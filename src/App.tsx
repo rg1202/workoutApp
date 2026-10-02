@@ -1,69 +1,36 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Activity, BookOpen, CalendarDays, Dumbbell, History, Plus, Search, Trash2 } from 'lucide-react';
-import { exercises, Exercise } from './data';
+import { exercises } from './data';
+import { Program, Prescription, starterProgram } from './programs';
 import { loadJSON, saveJSON, SessionRecord, storageKeys, StoredSet } from './storage';
 
-type Tab = 'Today' | 'Programs' | 'Exercises' | 'History';
-type Prescription = { exercise: Exercise; sets: number; minReps: number; maxReps: number; rir: number; weight: number };
-type Logs = Record<string, StoredSet[]>;
-
-const starter: Prescription[] = [
-  { exercise: exercises[0], sets: 4, minReps: 6, maxReps: 8, rir: 2, weight: 185 },
-  { exercise: exercises[1], sets: 3, minReps: 8, maxReps: 10, rir: 2, weight: 185 },
-  { exercise: exercises[2], sets: 3, minReps: 10, maxReps: 12, rir: 1, weight: 270 },
-];
-
-export default function App() {
-  const [tab, setTab] = useState<Tab>('Today');
-  const [query, setQuery] = useState('');
-  const [equipment, setEquipment] = useState('All');
-  const [plan, setPlan] = useState<Prescription[]>(() => loadJSON(storageKeys.plan, starter));
-  const [logs, setLogs] = useState<Logs>(() => loadJSON(storageKeys.session, {}));
-  const [history, setHistory] = useState<SessionRecord[]>(() => loadJSON(storageKeys.history, []));
-
-  useEffect(() => saveJSON(storageKeys.plan, plan), [plan]);
-  useEffect(() => saveJSON(storageKeys.session, logs), [logs]);
-  useEffect(() => saveJSON(storageKeys.history, history), [history]);
-
-  const filtered = useMemo(() => exercises.filter((e) => {
-    const haystack = `${e.name} ${e.muscle} ${e.group} ${e.movement} ${e.goals.join(' ')}`.toLowerCase();
-    return haystack.includes(query.toLowerCase()) && (equipment === 'All' || e.equipment === equipment);
-  }), [query, equipment]);
-
-  const setCount = Object.values(logs).flat().length;
-  function logSet(p: Prescription) {
-    const prior = logs[p.exercise.id] ?? [];
-    if (prior.length >= p.sets) return;
-    setLogs(current => ({ ...current, [p.exercise.id]: [...(current[p.exercise.id] ?? []), { weight: p.weight, reps: p.minReps, rir: p.rir, completedAt: new Date().toISOString() }] }));
-  }
-  function updateSet(exerciseId: string, index: number, field: 'weight'|'reps'|'rir', value: number) {
-    setLogs(current => ({ ...current, [exerciseId]: (current[exerciseId] ?? []).map((s,i)=>i===index?{...s,[field]:value}:s) }));
-  }
-  function removeSet(exerciseId: string, index: number) {
-    setLogs(current => ({ ...current, [exerciseId]: (current[exerciseId] ?? []).filter((_,i)=>i!==index) }));
-  }
-  function finishWorkout() {
-    if (!setCount) return;
-    const sets = plan.flatMap(p => (logs[p.exercise.id] ?? []).map(set => ({ exerciseId:p.exercise.id, exerciseName:p.exercise.name, set })));
-    setHistory(current => [{ id: crypto.randomUUID(), name:'Lower A', completedAt:new Date().toISOString(), sets }, ...current]);
-    setLogs({});
-    setTab('History');
-  }
-
-  return <div className="app-shell"><aside><div className="brand"><Dumbbell size={22}/><span>WorkoutApp</span></div><nav>
-    {([['Today',Activity],['Programs',CalendarDays],['Exercises',BookOpen],['History',History]] as const).map(([name,Icon])=><button className={tab===name?'active':''} onClick={()=>setTab(name)} key={name}><Icon size={18}/>{name}</button>)}
-  </nav><div className="aside-foot">MVP · Persistent local workspace</div></aside><main>
-
-  {tab==='Today'&&<><header><div><span className="eyebrow">TODAY'S TRAINING</span><h1>Lower A</h1><p>Strength + hypertrophy · {plan.reduce((n,p)=>n+p.sets,0)} working sets</p></div><button className="primary" onClick={finishWorkout}>Finish workout</button></header>
-  <section className="hero-card"><div><span className="eyebrow">8-WEEK HYPERTROPHY BLOCK</span><h2>Week 1 · Day 1</h2><p>Your active session now survives page reloads.</p></div><div className="metric"><strong>{setCount}</strong><span>sets logged</span></div></section>
-  <div className="stack">{plan.map((p,i)=><article className="workout-card" key={p.exercise.id}><div className="exercise-number">{String(i+1).padStart(2,'0')}</div><div className="exercise-main"><h3>{p.exercise.name}</h3><p>{p.exercise.muscle} · {p.exercise.movement} · {p.exercise.equipment}</p><div className="prescription"><span><b>{p.sets}</b> sets</span><span><b>{p.minReps}–{p.maxReps}</b> reps</span><span><b>{p.rir}</b> RIR</span><span><b>{p.weight}</b> lb</span></div>
-  {(logs[p.exercise.id]??[]).map((s,n)=><div className="logged editable" key={n}><span>Set {n+1}</span><label><input type="number" value={s.weight} onChange={e=>updateSet(p.exercise.id,n,'weight',+e.target.value)}/> lb</label><label><input type="number" value={s.reps} onChange={e=>updateSet(p.exercise.id,n,'reps',+e.target.value)}/> reps</label><label><input type="number" step="0.5" value={s.rir} onChange={e=>updateSet(p.exercise.id,n,'rir',+e.target.value)}/> RIR</label><button className="icon-button" onClick={()=>removeSet(p.exercise.id,n)}><Trash2 size={14}/></button></div>)}</div>
-  <button className="log-button" disabled={(logs[p.exercise.id]??[]).length>=p.sets} onClick={()=>logSet(p)}><Plus size={18}/> Log set</button></article>)}</div></>}
-
-  {tab==='Exercises'&&<><header><div><span className="eyebrow">KNOWLEDGE BASE</span><h1>Exercise Library</h1><p>Find movements by anatomy, equipment, movement pattern, or training goal.</p></div></header><div className="filters"><label className="search"><Search size={18}/><input placeholder="Search biceps, hamstrings, hypertrophy…" value={query} onChange={e=>setQuery(e.target.value)}/></label><select value={equipment} onChange={e=>setEquipment(e.target.value)}><option>All</option><option>Free Weight</option><option>Machine</option><option>Bodyweight</option></select></div><div className="exercise-grid">{filtered.map(e=><article className="library-card" key={e.id}><div className="tag">{e.equipment}</div><h3>{e.name}</h3><p>{e.muscle} · {e.group}</p><div className="chips"><span>{e.movement}</span>{e.goals.map(g=><span key={g}>{g}</span>)}</div><button onClick={()=>setPlan(p=>p.some(x=>x.exercise.id===e.id)?p:[...p,{exercise:e,sets:3,minReps:8,maxReps:12,rir:2,weight:0}])}><Plus size={16}/> Add to workout</button></article>)}</div></>}
-
-  {tab==='Programs'&&<><header><div><span className="eyebrow">PROGRAMMING</span><h1>Programs</h1><p>Persistent prescriptions are now in place; full editing comes next.</p></div><button className="primary"><Plus size={18}/> New program</button></header><section className="program-card"><div><span className="status">ACTIVE</span><h2>8-Week Hypertrophy Block</h2><p>Week 1 of 8 · {plan.length} exercises in today's session</p></div><div className="weekbar">{Array.from({length:8},(_,i)=><span className={i===0?'current':''} key={i}>W{i+1}</span>)}</div></section></>}
-
-  {tab==='History'&&<><header><div><span className="eyebrow">PERFORMANCE</span><h1>Training History</h1><p>Completed sessions are stored separately from planned prescriptions.</p></div></header>{history.length===0?<section className="empty"><History size={34}/><h2>Your training record starts here.</h2><p>Complete a workout to create your first permanent session record.</p></section>:<div className="stack">{history.map(session=><article className="history-card" key={session.id}><div><span className="eyebrow">{new Date(session.completedAt).toLocaleDateString()}</span><h2>{session.name}</h2><p>{session.sets.length} working sets</p></div><div className="history-sets">{session.sets.map((x,i)=><span key={i}>{x.exerciseName}: <b>{x.set.weight}×{x.set.reps}</b> @ {x.set.rir} RIR</span>)}</div></article>)}</div>}</>}
-  </main></div>;
+type Tab='Today'|'Programs'|'Exercises'|'History'; type Logs=Record<string,StoredSet[]>;
+const uid=()=>crypto.randomUUID();
+export default function App(){
+ const[tab,setTab]=useState<Tab>('Today'),[query,setQuery]=useState(''),[equipment,setEquipment]=useState('All');
+ const[program,setProgram]=useState<Program>(()=>loadJSON(storageKeys.program,starterProgram));
+ const[logs,setLogs]=useState<Logs>(()=>loadJSON(storageKeys.session,{}));
+ const[history,setHistory]=useState<SessionRecord[]>(()=>loadJSON(storageKeys.history,[]));
+ useEffect(()=>saveJSON(storageKeys.program,program),[program]);useEffect(()=>saveJSON(storageKeys.session,logs),[logs]);useEffect(()=>saveJSON(storageKeys.history,history),[history]);
+ const day=program.days.find(d=>d.id===program.activeDayId)??program.days[0];
+ const filtered=useMemo(()=>exercises.filter(e=>`${e.name} ${e.muscle} ${e.group} ${e.movement} ${e.goals.join(' ')}`.toLowerCase().includes(query.toLowerCase())&&(equipment==='All'||e.equipment===equipment)),[query,equipment]);
+ const exercise=(id:string)=>exercises.find(e=>e.id===id)!; const setCount=Object.values(logs).flat().length;
+ const changeProgram=(field:'name'|'weeks'|'activeWeek',value:string|number)=>setProgram(p=>({...p,[field]:value}));
+ const updateDay=(id:string,name:string)=>setProgram(p=>({...p,days:p.days.map(d=>d.id===id?{...d,name}:d)}));
+ const addDay=()=>{const id=uid();setProgram(p=>({...p,activeDayId:id,days:[...p.days,{id,name:`Day ${p.days.length+1}`,prescriptions:[]}]}));setLogs({});};
+ const deleteDay=(id:string)=>setProgram(p=>{if(p.days.length===1)return p;const days=p.days.filter(d=>d.id!==id);return{...p,days,activeDayId:p.activeDayId===id?days[0].id:p.activeDayId}});
+ const addExercise=(exerciseId:string)=>setProgram(p=>({...p,days:p.days.map(d=>d.id===p.activeDayId&& !d.prescriptions.some(x=>x.exerciseId===exerciseId)?{...d,prescriptions:[...d.prescriptions,{id:uid(),exerciseId,sets:3,minReps:8,maxReps:12,rir:2,weight:0}]}:d)}));
+ const updateRx=(id:string,field:keyof Pick<Prescription,'sets'|'minReps'|'maxReps'|'rir'|'weight'>,value:number)=>setProgram(p=>({...p,days:p.days.map(d=>d.id===p.activeDayId?{...d,prescriptions:d.prescriptions.map(x=>x.id===id?{...x,[field]:value}:x)}:d)}));
+ const removeRx=(id:string)=>setProgram(p=>({...p,days:p.days.map(d=>d.id===p.activeDayId?{...d,prescriptions:d.prescriptions.filter(x=>x.id!==id)}:d)}));
+ const chooseDay=(id:string)=>{setProgram(p=>({...p,activeDayId:id}));setLogs({});};
+ const logSet=(p:Prescription)=>{const prior=logs[p.id]??[];if(prior.length>=p.sets)return;setLogs(c=>({...c,[p.id]:[...(c[p.id]??[]),{weight:p.weight,reps:p.minReps,rir:p.rir,completedAt:new Date().toISOString()}]}));};
+ const updateSet=(id:string,i:number,f:'weight'|'reps'|'rir',v:number)=>setLogs(c=>({...c,[id]:(c[id]??[]).map((s,n)=>n===i?{...s,[f]:v}:s)}));
+ const removeSet=(id:string,i:number)=>setLogs(c=>({...c,[id]:(c[id]??[]).filter((_,n)=>n!==i)}));
+ const finish=()=>{if(!setCount)return;const sets=day.prescriptions.flatMap(p=>(logs[p.id]??[]).map(set=>({exerciseId:p.exerciseId,exerciseName:exercise(p.exerciseId).name,set})));setHistory(h=>[{id:uid(),name:day.name,programName:program.name,week:program.activeWeek,completedAt:new Date().toISOString(),sets},...h]);setLogs({});setTab('History');};
+ return <div className="app-shell"><aside><div className="brand"><Dumbbell size={22}/><span>WorkoutApp</span></div><nav>{([['Today',Activity],['Programs',CalendarDays],['Exercises',BookOpen],['History',History]] as const).map(([n,I])=><button className={tab===n?'active':''} onClick={()=>setTab(n)} key={n}><I size={18}/>{n}</button>)}</nav><div className="aside-foot">MVP · Program Builder</div></aside><main>
+ {tab==='Today'&&<><header><div><span className="eyebrow">TODAY'S TRAINING</span><h1>{day.name}</h1><p>{program.goal} · {day.prescriptions.reduce((n,p)=>n+p.sets,0)} working sets</p></div><button className="primary" onClick={finish}>Finish workout</button></header><section className="hero-card"><div><span className="eyebrow">{program.name.toUpperCase()}</span><h2>Week {program.activeWeek} · {day.name}</h2><p>Prescription and actual performance remain independent.</p></div><div className="metric"><strong>{setCount}</strong><span>sets logged</span></div></section><div className="stack">{day.prescriptions.map((p,i)=>{const e=exercise(p.exerciseId);return <article className="workout-card" key={p.id}><div className="exercise-number">{String(i+1).padStart(2,'0')}</div><div className="exercise-main"><h3>{e.name}</h3><p>{e.muscle} · {e.movement} · {e.equipment}</p><div className="prescription"><span><b>{p.sets}</b> sets</span><span><b>{p.minReps}–{p.maxReps}</b> reps</span><span><b>{p.rir}</b> RIR</span><span><b>{p.weight}</b> lb</span></div>{(logs[p.id]??[]).map((s,n)=><div className="logged editable" key={n}><span>Set {n+1}</span><label><input type="number" value={s.weight} onChange={e=>updateSet(p.id,n,'weight',+e.target.value)}/> lb</label><label><input type="number" value={s.reps} onChange={e=>updateSet(p.id,n,'reps',+e.target.value)}/> reps</label><label><input type="number" step=".5" value={s.rir} onChange={e=>updateSet(p.id,n,'rir',+e.target.value)}/> RIR</label><button className="icon-button" onClick={()=>removeSet(p.id,n)}><Trash2 size={14}/></button></div>)}</div><button className="log-button" disabled={(logs[p.id]??[]).length>=p.sets} onClick={()=>logSet(p)}><Plus size={18}/> Log set</button></article>})}</div></>}
+ {tab==='Programs'&&<><header><div><span className="eyebrow">PROGRAM BUILDER</span><h1>Build your program</h1><p>Edit the program, select a training day, then configure its prescriptions.</p></div><button className="primary" onClick={addDay}><Plus size={18}/> Add day</button></header><section className="builder-card"><div className="builder-fields"><label>Program name<input value={program.name} onChange={e=>changeProgram('name',e.target.value)}/></label><label>Goal<select value={program.goal} onChange={e=>setProgram(p=>({...p,goal:e.target.value as Program['goal']}))}><option>Hypertrophy</option><option>Strength</option><option>Endurance</option><option>Mixed</option></select></label><label>Weeks<input type="number" min="1" max="52" value={program.weeks} onChange={e=>changeProgram('weeks',+e.target.value)}/></label><label>Current week<input type="number" min="1" max={program.weeks} value={program.activeWeek} onChange={e=>changeProgram('activeWeek',+e.target.value)}/></label></div><div className="day-tabs">{program.days.map(d=><button className={d.id===program.activeDayId?'selected':''} onClick={()=>chooseDay(d.id)} key={d.id}>{d.name}</button>)}</div><div className="day-heading"><input className="day-name" value={day.name} onChange={e=>updateDay(day.id,e.target.value)}/><button className="danger" onClick={()=>deleteDay(day.id)}><Trash2 size={15}/> Delete day</button></div><div className="rx-table"><div className="rx-head"><span>Exercise</span><span>Sets</span><span>Reps</span><span>RIR</span><span>Weight</span><span></span></div>{day.prescriptions.map(p=><div className="rx-row" key={p.id}><b>{exercise(p.exerciseId).name}</b><input type="number" value={p.sets} onChange={e=>updateRx(p.id,'sets',+e.target.value)}/><div className="rep-range"><input type="number" value={p.minReps} onChange={e=>updateRx(p.id,'minReps',+e.target.value)}/><span>–</span><input type="number" value={p.maxReps} onChange={e=>updateRx(p.id,'maxReps',+e.target.value)}/></div><input type="number" step=".5" value={p.rir} onChange={e=>updateRx(p.id,'rir',+e.target.value)}/><input type="number" value={p.weight} onChange={e=>updateRx(p.id,'weight',+e.target.value)}/><button className="icon-button" onClick={()=>removeRx(p.id)}><Trash2 size={15}/></button></div>)}</div><div className="add-exercise"><h3>Add exercise to {day.name}</h3><div className="exercise-picker">{exercises.filter(e=>!day.prescriptions.some(p=>p.exerciseId===e.id)).map(e=><button onClick={()=>addExercise(e.id)} key={e.id}><Plus size={14}/>{e.name}<small>{e.muscle}</small></button>)}</div></div></section></>}
+ {tab==='Exercises'&&<><header><div><span className="eyebrow">KNOWLEDGE BASE</span><h1>Exercise Library</h1><p>Search by anatomy, equipment, movement, or goal.</p></div></header><div className="filters"><label className="search"><Search size={18}/><input placeholder="Search biceps, hamstrings, hypertrophy…" value={query} onChange={e=>setQuery(e.target.value)}/></label><select value={equipment} onChange={e=>setEquipment(e.target.value)}><option>All</option><option>Free Weight</option><option>Machine</option><option>Bodyweight</option></select></div><div className="exercise-grid">{filtered.map(e=><article className="library-card" key={e.id}><div className="tag">{e.equipment}</div><h3>{e.name}</h3><p>{e.muscle} · {e.group}</p><div className="chips"><span>{e.movement}</span>{e.goals.map(g=><span key={g}>{g}</span>)}</div><button onClick={()=>addExercise(e.id)}><Plus size={16}/> Add to {day.name}</button></article>)}</div></>}
+ {tab==='History'&&<><header><div><span className="eyebrow">PERFORMANCE</span><h1>Training History</h1><p>Completed performance, separate from the program prescription.</p></div></header>{history.length===0?<section className="empty"><History size={34}/><h2>Your training record starts here.</h2></section>:<div className="stack">{history.map(s=><article className="history-card" key={s.id}><div><span className="eyebrow">{new Date(s.completedAt).toLocaleDateString()}</span><h2>{s.name}</h2><p>{s.programName} · Week {s.week} · {s.sets.length} sets</p></div><div className="history-sets">{s.sets.map((x,i)=><span key={i}>{x.exerciseName}: <b>{x.set.weight}×{x.set.reps}</b> @ {x.set.rir} RIR</span>)}</div></article>)}</div>}</>}
+ </main></div>;
 }
