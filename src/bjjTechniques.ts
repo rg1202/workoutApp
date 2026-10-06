@@ -1,7 +1,7 @@
 export type TechniqueStatus='Learning'|'Drilling'|'Usable'|'Reliable'|'A-Game';
 export type CompetencyStatus='Not assessed'|'Developing'|'Functional'|'Reliable'|'Verified';
-export type TechniqueFailure={problem:string;fix:string};
-export type BjjTechnique={id:string;name:string;position:string;category:string;applicability:('Gi'|'No-Gi')[];status:TechniqueStatus;competency?:CompetencyStatus;competencyAreaId?:string;tags:string[];goal?:string;setup:string;grips?:string[];baseManipulation?:string;bodyPosition?:string;steps:string[];finish?:string;mechanism?:string;cues:string[];mistakes:string[];troubleshooting?:TechniqueFailure[];reactions?:string[];followUps:string[];variations?:string[];drilling?:string[];notes:string;focus?:boolean;focusNote?:string;gameFollowUpIds?:string[];gameReaction?:string;videoUrl?:string};
+export type TechniqueFailure={problem:string;fix:string};export type GameConnection={id:string;reaction:string;nextTechniqueId:string;note?:string};
+export type BjjTechnique={id:string;name:string;position:string;category:string;applicability:('Gi'|'No-Gi')[];status:TechniqueStatus;competency?:CompetencyStatus;competencyAreaId?:string;tags:string[];goal?:string;setup:string;grips?:string[];baseManipulation?:string;bodyPosition?:string;steps:string[];finish?:string;mechanism?:string;cues:string[];mistakes:string[];troubleshooting?:TechniqueFailure[];reactions?:string[];followUps:string[];variations?:string[];drilling?:string[];notes:string;focus?:boolean;focusNote?:string;gameFollowUpIds?:string[];gameReaction?:string;gameConnections?:GameConnection[];videoUrl?:string};
 export type CompetencyArea={id:string;name:string;targetCount:number;description:string};
 export const BJJ_TECHNIQUES_KEY='workoutapp.bjj-techniques.v1';
 export const techniqueStatuses:TechniqueStatus[]=['Learning','Drilling','Usable','Reliable','A-Game'];
@@ -221,7 +221,7 @@ export function seedCompetencyTechniques(existing:BjjTechnique[]){
  const merged=seeds.map(seed=>{
   const saved=byName.get(seed.name.toLowerCase());
   if(!saved)return seed;
-  return {...seed,id:saved.id||seed.id,status:saved.status??seed.status,competency:saved.competency??seed.competency,notes:saved.notes??seed.notes,focus:saved.focus??seed.focus,focusNote:saved.focusNote??seed.focusNote,gameFollowUpIds:saved.gameFollowUpIds??seed.gameFollowUpIds,gameReaction:saved.gameReaction??seed.gameReaction,videoUrl:saved.videoUrl??seed.videoUrl,tags:Array.from(new Set([...seed.tags,...saved.tags.filter(x=>!['Instruction pending','Instruction complete'].includes(x))]))};
+  return {...seed,id:saved.id||seed.id,status:saved.status??seed.status,competency:saved.competency??seed.competency,notes:saved.notes??seed.notes,focus:saved.focus??seed.focus,focusNote:saved.focusNote??seed.focusNote,gameFollowUpIds:saved.gameFollowUpIds??seed.gameFollowUpIds,gameReaction:saved.gameReaction??seed.gameReaction,gameConnections:saved.gameConnections??(saved.gameFollowUpIds??[]).map((nextTechniqueId,i)=>({id:'legacy-'+i,reaction:saved.gameReaction??'',nextTechniqueId})),videoUrl:saved.videoUrl??seed.videoUrl,tags:Array.from(new Set([...seed.tags,...saved.tags.filter(x=>!['Instruction pending','Instruction complete'].includes(x))]))};
  });
  return [...extras,...merged]
 }
