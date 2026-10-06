@@ -517,3 +517,20 @@ test('Guard bottom curriculum exposes complete instructional records',async({pag
  await expect(page.getByRole('heading',{name:'Troubleshooting'})).toBeVisible();
  await expect(page.getByRole('heading',{name:'How to drill it'})).toBeVisible();
 });
+
+
+test('Guard top curriculum exposes passing and submission-defense instruction',async({page})=>{
+ await page.getByRole('button',{name:'BJJ',exact:true}).click();
+ await page.getByRole('button',{name:'Techniques',exact:true}).click();
+ const search=page.getByPlaceholder(/search/i);
+ await search.fill('Knee slice pass');
+ await page.getByRole('button',{name:/Knee slice pass/}).click();
+ await expect(page.getByRole('heading',{name:'Grips / connections'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Why it works'})).toBeVisible();
+ await expect(page.getByText(/Upper body before lower body/)).toBeVisible();
+ await page.keyboard.press('Escape');
+ await search.fill('Triangle defense');
+ await page.getByRole('button',{name:/Triangle defense/}).click();
+ await expect(page.getByRole('heading',{name:'Troubleshooting'})).toBeVisible();
+ await expect(page.getByText(/One arm in = immediate danger/)).toBeVisible();
+});
