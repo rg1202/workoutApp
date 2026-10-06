@@ -206,3 +206,25 @@ test('expanded library creates every configured training day',async({page})=>{
  expect(p.days).toHaveLength(6);
  expect(new Set(p.days.map((d:any)=>d.weekday)).size).toBeGreaterThan(3);
 });
+
+
+test('strength library setup uses multiple lift baselines and previews prescriptions',async({page})=>{
+ await nav(page,'Programs').click();
+ await page.getByRole('button',{name:'Program Library',exact:true}).click();
+ const card=page.locator('.published-card').filter({has:page.getByRole('heading',{name:'BJJ Strength — 3 Day'})});
+ await card.getByRole('button',{name:/Set up program/i}).click();
+ await expect(page.getByLabel('Back squat max')).toBeVisible();
+ await expect(page.getByLabel('Bench press max')).toBeVisible();
+ await expect(page.getByLabel('Deadlift max')).toBeVisible();
+ await expect(page.getByLabel('Overhead press max')).toBeVisible();
+ await page.getByLabel('Back squat max').fill('300');
+ await page.getByLabel('Bench press max').fill('200');
+ await expect(page.getByText(/Barbell Back Squat 3×5 @ 215 lb/)).toBeVisible();
+ await expect(page.getByText(/Barbell Bench Press 3×5 @ 145 lb/)).toBeVisible();
+ await page.getByRole('button',{name:/Create program/i}).click();
+ const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}'));
+ const p=stored.programs.find((x:any)=>x.name==='BJJ Strength — 3 Day');
+ expect(p.days).toHaveLength(3);
+ expect(p.days[0].prescriptions.map((x:any)=>x.exerciseId)).toEqual(['back-squat','bench','pullup']);
+ expect(p.days[1].prescriptions.map((x:any)=>x.exerciseId)).toContain('deadlift');
+});
