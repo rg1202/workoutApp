@@ -53,3 +53,9 @@
 .today-plan-empty b{color:#b9c3ca;font-size:12px}
 .today-plan-empty small{font-size:9px;margin-top:4px}
 @media(max-width:600px){.today-workout-hero{grid-template-columns:38px 1fr}.today-workout-hero .primary{grid-column:2;justify-self:start}.today-activity-list>div{grid-template-columns:22px 1fr}.today-activity-meta{grid-column:2;justify-content:flex-start}}
+
+.setup-preview-days{display:grid;gap:7px;margin-top:12px}
+.setup-preview-days>div{display:grid;gap:4px;padding:9px 10px;background:#111a21;border:1px solid #22303a;border-radius:7px}
+.setup-preview-days strong{font-size:11px;color:#dfe6eb}
+.setup-preview-days small{font-size:9px;color:#82909b;line-height:1.5}
+.program-setup>.builder-fields{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
