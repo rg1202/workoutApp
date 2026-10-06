@@ -14,6 +14,7 @@ export const DATA_CHANGE_EVENT='workoutapp:data-change';
 export function loadJSON<T>(key: string, fallback: T): T {
   try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) as T : fallback; } catch { return fallback; }
 }
-export function saveJSON<T>(key: string, value: T) { localStorage.setItem(key, JSON.stringify(value)); window.dispatchEvent(new CustomEvent(DATA_CHANGE_EVENT,{detail:{key}})); }
+export function saveJSON<T>(key: string, value: T, source='app') { localStorage.setItem(key, JSON.stringify(value)); window.dispatchEvent(new CustomEvent(DATA_CHANGE_EVENT,{detail:{key,source}})); }
+export function sameJSON(a:unknown,b:unknown){return JSON.stringify(a)===JSON.stringify(b)}
 export function loadLegacyProgram<T>(): T | null { try { const raw=localStorage.getItem(LEGACY_PROGRAM_KEY); return raw?JSON.parse(raw) as T:null; } catch { return null; } }
 export const storageKeys = { session: SESSION_KEY, history: HISTORY_KEY, programs: PROGRAMS_KEY,checkins:CHECKINS_KEY,body:BODY_KEY };
