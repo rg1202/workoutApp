@@ -14,7 +14,7 @@ test('app shell loads and primary navigation works',async({page})=>{
  for(const name of['Goals','Calendar','BJJ','Programs','Analytics']){
   await nav(page,name).click();
   await expect(page.locator('main h1').first()).toContainText(
-   name==='BJJ'?/BJJ|Jiu/i:new RegExp(name,'i')
+   name==='BJJ'?/BJJ|Jiu/i:name==='Analytics'?/Performance/i:new RegExp(name,'i')
   );
  }
 });
