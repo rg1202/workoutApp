@@ -439,3 +439,25 @@ test('activating a program archives the previous active program everywhere',asyn
  expect(todayState.programs.filter((p:any)=>p.status==='Active')).toHaveLength(1);
  expect(todayState.programs.find((p:any)=>p.id===todayState.activeProgramId)?.status).toBe('Active');
 });
+
+
+test('adherence includes the final day of calendar periods',async({page})=>{
+ const now=new Date(),key=(d:Date)=>{const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`};
+ const monthEnd=new Date(now.getFullYear(),now.getMonth()+1,0);
+ const quarterStartMonth=Math.floor(now.getMonth()/3)*3,quarterEnd=new Date(now.getFullYear(),quarterStartMonth+3,0);
+ const yearEnd=new Date(now.getFullYear(),11,31);
+ await page.evaluate(({monthEnd,quarterEnd,yearEnd})=>{
+  const plans=[
+   {id:'boundary-month',date:monthEnd,title:'Month boundary',type:'BJJ',status:'Planned'},
+   {id:'boundary-quarter',date:quarterEnd,title:'Quarter boundary',type:'BJJ',status:'Planned'},
+   {id:'boundary-year',date:yearEnd,title:'Year boundary',type:'BJJ',status:'Planned'}
+  ];
+  localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify(plans));
+ },{monthEnd:key(monthEnd),quarterEnd:key(quarterEnd),yearEnd:key(yearEnd)});
+ await page.reload();
+ const card=page.locator('.overview-adherence');
+ const read=async(label:string)=>card.locator('.adherence-kpi').filter({hasText:label}).locator('small').innerText();
+ expect(await read('Month')).toMatch(/\/1 complete$/);
+ expect(await read('Quarter')).toMatch(/\/2 complete$|\/1 complete$/);
+ expect(await read('Year')).toMatch(/\/3 complete$|\/2 complete$|\/1 complete$/);
+});
