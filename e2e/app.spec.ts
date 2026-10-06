@@ -337,6 +337,7 @@ test('smart generator schedules strength around BJJ and previews the whole week'
  const preview=page.locator('.generator-week-preview');
  await expect(preview).toContainText('Strength');await expect(preview).toContainText('BJJ');
  await page.getByRole('button',{name:'Generate',exact:true}).click();
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}').activeProgramId||'')).not.toBe('');
  const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}'));
  const p=stored.programs[stored.programs.length-1],strengthDays=p.days.map((d:any)=>d.weekday);
  expect(p.status).toBe('Active');
