@@ -637,3 +637,6 @@ test('BJJ Current Focus is deliberate and shows focus note',{tag:'@bjj'},async({
 
 
 test('BJJ My Game exposes pathway architecture',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'BJJ'}).click();await page.getByRole('button',{name:'My Game'}).click();await expect(page.getByRole('heading',{name:'Build routes, not isolated moves'})).toBeVisible();await expect(page.getByRole('heading',{name:'Standing → top'})).toBeVisible();await expect(page.getByRole('heading',{name:'Top progression'})).toBeVisible();await expect(page.getByRole('heading',{name:'Bottom → top / reset'})).toBeVisible();await expect(page.getByRole('heading',{name:'Defense / recovery'})).toBeVisible();await expect(page.getByText(/GRIP → HEAD → PRESSURE/)).toBeVisible();});
+
+
+test('BJJ techniques can define personal My Game connections',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'BJJ'}).click();await page.getByRole('button',{name:'Techniques'}).click();await page.getByLabel('Search techniques').fill('Underhook Knee Pick');await page.getByRole('button',{name:/Underhook Knee Pick/}).click();await expect(page.getByText('MY GAME CONNECTIONS')).toBeVisible();await page.getByPlaceholder('e.g. They post the far hand or turn away').fill('They turn away');await expect(page.getByLabel('Add preferred next technique')).toBeVisible();});
