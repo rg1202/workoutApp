@@ -26,3 +26,30 @@
 .cal-move-modal input{background:#121b23;border:1px solid #26333e;color:#e6edf2;border-radius:8px;padding:10px}
 .cal-move-modal>section>div{display:flex;justify-content:flex-end;gap:8px}
 .cal-move-modal>section>div>button:not(.primary){border:1px solid #293640;background:#141d25;color:#cbd4dc;border-radius:9px;padding:10px 14px;cursor:pointer}
+
+/* Dashboard today's plan */
+.today-plan-card{display:flex;flex-direction:column;min-height:100%}
+.today-plan-card .overview-heading{padding-bottom:15px;border-bottom:1px solid #1d2832}
+.today-plan-card .overview-heading h2{margin-bottom:0}
+.today-workout-hero{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:12px;align-items:center;margin-top:16px;padding:15px;background:linear-gradient(135deg,#121c19,#101820);border:1px solid #30402e;border-radius:11px}
+.today-workout-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:9px;background:#1a2919;color:#a7f36b}
+.today-workout-copy{min-width:0;display:grid;gap:3px}
+.today-workout-copy>span{font-size:9px;text-transform:uppercase;letter-spacing:.9px;color:#82918a;font-weight:700}
+.today-workout-copy>b{font-size:16px;color:#f0f5f1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.today-workout-copy>small{font-size:10px;color:#718078}
+.today-workout-hero .primary{padding:9px 12px;font-size:10px}
+.today-activity-list{display:grid;margin-top:13px}
+.today-activity-list>div{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:9px;align-items:center;padding:11px 2px;border-top:1px solid #1b252e}
+.today-activity-list>div:first-child{border-top:0}
+.today-activity-list>div.done{opacity:.55}
+.today-activity-status{color:#a7f36b;display:grid;place-items:center}
+.today-activity-status i{display:block;width:14px;height:14px;border:2px solid #53616c;border-radius:50%}
+.today-activity-list b{display:block;font-size:12px}
+.today-activity-list small{display:block;color:#71808c;font-size:9px;margin-top:3px}
+.today-activity-meta{display:flex;align-items:center;justify-content:flex-end;gap:7px;color:#82909b;font-size:9px;white-space:nowrap}
+.today-activity-meta span{display:flex;align-items:center;gap:3px;background:#141e26;border-radius:5px;padding:4px 6px}
+.today-plan-empty{display:flex;gap:11px;align-items:center;margin-top:16px;padding:18px;border:1px dashed #293640;border-radius:10px;color:#65737e}
+.today-plan-empty b,.today-plan-empty small{display:block}
+.today-plan-empty b{color:#b9c3ca;font-size:12px}
+.today-plan-empty small{font-size:9px;margin-top:4px}
+@media(max-width:600px){.today-workout-hero{grid-template-columns:38px 1fr}.today-workout-hero .primary{grid-column:2;justify-self:start}.today-activity-list>div{grid-template-columns:22px 1fr}.today-activity-meta{grid-column:2;justify-content:flex-start}}
