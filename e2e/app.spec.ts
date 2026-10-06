@@ -550,3 +550,19 @@ test('Half guard top and Side control bottom expose full instruction',async({pag
  await expect(page.getByText(/Frame, bridge, hip escape, knee inside/)).toBeVisible();
  await expect(page.getByRole('heading',{name:'How to drill it'})).toBeVisible();
 });
+
+
+test('Side control top exposes control-first submission instruction',async({page})=>{
+ await page.getByRole('button',{name:'BJJ',exact:true}).click();
+ await page.getByRole('button',{name:'Techniques',exact:true}).click();
+ const search=page.getByPlaceholder(/search/i);
+ await search.fill('Arm triangle from side control');
+ await page.getByRole('button',{name:/Arm triangle from side control/}).click();
+ await expect(page.getByText(/Angle before squeeze/)).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Why it works'})).toBeVisible();
+ await page.keyboard.press('Escape');
+ await search.fill('Knee-on-belly to mount transition');
+ await page.getByRole('button',{name:/Knee-on-belly to mount transition/}).click();
+ await expect(page.getByText(/Settle mount before attack/)).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Reactions / counters'})).toBeVisible();
+});
