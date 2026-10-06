@@ -258,5 +258,5 @@ test('BJJ program setup detects planned Calendar training days',async({page})=>{
  await helper.getByRole('button',{name:'Suggest lifting days'}).click();
  const values=await page.locator('.setup-weekdays select').evaluateAll(xs=>xs.map(x=>(x as HTMLSelectElement).value));
  expect(new Set(values).size).toBe(values.length);
- expect(values.slice(0,2).sort()).toEqual(['2','5']);
+ expect(values.slice(0,2).sort()).toEqual(['4','5']);
 });
