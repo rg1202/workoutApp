@@ -91,6 +91,8 @@ const guardTopInstruction:Record<string,Partial<BjjTechnique>>={
 };
 
 const detailedByName=new Map([...starterTechniques,...movementCompetencies].map(t=>[t.name.toLowerCase(),t]));
+
+export const instructionalCoverage=curriculumSeeds.map(group=>({area:group.area,total:group.names.length,complete:group.names.filter(name=>!!detailedByName.get(name.toLowerCase())||!!guardBottomInstruction[name]||!!guardTopInstruction[name]).length}));
 export const curriculumCompetencies:BjjTechnique[]=curriculumSeeds.flatMap(group=>group.names.map(name=>{
  const detailed=detailedByName.get(name.toLowerCase());
  if(detailed)return {...detailed,position:group.area};
