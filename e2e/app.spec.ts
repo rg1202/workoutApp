@@ -491,3 +491,16 @@ test('BJJ competencies are belt agnostic and update independently of mastery',as
  await expect(page.getByLabel('Personal mastery')).toHaveValue('Learning');
  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.bjj-techniques.v1')||'[]').find((t:any)=>t.id==='movement-1')?.competency)).toBe('Functional');
 });
+
+
+test('scissor sweep teaches grips mechanics execution and troubleshooting',async({page})=>{
+ await page.getByRole('button',{name:'BJJ',exact:true}).click();
+ await page.getByRole('button',{name:'Techniques',exact:true}).click();
+ await page.getByRole('button',{name:/Scissor Sweep/}).click();
+ await expect(page.getByRole('heading',{name:'Grips / connections'})).toBeVisible();
+ await expect(page.getByText(/control your opponent’s left sleeve/)).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Why it works'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Troubleshooting'})).toBeVisible();
+ await expect(page.getByText('They catch themselves with a hand.')).toBeVisible();
+ await expect(page.getByRole('heading',{name:'How to drill it'})).toBeVisible();
+});
