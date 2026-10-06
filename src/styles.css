@@ -59,3 +59,11 @@
 .setup-preview-days strong{font-size:11px;color:#dfe6eb}
 .setup-preview-days small{font-size:9px;color:#82909b;line-height:1.5}
 .program-setup>.builder-fields{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+
+.bjj-schedule-helper{display:grid;grid-template-columns:minmax(180px,1fr) auto auto;gap:12px;align-items:center;margin:14px 0;padding:13px;background:#111a21;border:1px solid #27343e;border-radius:9px}
+.bjj-schedule-helper b,.bjj-schedule-helper small{display:block}
+.bjj-schedule-helper small{margin-top:4px;color:#82909b;font-size:9px;line-height:1.4}
+.bjj-day-picks{display:flex;gap:4px;flex-wrap:wrap}
+.bjj-day-picks button{padding:6px 8px;font-size:9px}
+.bjj-day-picks button.selected{background:#22351f;border-color:#57764b;color:#b8f58d}
+@media(max-width:800px){.bjj-schedule-helper{grid-template-columns:1fr}.bjj-day-picks{justify-content:flex-start}}
