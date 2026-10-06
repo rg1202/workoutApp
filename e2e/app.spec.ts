@@ -585,3 +585,26 @@ test('North-south and Turtle domains expose detailed instruction',async({page})=
  await expect(page.getByRole('heading',{name:'Why it works'})).toBeVisible();
  await expect(page.getByRole('heading',{name:'How to drill it'})).toBeVisible();
 });
+
+
+test('Mount Technical mount and Back domains expose detailed instruction',async({page})=>{
+ await page.getByRole('button',{name:'BJJ',exact:true}).click();
+ await page.getByRole('button',{name:'Techniques',exact:true}).click();
+ const search=page.getByPlaceholder(/search/i);
+ await search.fill('Upa escape');
+ await page.getByRole('button',{name:/Upa escape/}).click();
+ await expect(page.getByText(/Trap arm and foot on same side/)).toBeVisible();
+ await page.keyboard.press('Escape');
+ await search.fill('Gift-wrap back take');
+ await page.getByRole('button',{name:/Gift-wrap back take/}).click();
+ await expect(page.getByText(/Seatbelt before release/)).toBeVisible();
+ await page.keyboard.press('Escape');
+ await search.fill('Rear naked choke defense');
+ await page.getByRole('button',{name:/Rear naked choke defense/}).click();
+ await expect(page.getByText(/Hands fight choke first/)).toBeVisible();
+ await page.keyboard.press('Escape');
+ await search.fill('Rear naked choke');
+ await page.getByRole('button',{name:/Rear naked choke/}).click();
+ await expect(page.getByRole('heading',{name:'Why it works'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'How to drill it'})).toBeVisible();
+});
