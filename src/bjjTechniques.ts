@@ -201,6 +201,10 @@ const standingInstruction:Record<string,Partial<BjjTechnique>>={
 
 const detailedByName=new Map([...starterTechniques,...movementCompetencies].map(t=>[t.name.toLowerCase(),t]));
 
+const canonicalNextName=(name:string,allNames:Set<string>)=>{const aliases:Record<string,string>={
+ 'Straight Armlock':'Straight arm lock from side control','Armbar':'Near-side armbar','Mount':'Knee-on-belly to mount transition',
+ 'Technical stand-up':'Technical stand-up','Back take':'Back take from turtle'
+ };const candidate=aliases[name]??name;return allNames.has(candidate.toLowerCase())?candidate:null};
 const suggestedNextByArea:Record<string,string[]>={
  'Movement':['Hip escape · shrimp','Technical stand-up','Bridge · upa movement'],
  'Self-defense':['Technical stand-up','Pull to guard','Body lock · head in front takedown'],
@@ -220,7 +224,8 @@ const suggestedNextByArea:Record<string,string[]>={
  'Back · defense':['Rear naked choke defense','Escape back control to guard','Technical stand-up'],
  'Back · attacks':['Rear naked choke','Bow-and-arrow choke','Armbar from back control']
 };
-const withSuggestedNext=(t:BjjTechnique):BjjTechnique=>t.followUps.length?t:{...t,followUps:(suggestedNextByArea[t.position]??[]).filter(n=>n!==t.name).slice(0,3)};
+const curriculumNameSet=new Set([...movementCompetencies.map(t=>t.name),...curriculumSeeds.flatMap(g=>g.names),...starterTechniques.map(t=>t.name)].map(n=>n.toLowerCase()));
+const withSuggestedNext=(t:BjjTechnique):BjjTechnique=>{const authored=t.followUps.map(n=>canonicalNextName(n,curriculumNameSet)).filter((n):n is string=>!!n&&n.toLowerCase()!==t.name.toLowerCase()),fallback=(suggestedNextByArea[t.position]??[]).filter(n=>curriculumNameSet.has(n.toLowerCase())&&n.toLowerCase()!==t.name.toLowerCase()),followUps=Array.from(new Set([...authored,...fallback])).slice(0,3);return {...t,followUps}};
 const areaIdByName=new Map(competencyAreas.map(a=>[a.name,a.id]));
 export const instructionalCoverage=[
  {area:'Movement',total:movementCompetencies.length,complete:movementCompetencies.filter(t=>!!t.goal&&t.steps.length>0).length},
