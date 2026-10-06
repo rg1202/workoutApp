@@ -504,3 +504,16 @@ test('scissor sweep teaches grips mechanics execution and troubleshooting',async
  await expect(page.getByText('They catch themselves with a hand.')).toBeVisible();
  await expect(page.getByRole('heading',{name:'How to drill it'})).toBeVisible();
 });
+
+
+test('Guard bottom curriculum exposes complete instructional records',async({page})=>{
+ await page.getByRole('button',{name:'BJJ',exact:true}).click();
+ await page.getByRole('button',{name:'Techniques',exact:true}).click();
+ await page.getByPlaceholder(/search/i).fill('Triangle from closed guard');
+ await page.getByRole('button',{name:/Triangle from closed guard/}).click();
+ await expect(page.getByRole('heading',{name:'Grips / connections'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Break posture / base'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Why it works'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Troubleshooting'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'How to drill it'})).toBeVisible();
+});
