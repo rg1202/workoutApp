@@ -260,3 +260,22 @@ test('BJJ program setup detects planned Calendar training days',async({page})=>{
  expect(new Set(values).size).toBe(values.length);
  expect(values.slice(0,2).sort()).toEqual(['4','5']);
 });
+
+
+test('smart generator adds recurring BJJ block to Calendar',async({page})=>{
+ await nav(page,'Programs').click();
+ await page.getByRole('button',{name:/Build program/i}).click();
+ await page.getByText('Add BJJ training block').click();
+ const block=page.locator('.generator-bjj-block');
+ await block.getByRole('button',{name:'Tue',exact:true}).click();
+ await block.getByRole('button',{name:'Thu',exact:true}).click();
+ await page.getByLabel('BJJ session name').fill('Gi BJJ');
+ await page.getByLabel('BJJ session minutes').fill('90');
+ await page.getByRole('button',{name:'Generate',exact:true}).click();
+ const plans=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]'));
+ expect(plans).toHaveLength(16);
+ expect(new Set(plans.map((p:any)=>new Date(p.date+'T12:00:00').getDay()))).toEqual(new Set([2,4]));
+ expect(plans.every((p:any)=>p.type==='BJJ'&&p.title==='Gi BJJ'&&p.durationMinutes===90)).toBeTruthy();
+ await nav(page,'Calendar').click();
+ await expect(page.getByText('Gi BJJ').first()).toBeVisible();
+});
