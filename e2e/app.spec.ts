@@ -96,7 +96,11 @@ test('latest body weight drives weight-loss goal progress',async({page})=>{
  await nav(page,'Goals').click();
  await expect(page.getByText('195', {exact:false}).first()).toBeVisible();
  await expect(page.getByText('50%',{exact:true})).toBeVisible();
- await expect(page.locator('.goal-progress i')).toHaveCSS('width','198px');
+ const initialBar=page.locator('.goal-progress');
+ const initialFill=initialBar.locator('i');
+ const initialWidths=await Promise.all([initialBar,initialFill].map(async x=>(await x.boundingBox())?.width??0));
+ expect(initialWidths[1]/initialWidths[0]).toBeGreaterThan(.45);
+ expect(initialWidths[1]/initialWidths[0]).toBeLessThan(.55);
  await nav(page,'Analytics').click();
  await page.locator('#bm-weight').fill('192');
  await page.getByRole('button',{name:/Save measurements/i}).click();
