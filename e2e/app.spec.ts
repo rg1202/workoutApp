@@ -195,12 +195,14 @@ test('expanded library creates every configured training day',async({page})=>{
  await nav(page,'Programs').click();
  await page.getByRole('button',{name:'Program Library',exact:true}).click();
  await expect(page.getByText('BJJ Strength — 2 Day Minimal')).toBeVisible();
- await page.getByText('Push / Pull / Legs — 6 Day').locator('..').locator('..').getByRole('button',{name:/Set up program/i}).click();
+ const pplCard=page.locator('.published-card').filter({has:page.getByRole('heading',{name:'Push / Pull / Legs Hypertrophy'})});
+ await expect(pplCard).toBeVisible();
+ await pplCard.getByRole('button',{name:/Set up program/i}).click();
  await expect(page.getByText(/6 days\/week/).first()).toBeVisible();
  await page.getByRole('button',{name:/Create program/i}).click();
- await expect(page.getByText('Push / Pull / Legs — 6 Day').first()).toBeVisible();
+ await expect(page.getByText('Push / Pull / Legs Hypertrophy').first()).toBeVisible();
  const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}'));
- const p=stored.programs.find((x:any)=>x.name==='Push / Pull / Legs — 6 Day');
+ const p=stored.programs.find((x:any)=>x.name==='Push / Pull / Legs Hypertrophy');
  expect(p.days).toHaveLength(6);
  expect(new Set(p.days.map((d:any)=>d.weekday)).size).toBeGreaterThan(3);
 });
