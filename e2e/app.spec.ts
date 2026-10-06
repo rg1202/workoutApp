@@ -398,3 +398,26 @@ test('editing generated program dates resyncs future BJJ plans',async({page})=>{
  expect(new Set(plans.map((p:any)=>new Date(p.date+'T12:00:00').getDay()))).toEqual(new Set([2,4]));
  expect(plans.every((p:any)=>p.date>='2026-10-13'&&p.title==='Synced BJJ')).toBeTruthy();
 });
+
+
+test('editable generator preview changes generated strength weekday',async({page})=>{
+ await nav(page,'Programs').click();
+ await page.getByRole('button',{name:/Build program/i}).click();
+ await page.getByText('Add BJJ training block').click();
+ const block=page.locator('.generator-bjj-block');
+ for(const day of['Mon','Wed','Sat'])await block.getByRole('button',{name:day,exact:true}).click();
+ const preview=page.locator('.generator-week-preview');
+ const before=await preview.locator('.generator-strength-slot').first().getAttribute('aria-label');
+ expect(before).toBeTruthy();
+ const open=preview.locator('.generator-open-slot').first();
+ const openLabel=await open.getAttribute('aria-label');
+ const targetDay=(openLabel||'').replace('Schedule strength on ','');
+ await open.click();
+ await expect(preview.getByRole('button',{name:new RegExp('Move strength .* from '+targetDay)})).toBeVisible();
+ await page.getByRole('button',{name:'Generate',exact:true}).click();
+ const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}'));
+ const p=stored.programs.find((x:any)=>x.id===stored.activeProgramId);
+ const dayIndex=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(targetDay);
+ expect(p.days.some((d:any)=>d.weekday===dayIndex)).toBeTruthy();
+ expect(new Set(p.days.map((d:any)=>d.weekday)).size).toBe(p.days.length);
+});
