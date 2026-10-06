@@ -347,9 +347,10 @@ test('smart generator schedules strength around BJJ and previews the whole week'
  await nav(page,'Calendar').click();
  await expect(page.getByText('BJJ').first()).toBeVisible();
  const firstStrengthDate=await page.evaluate(()=>{const store=JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}'),p=store.programs[store.programs.length-1],start=new Date(p.startDate+'T12:00:00'),weekday=p.days[0].weekday,offset=(weekday-start.getDay()+7)%7,d=new Date(start);d.setDate(d.getDate()+offset);return d.toLocaleDateString('en-CA')});
- const debug=await page.evaluate(({programId,date,title})=>{const store=JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}'),selected=store.programs.find((x:any)=>x.id===store.activeProgramId),planned=JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]');return{programId,activeProgramId:store.activeProgramId,selectedId:selected?.id,selectedStatus:selected?.status,selectedStart:selected?.startDate,selectedDays:selected?.days?.map((d:any)=>({name:d.name,weekday:d.weekday})),expected:{date,title},manualPlans:planned.filter((x:any)=>x.date===date)}} ,{programId:p.id,date:firstStrengthDate,title:p.days[0].name});
- console.log('SMART_GENERATOR_CALENDAR_DEBUG',JSON.stringify(debug));
+
  const strengthCell=page.locator('[data-date="'+firstStrengthDate+'"]').first();
  await expect(strengthCell).toHaveCount(1);
- await expect(strengthCell.getByText(p.days[0].name,{exact:true}),JSON.stringify(debug)).toBeVisible();
+ const strengthEvent=strengthCell.locator('.cal-event.cal-planned').filter({hasText:p.days[0].name});
+ await expect(strengthEvent).toHaveCount(1);
+ await expect(strengthEvent).toContainText(p.days[0].name);
 });
