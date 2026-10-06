@@ -631,3 +631,6 @@ test('Self-defense Standing and Takedown domains expose detailed instruction',as
  await expect(page.getByText(/Kuzushi before leg/)).toBeVisible();
  await expect(page.getByRole('heading',{name:'How to drill it'})).toBeVisible();
 });
+
+
+test('BJJ Current Focus is deliberate and shows focus note',{tag:'@bjj'},async({page})=>{await page.goto('/');await page.getByRole('button',{name:'BJJ'}).click();await page.getByRole('button',{name:'Techniques'}).click();const search=page.getByLabel('Search techniques');await search.fill('Underhook Knee Pick');await page.getByRole('button',{name:/Underhook Knee Pick/}).click();const focus=page.getByLabel('Current Focus');if(!(await focus.isChecked()))await focus.check();await page.getByPlaceholder('e.g. Move their weight before attacking the leg').fill('Move their feet first');await page.keyboard.press('Escape');await page.getByRole('button',{name:'Overview'}).click();await expect(page.getByText('Move their feet first')).toBeVisible();});
