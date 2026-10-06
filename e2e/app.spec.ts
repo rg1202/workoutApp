@@ -374,3 +374,27 @@ test('deleting generated program removes its generated BJJ Calendar plans',async
  const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}'));
  expect(stored.programs.some((p:any)=>p.id===generated.id)).toBeFalsy();
 });
+
+
+test('editing generated program dates resyncs future BJJ plans',async({page})=>{
+ await nav(page,'Programs').click();
+ await page.getByRole('button',{name:/Build program/i}).click();
+ await page.getByText('Add BJJ training block').click();
+ const block=page.locator('.generator-bjj-block');
+ await block.getByRole('button',{name:'Tue',exact:true}).click();
+ await block.getByRole('button',{name:'Thu',exact:true}).click();
+ await page.getByLabel('BJJ session name').fill('Synced BJJ');
+ await page.getByRole('button',{name:'Generate',exact:true}).click();
+ const generated=await page.evaluate(()=>{const s=JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}');return s.programs.find((p:any)=>p.id===s.activeProgramId)});
+ const editor=page.locator('.program-editor-v2');
+ const oldPlans=await page.evaluate(id=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').filter((p:any)=>p.programId===id),generated.id);
+ expect(oldPlans).toHaveLength(generated.weeks*2);
+ const newStart='2026-10-13';
+ await editor.getByLabel('Start').fill(newStart);
+ await editor.getByLabel('Weeks').fill('2');
+ await expect.poll(()=>page.evaluate(id=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').filter((p:any)=>p.programId===id&&p.status!=='Completed').length,generated.id)).toBe(4);
+ const plans=await page.evaluate(id=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').filter((p:any)=>p.programId===id),generated.id);
+ expect(plans).toHaveLength(4);
+ expect(new Set(plans.map((p:any)=>new Date(p.date+'T12:00:00').getDay()))).toEqual(new Set([2,4]));
+ expect(plans.every((p:any)=>p.date>='2026-10-13'&&p.title==='Synced BJJ')).toBeTruthy();
+});
