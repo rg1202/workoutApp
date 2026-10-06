@@ -478,3 +478,16 @@ test('BJJ technique library supports search detail and mastery persistence',asyn
  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.bjj-techniques.v1')||'[]').find((t:any)=>t.id==='mount-control')?.status)).toBe('Drilling');
  await page.getByRole('button').filter({has:page.locator('svg')}).last().press('Escape').catch(()=>{});
 });
+
+
+test('BJJ competencies are belt agnostic and update independently of mastery',async({page})=>{
+ await page.getByRole('button',{name:'BJJ',exact:true}).click();
+ await page.getByRole('button',{name:'Competencies',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'Build a complete grappling skill set'})).toBeVisible();
+ await expect(page.getByText('Movement',{exact:true}).first()).toBeVisible();
+ await page.getByRole('button',{name:'Review skills'}).first().click();
+ await page.getByRole('button',{name:/Hip escape · shrimp/}).click();
+ await page.getByLabel('Competency').selectOption('Functional');
+ await expect(page.getByLabel('Personal mastery')).toHaveValue('Learning');
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.bjj-techniques.v1')||'[]').find((t:any)=>t.id==='movement-1')?.competency)).toBe('Functional');
+});
