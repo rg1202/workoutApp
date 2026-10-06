@@ -655,3 +655,6 @@ test('BJJ My Game uses streamlined strategic route workspace',async({page})=>{aw
 
 
 test('Every BJJ technique exposes suggested next moves',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'BJJ'}).click();await page.getByRole('button',{name:'Techniques',exact:true}).click();const cards=page.locator('.bjj-tech-card');const count=await cards.count();expect(count).toBeGreaterThan(0);for(let i=0;i<Math.min(count,12);i++){await cards.nth(i).click();await expect(page.getByRole('heading',{name:'Suggested next moves'})).toBeVisible();await expect(page.locator('.bjj-suggested-next').locator('button, .bjj-next-unlinked').first()).toBeVisible();await page.keyboard.press('Escape');}});
+
+
+test('BJJ My Game can add a defense recovery technique directly',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'BJJ'}).click();await page.getByRole('button',{name:'My Game'}).click();const picker=page.getByLabel('Add technique to Defense / recovery');await expect(picker).toBeVisible();const option=picker.locator('option').filter({hasText:'Rear naked choke defense'}).first();const value=await option.getAttribute('value');expect(value).toBeTruthy();await picker.selectOption(value!);const route=page.locator('#game-route-3');await expect(route.getByText('Rear naked choke defense')).toBeVisible();});
