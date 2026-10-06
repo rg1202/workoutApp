@@ -304,20 +304,26 @@ test('drags one program workout without changing recurring weekday',async({page}
 });
 
 
-test('adherence card shows week month quarter year and all history KPIs together',async({page})=>{
- const now=new Date(),iso=(d:Date)=>d.toLocaleDateString('en-CA'),daysAgo=(n:number)=>{const d=new Date(now);d.setDate(d.getDate()-n);return iso(d)};
- await page.evaluate(({d2,d20,d70,d200,d500})=>localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([
-  {id:'a1',date:d2,title:'Recent',type:'BJJ',status:'Completed'},
-  {id:'a2',date:d20,title:'Month',type:'BJJ',status:'Planned'},
-  {id:'a3',date:d70,title:'Quarter',type:'BJJ',status:'Completed'},
-  {id:'a4',date:d200,title:'Year',type:'BJJ',status:'Completed'},
-  {id:'a5',date:d500,title:'Old',type:'BJJ',status:'Planned'}
- ])),{d2:daysAgo(2),d20:daysAgo(20),d70:daysAgo(70),d200:daysAgo(200),d500:daysAgo(500)});
+test('adherence KPIs use current calendar week month quarter and year',async({page})=>{
+ const now=new Date(),iso=(d:Date)=>d.toLocaleDateString('en-CA');
+ const monday=new Date(now);monday.setDate(now.getDate()-((now.getDay()+6)%7));
+ const priorWeek=new Date(monday);priorWeek.setDate(monday.getDate()-1);
+ const priorMonth=new Date(now.getFullYear(),now.getMonth()-1,15);
+ const priorQuarter=new Date(now.getFullYear(),Math.floor(now.getMonth()/3)*3-1,15);
+ const priorYear=new Date(now.getFullYear()-1,6,15);
+ await page.evaluate(({current,priorWeek,priorMonth,priorQuarter,priorYear})=>localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([
+  {id:'a1',date:current,title:'Current',type:'BJJ',status:'Completed'},
+  {id:'a2',date:current,title:'Current missed',type:'BJJ',status:'Planned'},
+  {id:'a3',date:priorWeek,title:'Earlier week',type:'BJJ',status:'Completed'},
+  {id:'a4',date:priorMonth,title:'Earlier month',type:'BJJ',status:'Completed'},
+  {id:'a5',date:priorQuarter,title:'Earlier quarter',type:'BJJ',status:'Completed'},
+  {id:'a6',date:priorYear,title:'Earlier year',type:'BJJ',status:'Planned'}
+ ])),{current:iso(now),priorWeek:iso(priorWeek),priorMonth:iso(priorMonth),priorQuarter:iso(priorQuarter),priorYear:iso(priorYear)});
  await page.reload();
  const kpis=page.locator('.overview-adherence .adherence-kpi');
  await expect(kpis).toHaveCount(5);
- for(const [label,pct] of [['Week','100%'],['Month','50%'],['Quarter','67%'],['Year','75%'],['All history','60%']]){
-  const kpi=kpis.filter({hasText:label});
-  await expect(kpi).toContainText(pct);
- }
+ const week=kpis.filter({hasText:'Week'});await expect(week).toContainText('50%');await expect(week).toContainText('1/2 complete');
+ const all=kpis.filter({hasText:'All history'});await expect(all).toContainText('67%');await expect(all).toContainText('4/6 complete');
+ const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]'));
+ expect(stored).toHaveLength(6);
 });
