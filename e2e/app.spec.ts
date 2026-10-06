@@ -228,3 +228,17 @@ test('strength library setup uses multiple lift baselines and previews prescript
  expect(p.days[0].prescriptions.map((x:any)=>x.exerciseId)).toEqual(['back-squat','bench','pullup']);
  expect(p.days[1].prescriptions.map((x:any)=>x.exerciseId)).toContain('deadlift');
 });
+
+
+test('BJJ setup suggests lower-conflict training days',async({page})=>{
+ await nav(page,'Programs').click();
+ await page.getByRole('button',{name:'Program Library',exact:true}).click();
+ const card=page.locator('.published-card').filter({has:page.getByRole('heading',{name:'BJJ Strength — 3 Day'})});
+ await card.getByRole('button',{name:/Set up program/i}).click();
+ const helper=page.locator('.bjj-schedule-helper');
+ for(const day of['Mon','Tue','Wed','Thu','Sat'])await helper.getByRole('button',{name:day,exact:true}).click();
+ await helper.getByRole('button',{name:'Suggest lifting days'}).click();
+ const selects=page.locator('.setup-weekdays select');
+ await expect(selects.nth(0)).toHaveValue('0');
+ await expect(selects.nth(1)).toHaveValue('5');
+});
