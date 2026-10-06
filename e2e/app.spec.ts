@@ -176,3 +176,16 @@ test('shared state changes propagate once without persistence churn',async({page
  const stable=await page.evaluate(()=>({goals:localStorage.getItem('workoutapp.goals.v2'),body:localStorage.getItem('workoutapp.body-metrics.v1')}));
  expect(stable).toEqual(snapshot);
 });
+
+
+test('can delete the only program and keep the library empty after reload',async({page})=>{
+ const date=new Date().toLocaleDateString('en-CA');
+ await page.evaluate(date=>{const p={id:'only-program',name:'Only Program',goal:'Strength',weeks:4,activeWeek:1,activeDayId:'only-day',status:'Active',createdAt:new Date().toISOString(),startDate:date,progression:{type:'None',loadStep:5,startRir:3,endRir:1,deloadEvery:4,deloadPercent:15},days:[{id:'only-day',name:'Only Day',type:'Full Body',weekday:new Date().getDay(),prescriptions:[]}]};localStorage.setItem('workoutapp.programs.v3',JSON.stringify({activeProgramId:p.id,programs:[p]}))},date);
+ await page.reload();await nav(page,'Programs').click();
+ page.on('dialog',dialog=>dialog.accept());
+ await page.locator('.program-tile',{hasText:'Only Program'}).getByRole('button').click();
+ await expect(page.getByText('No programs yet')).toBeVisible();
+ await page.reload();await nav(page,'Programs').click();
+ await expect(page.getByText('No programs yet')).toBeVisible();
+ expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}').programs.length)).toBe(0);
+});
