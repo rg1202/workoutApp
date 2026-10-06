@@ -201,6 +201,26 @@ const standingInstruction:Record<string,Partial<BjjTechnique>>={
 
 const detailedByName=new Map([...starterTechniques,...movementCompetencies].map(t=>[t.name.toLowerCase(),t]));
 
+const suggestedNextByArea:Record<string,string[]>={
+ 'Movement':['Hip escape · shrimp','Technical stand-up','Bridge · upa movement'],
+ 'Self-defense':['Technical stand-up','Pull to guard','Body lock · head in front takedown'],
+ 'Standing techniques':['Scissor Sweep','Seated guard','Back take from turtle'],
+ 'Takedowns':['Knee slice pass','Americana from Side Control','Knee-on-belly to mount transition'],
+ 'Guard · bottom':['Scissor Sweep','Hip bump / sit-up sweep','Seated guard'],
+ 'Guard · top':['Knee slice pass','Over-under · longstep pass','Bullfighter pass'],
+ 'Half guard · top':['Knee slice from half guard','D’Arce choke from half guard top','Americana from Side Control'],
+ 'Side control · bottom':['Replace guard from side control','Underhook to turtle transition','Technical stand-up'],
+ 'Side control · top':['Knee-on-belly to mount transition','Americana from Side Control','Near-side armbar'],
+ 'North–south':['Shoulder-roll back take','Pendulum escape to guard / half guard','Americana from Side Control'],
+ 'Turtle · bottom':['Sit through','Donkey-kick guard recovery','Technical stand-up'],
+ 'Turtle · top':['Back take from turtle','Rear naked choke','Technical mount to mount transition'],
+ 'Mount · bottom':['Upa escape','Elbow escape','Replace guard from side control'],
+ 'Mount · top':['Americana from mount','Arm triangle from mount','Technical mount to mount transition'],
+ 'Technical mount':['Gift-wrap back take','Technical mount to mount transition','Armbar from technical mount'],
+ 'Back · defense':['Rear naked choke defense','Escape back control to guard','Technical stand-up'],
+ 'Back · attacks':['Rear naked choke','Bow-and-arrow choke','Armbar from back control']
+};
+const withSuggestedNext=(t:BjjTechnique):BjjTechnique=>t.followUps.length?t:{...t,followUps:(suggestedNextByArea[t.position]??[]).filter(n=>n!==t.name).slice(0,3)};
 const areaIdByName=new Map(competencyAreas.map(a=>[a.name,a.id]));
 export const instructionalCoverage=[
  {area:'Movement',total:movementCompetencies.length,complete:movementCompetencies.filter(t=>!!t.goal&&t.steps.length>0).length},
@@ -208,13 +228,13 @@ export const instructionalCoverage=[
 ];
 export const curriculumCompetencies:BjjTechnique[]=curriculumSeeds.flatMap(group=>group.names.map(name=>{
  const detailed=detailedByName.get(name.toLowerCase());
- if(detailed)return {...detailed,position:group.area,competencyAreaId:areaIdByName.get(group.area)};
+ if(detailed)return withSuggestedNext({...detailed,position:group.area,competencyAreaId:areaIdByName.get(group.area)});
  const instruction=guardBottomInstruction[name]??guardTopInstruction[name]??halfGuardTopInstruction[name]??sideControlBottomInstruction[name]??sideControlTopInstruction[name]??transitionInstruction[name]??mountBackInstruction[name]??standingInstruction[name];
  const base={id:'competency-'+slug(group.area)+'-'+slug(name),name,position:group.area,competencyAreaId:areaIdByName.get(group.area),category:'Competency',applicability:['Gi','No-Gi'] as ('Gi'|'No-Gi')[],status:'Learning' as TechniqueStatus,competency:'Not assessed' as CompetencyStatus,tags:['Competency',instruction?'Instruction complete':'Instruction pending'],setup:'',steps:[],cues:[],mistakes:[],followUps:[],notes:''};
- return instruction?{...base,...instruction}:base;
+ return withSuggestedNext(instruction?{...base,...instruction}:base);
 }));
 export function seedCompetencyTechniques(existing:BjjTechnique[]){
- const seeds=[...movementCompetencies.map(t=>({...t,competencyAreaId:'movement'})),...curriculumCompetencies];
+ const seeds=[...movementCompetencies.map(t=>withSuggestedNext({...t,competencyAreaId:'movement'})),...curriculumCompetencies];
  const seedNames=new Set(seeds.map(t=>t.name.toLowerCase()));
  const extras=existing.filter(t=>!seedNames.has(t.name.toLowerCase()));
  const byName=new Map(existing.map(t=>[t.name.toLowerCase(),t]));
