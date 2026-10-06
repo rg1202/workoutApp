@@ -214,17 +214,14 @@ export const curriculumCompetencies:BjjTechnique[]=curriculumSeeds.flatMap(group
  return instruction?{...base,...instruction}:base;
 }));
 export function seedCompetencyTechniques(existing:BjjTechnique[]){
- const byName=new Map(existing.map(t=>[t.name.toLowerCase(),t]));
- const merged=[...existing];
  const seeds=[...movementCompetencies.map(t=>({...t,competencyAreaId:'movement'})),...curriculumCompetencies];
- for(const seed of seeds){
-  const current=byName.get(seed.name.toLowerCase());
-  if(current){
-   if(current.position!==seed.position||current.competencyAreaId!==seed.competencyAreaId){
-    const i=merged.findIndex(t=>t.id===current.id);
-    if(i>=0)merged[i]={...current,position:seed.position,competencyAreaId:seed.competencyAreaId};
-   }
-  }else{merged.push(seed);byName.set(seed.name.toLowerCase(),seed)}
- }
- return merged
+ const seedNames=new Set(seeds.map(t=>t.name.toLowerCase()));
+ const extras=existing.filter(t=>!seedNames.has(t.name.toLowerCase()));
+ const byName=new Map(existing.map(t=>[t.name.toLowerCase(),t]));
+ const merged=seeds.map(seed=>{
+  const saved=byName.get(seed.name.toLowerCase());
+  if(!saved)return seed;
+  return {...seed,id:saved.id||seed.id,status:saved.status??seed.status,competency:saved.competency??seed.competency,notes:saved.notes??seed.notes,videoUrl:saved.videoUrl??seed.videoUrl,tags:Array.from(new Set([...seed.tags,...saved.tags.filter(x=>!['Instruction pending','Instruction complete'].includes(x))]))};
+ });
+ return [...extras,...merged]
 }
