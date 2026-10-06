@@ -157,3 +157,22 @@ test('moves one program workout without changing its recurring weekday',async({p
  expect(stored.programs[0].scheduleOverrides['program:move-program:1:move-day']).toBe(moved);
  expect(stored.programs[0].days[0].weekday).toBe(weekday);
 });
+
+
+test('shared state changes propagate once without persistence churn',async({page})=>{
+ await nav(page,'Analytics').click();
+ await page.locator('#bm-weight').fill('197');
+ await page.getByRole('button',{name:/Save measurements/i}).click();
+ await nav(page,'Goals').click();
+ await page.getByRole('button',{name:/Add goal/i}).click();
+ await page.getByRole('button',{name:'Body',exact:true}).click();
+ await page.getByLabel('Target').fill('190');
+ await page.getByRole('button',{name:/Create body goal/i}).click();
+ await nav(page,'Dashboard').click();
+ const goals=page.locator('.overview-goals');
+ await expect(goals.getByText(/197 \/ 190 lb/)).toBeVisible();
+ const snapshot=await page.evaluate(()=>({goals:localStorage.getItem('workoutapp.goals.v2'),body:localStorage.getItem('workoutapp.body-metrics.v1')}));
+ await page.waitForTimeout(300);
+ const stable=await page.evaluate(()=>({goals:localStorage.getItem('workoutapp.goals.v2'),body:localStorage.getItem('workoutapp.body-metrics.v1')}));
+ expect(stable).toEqual(snapshot);
+});
