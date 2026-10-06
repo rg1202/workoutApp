@@ -279,3 +279,26 @@ test('smart generator adds recurring BJJ block to Calendar',async({page})=>{
  await nav(page,'Calendar').click();
  await expect(page.getByText('Gi BJJ').first()).toBeVisible();
 });
+
+
+test('drags a planned activity to another Calendar day',async({page})=>{
+ const today=new Date(),tomorrow=new Date(today);tomorrow.setDate(today.getDate()+1);
+ const from=today.toLocaleDateString('en-CA'),to=tomorrow.toLocaleDateString('en-CA');
+ await page.evaluate(from=>localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([{id:'drag-plan',date:from,title:'Drag BJJ',type:'BJJ',status:'Planned'}])),from);
+ await page.reload();await nav(page,'Calendar').click();
+ const card=page.getByText('Drag BJJ').first(),target=page.locator('[data-date="'+to+'"]').first();
+ await card.dragTo(target);
+ const plans=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]'));
+ expect(plans.find((p:any)=>p.id==='drag-plan').date).toBe(to);
+});
+
+test('drags one program workout without changing recurring weekday',async({page})=>{
+ const today=new Date(),from=today.toLocaleDateString('en-CA'),weekday=today.getDay(),tomorrow=new Date(today);tomorrow.setDate(today.getDate()+1);const to=tomorrow.toLocaleDateString('en-CA');
+ await page.evaluate(({from,weekday})=>{const p={id:'drag-program',name:'Drag Program',goal:'Strength',weeks:2,activeWeek:1,activeDayId:'drag-day',status:'Active',createdAt:new Date().toISOString(),startDate:from,progression:{type:'None',loadStep:5,startRir:3,endRir:1,deloadEvery:4,deloadPercent:15},days:[{id:'drag-day',name:'Drag Strength',type:'Full Body',weekday,prescriptions:[]}]};localStorage.setItem('workoutapp.programs.v3',JSON.stringify({activeProgramId:p.id,programs:[p]}))},{from,weekday});
+ await page.reload();await nav(page,'Calendar').click();
+ const card=page.getByText('Drag Strength').first(),target=page.locator('[data-date="'+to+'"]').first();
+ await card.dragTo(target);
+ const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}'));
+ expect(stored.programs[0].scheduleOverrides['program:drag-program:1:drag-day']).toBe(to);
+ expect(stored.programs[0].days[0].weekday).toBe(weekday);
+});
