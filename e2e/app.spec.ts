@@ -22,7 +22,8 @@ test('app shell loads and primary navigation works',async({page})=>{
 test('created goal appears on dashboard',async({page})=>{
  await nav(page,'Goals').click();
  await page.getByRole('button',{name:/Add goal/i}).click();
- await page.getByLabel(/Event name/i).fill('E2E Tournament');
+ await page.getByLabel(/Event name/i).selectOption('__other');
+ await page.getByLabel('Other Event name').fill('E2E Tournament');
  await page.getByRole('button',{name:/Create competition goal/i}).click();
  await expect(page.getByText('E2E Tournament')).toBeVisible();
  await nav(page,'Dashboard').click();
@@ -122,10 +123,11 @@ test('creating a weight goal uses Analytics weight and syncs Dashboard progress'
  await nav(page,'Goals').click();
  await page.getByRole('button',{name:/Add goal/i}).click();
  await page.getByRole('button',{name:'Body',exact:true}).click();
- await page.getByLabel(/Goal name/i).fill('Competition Cut');
- await page.getByLabel('Metric').fill('Bodyweight');
+ await page.getByLabel(/Goal name/i).selectOption('__other');
+ await page.getByLabel('Other Goal name').fill('Competition Cut');
+ await page.getByLabel('Metric').selectOption({label:'Bodyweight'});
  await page.getByLabel('Target').fill('194');
- await page.getByLabel('Unit').fill('lb');
+ await page.getByLabel('Unit').selectOption({label:'lb'});
  await page.getByRole('button',{name:/Create body goal/i}).click();
  await expect(page.getByText(/198/).first()).toBeVisible();
  await expect(page.getByText('0%',{exact:true})).toBeVisible();
