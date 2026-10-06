@@ -242,3 +242,21 @@ test('BJJ setup suggests lower-conflict training days',async({page})=>{
  await expect(selects.nth(0)).toHaveValue('0');
  await expect(selects.nth(1)).toHaveValue('5');
 });
+
+
+test('BJJ program setup detects planned Calendar training days',async({page})=>{
+ const base=new Date(),dates=[1,3,6].map(target=>{const d=new Date(base);d.setDate(d.getDate()+((target-d.getDay()+7)%7));return d.toLocaleDateString('en-CA')});
+ await page.evaluate(dates=>localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify(dates.map((date,i)=>({id:'bjj-plan-'+i,date,title:'Planned BJJ',type:'BJJ',status:'Planned'})))),dates);
+ await page.reload();
+ await nav(page,'Programs').click();
+ await page.getByRole('button',{name:'Program Library',exact:true}).click();
+ const card=page.locator('.published-card').filter({has:page.getByRole('heading',{name:'BJJ Strength — 3 Day'})});
+ await card.getByRole('button',{name:/Set up program/i}).click();
+ const helper=page.locator('.bjj-schedule-helper');
+ await expect(helper).toContainText('BJJ days detected from your Calendar');
+ for(const day of['Mon','Wed','Sat'])await expect(helper.getByRole('button',{name:day,exact:true})).toHaveAttribute('aria-pressed','true');
+ await helper.getByRole('button',{name:'Suggest lifting days'}).click();
+ const values=await page.locator('.setup-weekdays select').evaluateAll(xs=>xs.map(x=>(x as HTMLSelectElement).value));
+ expect(new Set(values).size).toBe(values.length);
+ expect(values.slice(0,2).sort()).toEqual(['2','5']);
+});
