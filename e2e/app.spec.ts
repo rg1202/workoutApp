@@ -327,3 +327,22 @@ test('adherence KPIs use current calendar week month quarter and year',async({pa
  const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]'));
  expect(stored).toHaveLength(6);
 });
+
+
+test('smart generator schedules strength around BJJ and previews the whole week',async({page})=>{
+ await nav(page,'Programs').click();await page.getByRole('button',{name:/Build program/i}).click();
+ await page.getByText('Add BJJ training block').click();
+ const block=page.locator('.generator-bjj-block');
+ for(const day of['Mon','Wed','Sat'])await block.getByRole('button',{name:day,exact:true}).click();
+ const preview=page.locator('.generator-week-preview');
+ await expect(preview).toContainText('Strength');await expect(preview).toContainText('BJJ');
+ await page.getByRole('button',{name:'Generate',exact:true}).click();
+ const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}'));
+ const p=stored.programs[stored.programs.length-1],strengthDays=p.days.map((d:any)=>d.weekday);
+ expect(p.status).toBe('Active');
+ expect(new Set(strengthDays).size).toBe(strengthDays.length);
+ expect(strengthDays.some((d:number)=>[1,3,6].includes(d))).toBeFalsy();
+ await nav(page,'Calendar').click();
+ await expect(page.getByText('BJJ').first()).toBeVisible();
+ await expect(page.getByText(p.days[0].name).first()).toBeVisible();
+});
