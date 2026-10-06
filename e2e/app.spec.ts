@@ -113,3 +113,35 @@ test('latest body weight drives weight-loss goal progress',async({page})=>{
  expect(widths[1]/widths[0]).toBeGreaterThan(.75);
  expect(widths[1]/widths[0]).toBeLessThan(.85);
 });
+
+
+test('creating a weight goal uses Analytics weight and syncs Dashboard progress',async({page})=>{
+ const date=new Date().toLocaleDateString('en-CA');
+ await page.evaluate(date=>localStorage.setItem('workoutapp.body-metrics.v1',JSON.stringify([{id:'baseline-weight',date,weight:198}])),date);
+ await page.reload();
+ await nav(page,'Goals').click();
+ await page.getByRole('button',{name:/Add goal/i}).click();
+ await page.getByRole('button',{name:'Body',exact:true}).click();
+ await page.getByLabel(/Goal name/i).fill('Competition Cut');
+ await page.getByLabel('Metric').fill('Bodyweight');
+ await page.getByLabel('Target').fill('194');
+ await page.getByLabel('Unit').fill('lb');
+ await page.getByRole('button',{name:/Create body goal/i}).click();
+ await expect(page.getByText(/198/).first()).toBeVisible();
+ await expect(page.getByText('0%',{exact:true})).toBeVisible();
+ await nav(page,'Dashboard').click();
+ const goals=page.locator('.overview-goals');
+ await expect(goals.getByText('Competition Cut')).toBeVisible();
+ await expect(goals.getByText(/198 \/ 194 lb/)).toBeVisible();
+ await expect(goals.getByText('0%',{exact:true})).toBeVisible();
+ await nav(page,'Analytics').click();
+ await page.locator('#bm-weight').fill('196');
+ await page.getByRole('button',{name:/Save measurements/i}).click();
+ await nav(page,'Dashboard').click();
+ await expect(goals.getByText(/196 \/ 194 lb/)).toBeVisible();
+ await expect(goals.getByText('50%',{exact:true})).toBeVisible();
+ const track=goals.locator('.overview-progress').first(),fill=track.locator('i');
+ const widths=await Promise.all([track,fill].map(async x=>(await x.boundingBox())?.width??0));
+ expect(widths[1]/widths[0]).toBeGreaterThan(.45);
+ expect(widths[1]/widths[0]).toBeLessThan(.55);
+});
