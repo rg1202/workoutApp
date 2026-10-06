@@ -608,3 +608,26 @@ test('Mount Technical mount and Back domains expose detailed instruction',async(
  await expect(page.getByRole('heading',{name:'Why it works'})).toBeVisible();
  await expect(page.getByRole('heading',{name:'How to drill it'})).toBeVisible();
 });
+
+
+test('Self-defense Standing and Takedown domains expose detailed instruction',async({page})=>{
+ await page.getByRole('button',{name:'BJJ',exact:true}).click();
+ await page.getByRole('button',{name:'Techniques',exact:true}).click();
+ const search=page.getByPlaceholder(/search/i);
+ await search.fill('Standing guillotine defense');
+ await page.getByRole('button',{name:/Standing guillotine defense/}).click();
+ await expect(page.getByText(/Hands on choke first/)).toBeVisible();
+ await page.keyboard.press('Escape');
+ await search.fill('Snap down · sprawl · take the back');
+ await page.getByRole('button',{name:/Snap down · sprawl · take the back/}).click();
+ await expect(page.getByText(/Hips heavy on sprawl/)).toBeVisible();
+ await page.keyboard.press('Escape');
+ await search.fill('Body lock · head in front takedown');
+ await page.getByRole('button',{name:/Body lock · head in front takedown/}).click();
+ await expect(page.getByText(/Move their feet/)).toBeVisible();
+ await page.keyboard.press('Escape');
+ await search.fill('Uchi mata');
+ await page.getByRole('button',{name:/Uchi mata/}).click();
+ await expect(page.getByText(/Kuzushi before leg/)).toBeVisible();
+ await expect(page.getByRole('heading',{name:'How to drill it'})).toBeVisible();
+});
