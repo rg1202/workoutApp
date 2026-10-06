@@ -1,7 +1,7 @@
 export type TechniqueStatus='Learning'|'Drilling'|'Usable'|'Reliable'|'A-Game';
 export type CompetencyStatus='Not assessed'|'Developing'|'Functional'|'Reliable'|'Verified';
 export type TechniqueFailure={problem:string;fix:string};
-export type BjjTechnique={id:string;name:string;position:string;category:string;applicability:('Gi'|'No-Gi')[];status:TechniqueStatus;competency?:CompetencyStatus;tags:string[];goal?:string;setup:string;grips?:string[];baseManipulation?:string;bodyPosition?:string;steps:string[];finish?:string;mechanism?:string;cues:string[];mistakes:string[];troubleshooting?:TechniqueFailure[];reactions?:string[];followUps:string[];variations?:string[];drilling?:string[];notes:string;videoUrl?:string};
+export type BjjTechnique={id:string;name:string;position:string;category:string;applicability:('Gi'|'No-Gi')[];status:TechniqueStatus;competency?:CompetencyStatus;competencyAreaId?:string;tags:string[];goal?:string;setup:string;grips?:string[];baseManipulation?:string;bodyPosition?:string;steps:string[];finish?:string;mechanism?:string;cues:string[];mistakes:string[];troubleshooting?:TechniqueFailure[];reactions?:string[];followUps:string[];variations?:string[];drilling?:string[];notes:string;videoUrl?:string};
 export type CompetencyArea={id:string;name:string;targetCount:number;description:string};
 export const BJJ_TECHNIQUES_KEY='workoutapp.bjj-techniques.v1';
 export const techniqueStatuses:TechniqueStatus[]=['Learning','Drilling','Usable','Reliable','A-Game'];
@@ -201,23 +201,28 @@ const standingInstruction:Record<string,Partial<BjjTechnique>>={
 
 const detailedByName=new Map([...starterTechniques,...movementCompetencies].map(t=>[t.name.toLowerCase(),t]));
 
-export const instructionalCoverage=curriculumSeeds.map(group=>({area:group.area,total:group.names.length,complete:group.names.filter(name=>!!detailedByName.get(name.toLowerCase())||!!guardBottomInstruction[name]||!!guardTopInstruction[name]||!!halfGuardTopInstruction[name]||!!sideControlBottomInstruction[name]||!!sideControlTopInstruction[name]||!!transitionInstruction[name]||!!mountBackInstruction[name]||!!standingInstruction[name]).length}));
+const areaIdByName=new Map(competencyAreas.map(a=>[a.name,a.id]));
+export const instructionalCoverage=[
+ {area:'Movement',total:movementCompetencies.length,complete:movementCompetencies.filter(t=>!!t.goal&&t.steps.length>0).length},
+ ...curriculumSeeds.map(group=>({area:group.area,total:group.names.length,complete:group.names.filter(name=>!!detailedByName.get(name.toLowerCase())||!!guardBottomInstruction[name]||!!guardTopInstruction[name]||!!halfGuardTopInstruction[name]||!!sideControlBottomInstruction[name]||!!sideControlTopInstruction[name]||!!transitionInstruction[name]||!!mountBackInstruction[name]||!!standingInstruction[name]).length}))
+];
 export const curriculumCompetencies:BjjTechnique[]=curriculumSeeds.flatMap(group=>group.names.map(name=>{
  const detailed=detailedByName.get(name.toLowerCase());
- if(detailed)return {...detailed,position:group.area};
+ if(detailed)return {...detailed,position:group.area,competencyAreaId:areaIdByName.get(group.area)};
  const instruction=guardBottomInstruction[name]??guardTopInstruction[name]??halfGuardTopInstruction[name]??sideControlBottomInstruction[name]??sideControlTopInstruction[name]??transitionInstruction[name]??mountBackInstruction[name]??standingInstruction[name];
- if(instruction)return {id:'competency-'+slug(group.area)+'-'+slug(name),name,position:group.area,category:'Competency',applicability:['Gi','No-Gi'] as ('Gi'|'No-Gi')[],status:'Learning' as TechniqueStatus,competency:'Not assessed' as CompetencyStatus,tags:['Competency','Instruction complete'],setup:'',steps:[],cues:[],mistakes:[],followUps:[],notes:'',...instruction};
- return {id:'competency-'+slug(group.area)+'-'+slug(name),name,position:group.area,category:'Competency',applicability:['Gi','No-Gi'] as ('Gi'|'No-Gi')[],status:'Learning' as TechniqueStatus,competency:'Not assessed' as CompetencyStatus,tags:['Competency','Instruction pending'],setup:'',steps:[],cues:[],mistakes:[],followUps:[],notes:''};
+ const base={id:'competency-'+slug(group.area)+'-'+slug(name),name,position:group.area,competencyAreaId:areaIdByName.get(group.area),category:'Competency',applicability:['Gi','No-Gi'] as ('Gi'|'No-Gi')[],status:'Learning' as TechniqueStatus,competency:'Not assessed' as CompetencyStatus,tags:['Competency',instruction?'Instruction complete':'Instruction pending'],setup:'',steps:[],cues:[],mistakes:[],followUps:[],notes:''};
+ return instruction?{...base,...instruction}:base;
 }));
 export function seedCompetencyTechniques(existing:BjjTechnique[]){
  const byName=new Map(existing.map(t=>[t.name.toLowerCase(),t]));
  const merged=[...existing];
- for(const seed of [...movementCompetencies,...curriculumCompetencies]){
+ const seeds=[...movementCompetencies.map(t=>({...t,competencyAreaId:'movement'})),...curriculumCompetencies];
+ for(const seed of seeds){
   const current=byName.get(seed.name.toLowerCase());
   if(current){
-   if(current.position!==seed.position){
+   if(current.position!==seed.position||current.competencyAreaId!==seed.competencyAreaId){
     const i=merged.findIndex(t=>t.id===current.id);
-    if(i>=0)merged[i]={...current,position:seed.position};
+    if(i>=0)merged[i]={...current,position:seed.position,competencyAreaId:seed.competencyAreaId};
    }
   }else{merged.push(seed);byName.set(seed.name.toLowerCase(),seed)}
  }
