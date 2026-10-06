@@ -340,6 +340,7 @@ test('smart generator schedules strength around BJJ and previews the whole week'
  const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}'));
  const p=stored.programs[stored.programs.length-1],strengthDays=p.days.map((d:any)=>d.weekday);
  expect(p.status).toBe('Active');
+ expect(stored.activeProgramId).toBe(p.id);
  expect(new Set(strengthDays).size).toBe(strengthDays.length);
  expect(strengthDays.some((d:number)=>[1,3,6].includes(d))).toBeFalsy();
  await nav(page,'Calendar').click();
