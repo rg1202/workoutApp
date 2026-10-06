@@ -465,3 +465,16 @@ test('adherence includes the final day of calendar periods',async({page})=>{
  expect(await total('Quarter')).toBe(expected(quarterStart,quarterEnd));
  expect(await total('Year')).toBe(expected(yearStart,yearEnd));
 });
+
+
+test('BJJ technique library supports search detail and mastery persistence',async({page})=>{
+ await page.getByRole('button',{name:'BJJ',exact:true}).click();
+ await page.getByRole('button',{name:'Techniques',exact:true}).click();
+ await expect(page.getByRole('button',{name:/Scissor Sweep/})).toBeVisible();
+ await page.getByLabel('Search techniques').fill('mount');
+ await page.getByRole('button',{name:/Mount Control Cycle/}).click();
+ await expect(page.getByRole('heading',{name:'Mount Control Cycle'})).toBeVisible();
+ await page.getByLabel('Mastery').selectOption('Drilling');
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.bjj-techniques.v1')||'[]').find((t:any)=>t.id==='mount-control')?.status)).toBe('Drilling');
+ await page.getByRole('button').filter({has:page.locator('svg')}).last().press('Escape').catch(()=>{});
+});
