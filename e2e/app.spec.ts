@@ -604,7 +604,7 @@ test('Mount Technical mount and Back domains expose detailed instruction',async(
  await expect(page.getByText(/Hands fight choke first/)).toBeVisible();
  await page.keyboard.press('Escape');
  await search.fill('Rear naked choke');
- await page.getByRole('button',{name:/Rear naked choke/}).click();
+ await page.getByRole('button',{name:/Rear naked choke · Back · attacks/}).click();
  await expect(page.getByRole('heading',{name:'Why it works'})).toBeVisible();
  await expect(page.getByRole('heading',{name:'How to drill it'})).toBeVisible();
 });
