@@ -566,3 +566,22 @@ test('Side control top exposes control-first submission instruction',async({page
  await expect(page.getByText(/Settle mount before attack/)).toBeVisible();
  await expect(page.getByRole('heading',{name:'Reactions / counters'})).toBeVisible();
 });
+
+
+test('North-south and Turtle domains expose detailed instruction',async({page})=>{
+ await page.getByRole('button',{name:'BJJ',exact:true}).click();
+ await page.getByRole('button',{name:'Techniques',exact:true}).click();
+ const search=page.getByPlaceholder(/search/i);
+ await search.fill('Shoulder-roll back take');
+ await page.getByRole('button',{name:/Shoulder-roll back take/}).click();
+ await expect(page.getByText(/Shoulder, never neck/)).toBeVisible();
+ await page.keyboard.press('Escape');
+ await search.fill('Back take from turtle');
+ await page.getByRole('button',{name:/Back take from turtle/}).click();
+ await expect(page.getByText(/Hooks after control/)).toBeVisible();
+ await page.keyboard.press('Escape');
+ await search.fill('Anaconda choke');
+ await page.getByRole('button',{name:/Anaconda choke/}).click();
+ await expect(page.getByRole('heading',{name:'Why it works'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'How to drill it'})).toBeVisible();
+});
