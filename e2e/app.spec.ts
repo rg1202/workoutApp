@@ -304,7 +304,7 @@ test('drags one program workout without changing recurring weekday',async({page}
 });
 
 
-test('adherence card switches between week month quarter year and all history',async({page})=>{
+test('adherence card shows week month quarter year and all history KPIs together',async({page})=>{
  const now=new Date(),iso=(d:Date)=>d.toLocaleDateString('en-CA'),daysAgo=(n:number)=>{const d=new Date(now);d.setDate(d.getDate()-n);return iso(d)};
  await page.evaluate(({d2,d20,d70,d200,d500})=>localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([
   {id:'a1',date:d2,title:'Recent',type:'BJJ',status:'Completed'},
@@ -314,10 +314,10 @@ test('adherence card switches between week month quarter year and all history',a
   {id:'a5',date:d500,title:'Old',type:'BJJ',status:'Planned'}
  ])),{d2:daysAgo(2),d20:daysAgo(20),d70:daysAgo(70),d200:daysAgo(200),d500:daysAgo(500)});
  await page.reload();
- const card=page.locator('.overview-adherence');
- await expect(card.getByText('100%')).toBeVisible();
- await card.getByRole('button',{name:'Month',exact:true}).click();await expect(card.getByText('50%')).toBeVisible();
- await card.getByRole('button',{name:'Quarter',exact:true}).click();await expect(card.getByText('67%')).toBeVisible();
- await card.getByRole('button',{name:'Year',exact:true}).click();await expect(card.getByText('75%')).toBeVisible();
- await card.getByRole('button',{name:'All history',exact:true}).click();await expect(card.getByText('60%')).toBeVisible();
+ const kpis=page.locator('.overview-adherence .adherence-kpi');
+ await expect(kpis).toHaveCount(5);
+ for(const [label,pct] of [['Week','100%'],['Month','50%'],['Quarter','67%'],['Year','75%'],['All history','60%']]){
+  const kpi=kpis.filter({hasText:label});
+  await expect(kpi).toContainText(pct);
+ }
 });
