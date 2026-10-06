@@ -534,3 +534,19 @@ test('Guard top curriculum exposes passing and submission-defense instruction',a
  await expect(page.getByRole('heading',{name:'Troubleshooting'})).toBeVisible();
  await expect(page.getByText(/One arm in = immediate danger/)).toBeVisible();
 });
+
+
+test('Half guard top and Side control bottom expose full instruction',async({page})=>{
+ await page.getByRole('button',{name:'BJJ',exact:true}).click();
+ await page.getByRole('button',{name:'Techniques',exact:true}).click();
+ const search=page.getByPlaceholder(/search/i);
+ await search.fill('Knee slice from half guard');
+ await page.getByRole('button',{name:/Knee slice from half guard/}).click();
+ await expect(page.getByText(/Knee clears before foot/)).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Troubleshooting'})).toBeVisible();
+ await page.keyboard.press('Escape');
+ await search.fill('Replace guard from side control');
+ await page.getByRole('button',{name:/Replace guard from side control/}).click();
+ await expect(page.getByText(/Frame, bridge, hip escape, knee inside/)).toBeVisible();
+ await expect(page.getByRole('heading',{name:'How to drill it'})).toBeVisible();
+});
