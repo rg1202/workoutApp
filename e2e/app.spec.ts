@@ -85,3 +85,21 @@ test('finishing Today workout syncs History Calendar and Analytics',async({page}
  await expect(page.getByText('ALL TRAINING · 7D')).toBeVisible();
  await expect(page.locator('.analytics-summary article').first().locator('b')).toHaveText('1');
 });
+
+
+test('latest body weight drives weight-loss goal progress',async({page})=>{
+ await page.evaluate(()=>{
+  localStorage.setItem('workoutapp.goals.v2',JSON.stringify([{id:'weight-goal',name:'Weight Cut',type:'Body',status:'Active',metric:'Bodyweight',start:200,current:200,target:190,unit:'lb'}]));
+  localStorage.setItem('workoutapp.body-metrics.v1',JSON.stringify([{id:'weight-1',date:new Date().toLocaleDateString('en-CA'),weight:195}]));
+ });
+ await page.reload();
+ await nav(page,'Goals').click();
+ await expect(page.getByText('195', {exact:false}).first()).toBeVisible();
+ await expect(page.getByText('50%',{exact:true})).toBeVisible();
+ await nav(page,'Analytics').click();
+ await page.locator('#bm-weight').fill('192');
+ await page.getByRole('button',{name:/Save measurements/i}).click();
+ await nav(page,'Goals').click();
+ await expect(page.getByText('192', {exact:false}).first()).toBeVisible();
+ await expect(page.getByText('80%',{exact:true})).toBeVisible();
+});
