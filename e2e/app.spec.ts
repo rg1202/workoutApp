@@ -420,3 +420,22 @@ test('editable generator preview changes generated strength weekday',async({page
  expect(p.days.some((d:any)=>d.weekday===oldDayIndex)).toBeFalsy();
  expect(new Set(p.days.map((d:any)=>d.weekday)).size).toBe(p.days.length);
 });
+
+
+test('activating a program archives the previous active program everywhere',async({page})=>{
+ await nav(page,'Programs').click();
+ await page.getByRole('button',{name:/Build program/i}).click();
+ await page.getByRole('button',{name:'Generate',exact:true}).click();
+ const first=await page.evaluate(()=>{const s=JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}');return s.programs.find((p:any)=>p.id===s.activeProgramId)});
+ await page.getByRole('button',{name:/Build program/i}).click();
+ await page.getByRole('button',{name:'Generate',exact:true}).click();
+ const state=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}'));
+ const active=state.programs.filter((p:any)=>p.status==='Active');
+ expect(active).toHaveLength(1);
+ expect(active[0].id).toBe(state.activeProgramId);
+ expect(state.programs.find((p:any)=>p.id===first.id)?.status).toBe('Archived');
+ await nav(page,'Today').click();
+ const todayState=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}'));
+ expect(todayState.programs.filter((p:any)=>p.status==='Active')).toHaveLength(1);
+ expect(todayState.programs.find((p:any)=>p.id===todayState.activeProgramId)?.status).toBe('Active');
+});
