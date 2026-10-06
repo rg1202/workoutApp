@@ -354,3 +354,23 @@ test('smart generator schedules strength around BJJ and previews the whole week'
  await expect(strengthEvent).toHaveCount(1);
  await expect(strengthEvent).toContainText(p.days[0].name);
 });
+
+
+test('deleting generated program removes its generated BJJ Calendar plans',async({page})=>{
+ await nav(page,'Programs').click();
+ await page.getByRole('button',{name:/Build program/i}).click();
+ await page.getByText('Add BJJ training block').click();
+ const block=page.locator('.generator-bjj-block');
+ await block.getByRole('button',{name:'Tue',exact:true}).click();
+ await page.getByLabel('BJJ session name').fill('Lifecycle BJJ');
+ await page.getByRole('button',{name:'Generate',exact:true}).click();
+ const generated=await page.evaluate(()=>{const store=JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}');return store.programs.find((p:any)=>p.id===store.activeProgramId)});
+ const before=await page.evaluate(id=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').filter((p:any)=>p.programId===id),generated.id);
+ expect(before.length).toBeGreaterThan(0);
+ const tile=page.locator('.program-tile').filter({hasText:generated.name}).last();
+ page.once('dialog',d=>d.accept());
+ await tile.locator('.icon-button').click();
+ await expect.poll(()=>page.evaluate(id=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').filter((p:any)=>p.programId===id).length,generated.id)).toBe(0);
+ const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}'));
+ expect(stored.programs.some((p:any)=>p.id===generated.id)).toBeFalsy();
+});
