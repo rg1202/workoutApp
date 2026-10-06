@@ -646,3 +646,6 @@ test('BJJ My Game supports reaction-specific decision branches',async({page})=>{
 
 
 test('BJJ technique modal preserves the originating tab',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'BJJ'}).click();await page.getByRole('button',{name:'My Game'}).click();await expect(page.getByRole('button',{name:'My Game'})).toHaveClass(/active/);const technique=page.locator('.my-game-technique').first();if(await technique.count()){await technique.click();await expect(page.locator('.bjj-tech-modal')).toBeVisible();await expect(page.getByRole('button',{name:'My Game'})).toHaveClass(/active/);await page.keyboard.press('Escape');await expect(page.locator('.bjj-tech-modal')).toBeHidden();await expect(page.getByRole('heading',{name:'Build routes, not isolated moves'})).toBeVisible();}});
+
+
+test('BJJ My Game surfaces route health and gaps',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'BJJ'}).click();await page.getByRole('button',{name:'My Game'}).click();await expect(page.getByText('GAME HEALTH')).toBeVisible();await expect(page.getByText('dead ends')).toBeVisible();await expect(page.getByText('never logged')).toBeVisible();await expect(page.getByText('current focus')).toBeVisible();await expect(page.getByText(/techniques/).first()).toBeVisible();await expect(page.getByText(/branches/).first()).toBeVisible();});
