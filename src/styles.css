@@ -333,3 +333,23 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .today-state .state-scale button:hover,.today-fuel .state-scale button:hover,.today-fuel .state-options button:hover{border-color:#35627a;color:#dbeaf1}
 @media(max-width:1050px){.today-v2-grid{grid-template-columns:1fr}.today-state{grid-row:auto}.today-fuel,.today-context{grid-column:auto}}
 @media(max-width:520px){.today-future-plug{white-space:normal;text-align:right}.today-fuel .overview-heading{align-items:flex-start}}
+
+/* Today V2 — Arc brand color hierarchy */
+.today-v2 .eyebrow{color:#6f8798}
+.today-next{position:relative;overflow:hidden;border-color:rgba(53,217,232,.28);background:linear-gradient(115deg,#081522 0%,#0a1c29 55%,#0b2928 100%)}
+.today-next:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--arc-brand-gradient)}
+.today-next .eyebrow{color:var(--arc-cyan)}
+.today-countdown strong{background:var(--arc-brand-gradient);-webkit-background-clip:text;background-clip:text;color:transparent}
+.today-next-actions .primary,.today-program-link .primary{background:var(--arc-brand-gradient);color:#041015}
+.today-next-actions>button:not(.primary):hover,.today-open>button:hover,.today-timeline .overview-heading button:hover{border-color:var(--arc-cyan);color:#eafcff}
+.today-v2 .today-activity-status{border-color:#29485b}
+.today-v2 .today-activity-status:hover{border-color:var(--arc-cyan)}
+.today-v2 .today-activity-list>div.done .today-activity-status{color:var(--arc-mint);border-color:rgba(104,245,167,.38)}
+.today-state-saved{color:var(--arc-mint)}
+.today-state .state-scale button.selected,.today-fuel .state-scale button.selected{border-color:var(--arc-cyan);background:linear-gradient(135deg,rgba(46,116,243,.22),rgba(53,217,232,.16));color:#fff;box-shadow:inset 0 0 0 1px rgba(53,217,232,.12),0 0 0 2px var(--arc-ring)}
+.today-fuel .state-options button.selected{border-color:var(--arc-mint);background:rgba(104,245,167,.10);color:var(--arc-mint);box-shadow:0 0 0 2px rgba(104,245,167,.08)}
+.today-future-plug{border-color:rgba(53,217,232,.25);color:#72cbd7;background:rgba(53,217,232,.05)}
+.today-context-row b{color:var(--arc-cyan)}
+.today-context-row span{color:#91a7b8}
+.today-context-row:last-child b{color:var(--arc-mint)}
+.today-v2 input:focus,.today-v2 textarea:focus{outline:none;border-color:var(--arc-cyan);box-shadow:0 0 0 3px var(--arc-ring)}
