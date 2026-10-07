@@ -37,7 +37,7 @@ test('planned activity survives navigation and appears on dashboard',async({page
  await page.getByRole('button',{name:/Add to calendar/i}).click();
  await expect(page.getByText('E2E Training')).toBeVisible();
  await nav(page,'Dashboard').click();
- await expect(page.getByText('E2E Training')).toBeVisible();
+ await expect(page.locator('.today-activity-list').getByText('E2E Training',{exact:true})).toBeVisible();
 });
 
 test('daily check-in persists after navigation',async({page})=>{
