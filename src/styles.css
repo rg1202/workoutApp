@@ -121,3 +121,20 @@
 .analytics-range{display:flex;gap:6px}.analytics-range button{min-width:48px;padding:7px 10px;border:1px solid #263a43;border-radius:7px;background:#101b20;color:#8799a2;font-size:9px;font-weight:800;letter-spacing:.06em}.analytics-range button.selected{background:#dfffc8;color:#102017;border-color:#dfffc8}
 
 .analytics-trends{margin:18px 0}.analytics-trends>div:first-child h2{margin:5px 0 0}.trend-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:14px}.trend-grid article{padding:11px 12px;border:1px solid #26343b;border-radius:8px;background:#101b20;display:grid;gap:5px}.trend-grid span{font-size:9px;color:#80919a;text-transform:uppercase;letter-spacing:.05em}.trend-grid b{font-size:11px}.trend-up b{color:#b9eaa5}.trend-down b{color:#e8b2a9}.trend-flat b{color:#9eabb1}@media(max-width:800px){.trend-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.workout-session-toolbar{display:grid;grid-template-columns:auto minmax(260px,1fr);gap:12px;align-items:stretch;margin:0 0 18px}
+.workout-session-toolbar textarea,.exercise-note{background:#101820;border:1px solid #2a3945;color:inherit;border-radius:9px;padding:10px;resize:vertical}
+.workout-execution{display:block}
+.workout-exercise-heading{display:flex;justify-content:space-between;gap:18px;align-items:start}
+.workout-exercise-heading label{display:grid;gap:5px;font-size:12px;color:#9fb0bd;min-width:220px}
+.workout-exercise-heading select,.set-log-row select,.set-log-row input{background:#101820;border:1px solid #2a3945;color:inherit;border-radius:7px;padding:7px}
+.previous-performance{display:flex;gap:10px;align-items:center;margin:10px 0 14px;padding:9px 11px;border-radius:8px;background:#111c24;color:#aebbc5;font-size:12px}
+.previous-performance b{color:#dbe7ef}
+.set-log-table{display:grid;gap:6px}
+.set-log-head,.set-log-row{display:grid;grid-template-columns:42px 110px 100px 90px 80px 38px;gap:8px;align-items:center}
+.set-log-head{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#8193a0;padding:0 4px}
+.set-log-row{padding:7px;background:#101820;border:1px solid #22313c;border-radius:9px}
+.set-log-row input{width:100%;min-width:0}
+.workout-set-actions{display:flex;gap:8px;margin:10px 0}
+.exercise-note{width:100%;min-height:54px}
+@media(max-width:760px){.workout-session-toolbar{grid-template-columns:1fr}.workout-exercise-heading{display:grid}.workout-exercise-heading label{min-width:0}.set-log-table{overflow-x:auto}.set-log-head,.set-log-row{min-width:520px}}
