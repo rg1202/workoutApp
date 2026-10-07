@@ -159,7 +159,7 @@ test('creating a weight goal uses Analytics weight and syncs Dashboard progress'
 test('moves one program workout without changing its recurring weekday',async({page})=>{
  const today=new Date(),date=today.toLocaleDateString('en-CA'),weekday=today.getDay(),tomorrow=new Date(today);tomorrow.setDate(today.getDate()+1);const moved=tomorrow.toLocaleDateString('en-CA');
  await page.evaluate(({date,weekday})=>{const p={id:'move-program',name:'Move Test',goal:'Strength',weeks:2,activeWeek:1,activeDayId:'move-day',status:'Active',createdAt:new Date().toISOString(),startDate:date,progression:{type:'None',loadStep:5,startRir:3,endRir:1,deloadEvery:4,deloadPercent:15},days:[{id:'move-day',name:'Move Me',type:'Full Body',weekday,prescriptions:[]}]};localStorage.setItem('workoutapp.programs.v3',JSON.stringify({activeProgramId:p.id,programs:[p]}))},{date,weekday});
- await page.reload();await nav(page,'Calendar').click();await page.getByRole('button',{name:'Move Move Me'}).first().click();await page.getByLabel('New date').fill(moved);await page.getByRole('button',{name:'Move workout'}).click();
+ await page.reload();await nav(page,'Calendar').click();await page.getByRole('button',{name:'Move Move Me'}).first().click();await page.getByLabel('New date').click();const movedDay=String(tomorrow.getDate());await page.locator('.arc-date-popover').getByRole('button',{name:movedDay,exact:true}).click();await page.getByRole('button',{name:'Move workout'}).click();
  const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}'));
  expect(stored.programs[0].scheduleOverrides['program:move-program:1:move-day']).toBe(moved);
  expect(stored.programs[0].days[0].weekday).toBe(weekday);
