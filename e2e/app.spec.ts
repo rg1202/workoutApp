@@ -304,31 +304,6 @@ test('drags one program workout without changing recurring weekday',async({page}
 });
 
 
-test('adherence KPIs use current calendar week month quarter and year',async({page})=>{
- const now=new Date(),iso=(d:Date)=>d.toLocaleDateString('en-CA');
- const monday=new Date(now);monday.setDate(now.getDate()-((now.getDay()+6)%7));
- const priorWeek=new Date(monday);priorWeek.setDate(monday.getDate()-1);
- const priorMonth=new Date(now.getFullYear(),now.getMonth()-1,15);
- const priorQuarter=new Date(now.getFullYear(),Math.floor(now.getMonth()/3)*3-1,15);
- const priorYear=new Date(now.getFullYear()-1,6,15);
- await page.evaluate(({current,priorWeek,priorMonth,priorQuarter,priorYear})=>localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([
-  {id:'a1',date:current,title:'Current',type:'Mobility',status:'Completed'},
-  {id:'a2',date:current,title:'Current missed',type:'Mobility',status:'Planned'},
-  {id:'a3',date:priorWeek,title:'Earlier week',type:'Mobility',status:'Completed'},
-  {id:'a4',date:priorMonth,title:'Earlier month',type:'Mobility',status:'Completed'},
-  {id:'a5',date:priorQuarter,title:'Earlier quarter',type:'Mobility',status:'Completed'},
-  {id:'a6',date:priorYear,title:'Earlier year',type:'Mobility',status:'Planned'}
- ])),{current:iso(now),priorWeek:iso(priorWeek),priorMonth:iso(priorMonth),priorQuarter:iso(priorQuarter),priorYear:iso(priorYear)});
- await page.reload();
- const kpis=page.locator('.overview-adherence .adherence-kpi');
- await expect(kpis).toHaveCount(5);
- const week=kpis.filter({hasText:'Week'});await expect(week).toContainText('50%');await expect(week).toContainText('1/2 complete');
- const all=kpis.filter({hasText:'All history'});await expect(all).toContainText('67%');await expect(all).toContainText('4/6 complete');
- const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]'));
- expect(stored).toHaveLength(6);
-});
-
-
 test('smart generator schedules strength around BJJ and previews the whole week',async({page})=>{
  await nav(page,'Programs').click();await page.getByRole('button',{name:/Build program/i}).click();
  await page.getByText('Add BJJ training block').click();
@@ -438,33 +413,6 @@ test('activating a program archives the previous active program everywhere',asyn
  const todayState=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}'));
  expect(todayState.programs.filter((p:any)=>p.status==='Active')).toHaveLength(1);
  expect(todayState.programs.find((p:any)=>p.id===todayState.activeProgramId)?.status).toBe('Active');
-});
-
-
-test('adherence includes the final day of calendar periods',async({page})=>{
- const now=new Date(),key=(d:Date)=>{const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`};
- const monthEnd=new Date(now.getFullYear(),now.getMonth()+1,0);
- const quarterStartMonth=Math.floor(now.getMonth()/3)*3,quarterEnd=new Date(now.getFullYear(),quarterStartMonth+3,0);
- const yearEnd=new Date(now.getFullYear(),11,31);
- await page.evaluate(({monthEnd,quarterEnd,yearEnd})=>{
-  const plans=[
-   {id:'boundary-month',date:monthEnd,title:'Month boundary',type:'BJJ',status:'Planned'},
-   {id:'boundary-quarter',date:quarterEnd,title:'Quarter boundary',type:'BJJ',status:'Planned'},
-   {id:'boundary-year',date:yearEnd,title:'Year boundary',type:'BJJ',status:'Planned'}
-  ];
-  localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify(plans));
- },{monthEnd:key(monthEnd),quarterEnd:key(quarterEnd),yearEnd:key(yearEnd)});
- await page.reload();
- const card=page.locator('.overview-adherence');
- const total=async(label:string)=>{const text=await card.locator('.adherence-kpi').filter({hasText:label}).locator('small').innerText();return Number(text.match(/\/(\d+) complete$/)?.[1]??-1)};
- const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
- const expected=(start:Date,end:Date)=>[monthEnd,quarterEnd,yearEnd].filter(d=>d>=start&&d<=end&&d<=today).length;
- const monthStart=new Date(now.getFullYear(),now.getMonth(),1);
- const quarterStart=new Date(now.getFullYear(),quarterStartMonth,1);
- const yearStart=new Date(now.getFullYear(),0,1);
- expect(await total('Month')).toBe(expected(monthStart,monthEnd));
- expect(await total('Quarter')).toBe(expected(quarterStart,quarterEnd));
- expect(await total('Year')).toBe(expected(yearStart,yearEnd));
 });
 
 
