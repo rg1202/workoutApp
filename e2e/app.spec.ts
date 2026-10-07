@@ -19,7 +19,7 @@ test('app shell loads and primary navigation works',async({page})=>{
  }
 });
 
-test('created goal appears on dashboard',async({page})=>{
+test('created goal remains in Goals while Today stays day-focused',async({page})=>{
  await nav(page,'Goals').click();
  await page.getByRole('button',{name:/New goal/i}).click();
  await page.locator('.goal-type-v2').getByRole('button',{name:/^Event/}).click();
@@ -31,7 +31,8 @@ test('created goal appears on dashboard',async({page})=>{
  await page.getByRole('button',{name:/Not now/i}).click();
  await expect(page.getByText('E2E Tournament')).toBeVisible();
  await nav(page,'Today').click();
- await expect(page.getByText('E2E Tournament')).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Today'})).toBeVisible();
+ await expect(page.getByText('E2E Tournament')).toHaveCount(0);
 });
 
 test('planned activity survives navigation and appears on dashboard',async({page})=>{
@@ -44,12 +45,12 @@ test('planned activity survives navigation and appears on dashboard',async({page
  await expect(page.locator('.today-activity-list').getByText('E2E Training',{exact:true})).toBeVisible();
 });
 
-test('daily check-in persists after navigation',async({page})=>{
- const energy=page.locator('.dashboard-checkin input[type=range]').first();
- await energy.fill('5');
+test('Daily State persists after navigation',async({page})=>{
+ await page.getByRole('button',{name:'Energy: High'}).click();
  await nav(page,'Goals').click();
  await nav(page,'Today').click();
- await expect(page.locator('.dashboard-checkin input[type=range]').first()).toHaveValue('5');
+ await expect(page.getByRole('button',{name:'Energy: High'})).toHaveAttribute('aria-pressed','true');
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('arc.daily-state.v1')||'[]')[0]?.energy)).toBe(5);
 });
 
 
@@ -139,20 +140,13 @@ test('creating a weight goal uses Analytics weight and syncs Dashboard progress'
  await expect(page.getByText(/198/).first()).toBeVisible();
  await expect(page.getByText(/^0%/)).toBeVisible();
  await nav(page,'Today').click();
- const goals=page.locator('.overview-goals');
- await expect(goals.getByText('Competition Cut')).toBeVisible();
- await expect(goals.getByText(/198 \/ 194 lb/)).toBeVisible();
- await expect(goals.getByText(/^0%/)).toBeVisible();
+ await expect(page.getByText('Competition Cut')).toHaveCount(0);
  await nav(page,'Progress').click();
  await page.locator('#bm-weight').fill('196');
  await page.getByRole('button',{name:/Save measurements/i}).click();
- await nav(page,'Today').click();
- await expect(goals.getByText(/196 \/ 194 lb/)).toBeVisible();
- await expect(goals.getByText(/^50%/)).toBeVisible();
- const track=goals.locator('.overview-progress').first(),fill=track.locator('i');
- const widths=await Promise.all([track,fill].map(async x=>(await x.boundingBox())?.width??0));
- expect(widths[1]/widths[0]).toBeGreaterThan(.45);
- expect(widths[1]/widths[0]).toBeLessThan(.55);
+ await nav(page,'Goals').click();
+ await expect(page.getByText(/196/).first()).toBeVisible();
+ await expect(page.getByText(/^50%/)).toBeVisible();
 });
 
 
@@ -181,8 +175,7 @@ test('shared state changes propagate once without persistence churn',async({page
  const storedGoal=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.goals.v2')||'[]').find((g:any)=>g.name==='Weight Goal'));
  expect(storedGoal).toMatchObject({type:'Body',goalTypeV2:'Body Composition',start:197,current:197,target:190,unit:'lb'});
  await nav(page,'Today').click();
- const goals=page.locator('.overview-goals');
- await expect(goals.getByText(/197 \/ 190 lb/)).toBeVisible();
+ await expect(page.getByText('Weight Goal')).toHaveCount(0);
  const snapshot=await page.evaluate(()=>({goals:localStorage.getItem('workoutapp.goals.v2'),body:localStorage.getItem('workoutapp.body-metrics.v1')}));
  await page.waitForTimeout(300);
  const stable=await page.evaluate(()=>({goals:localStorage.getItem('workoutapp.goals.v2'),body:localStorage.getItem('workoutapp.body-metrics.v1')}));
@@ -630,7 +623,7 @@ test('BJJ My Game techniques can be prioritized within a route',async({page})=>{
 test('BJJ My Game techniques can be assigned strategic roles',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'BJJ'}).click();await page.getByRole('button',{name:'My Game',exact:true}).click();const row=page.locator('.my-game-row').first();if(await row.count()){const name=(await row.locator('.my-game-primary b').textContent())!;const role=page.getByLabel('Role for '+name);await role.selectOption('Primary');await expect(role).toHaveValue('Primary');await page.reload();await page.getByRole('button',{name:'BJJ'}).click();await page.getByRole('button',{name:'My Game',exact:true}).click();await expect(page.getByLabel('Role for '+name)).toHaveValue('Primary');}});
 
 
-test('Dashboard surfaces upcoming training as part of the daily workflow',async({page})=>{await page.goto('/');await expect(page.getByText('UP NEXT',{exact:true})).toBeVisible();await expect(page.locator('.dashboard-up-next')).toBeVisible();await expect(page.locator('.dashboard-up-next').getByRole('button',{name:/Calendar/})).toBeVisible();});
+test('Today surfaces a timed activity as Up Next with session state',async({page})=>{await page.addInitScript(()=>{const d=new Date(),date=d.toLocaleDateString('en-CA'),time=new Date(Date.now()+60*60*1000).toTimeString().slice(0,5);localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([{id:'today-timed',date,time,title:'Timed BJJ',type:'BJJ',status:'Planned'}]));});await page.goto('/');await expect(page.getByText('UP NEXT',{exact:true})).toBeVisible();await expect(page.getByText('Timed BJJ')).toBeVisible();await expect(page.getByText('FOR THIS SESSION')).toBeVisible();await page.getByRole('button',{name:'Session motivation 5'}).click();await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.id==='today-timed')?.sessionMotivation)).toBe(5);});
 
 
 
