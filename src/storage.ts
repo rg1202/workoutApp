@@ -1,5 +1,5 @@
-export type StoredSet = { weight: number; reps: number; rir: number; completedAt: string };
-export type SessionRecord = { id: string; name: string; programId?: string; programName?: string; dayId?: string; week?: number; completedAt: string; sets: { exerciseId: string; exerciseName: string; set: StoredSet }[] };
+export type StoredSet = { weight: number; reps: number; rir: number; completedAt: string; kind?:'Warm-up'|'Working' };
+export type SessionRecord = { id: string; name: string; programId?: string; programName?: string; dayId?: string; week?: number; completedAt: string; durationMinutes?:number; notes?:string; exerciseNotes?:Record<string,string>; sets: { exerciseId: string; exerciseName: string; set: StoredSet }[] };
 export type DailyCheckIn={date:string;energy:number;mood:number;soreness:number;stress:number;sleepQuality:number;sleepHours:number;notes:string};
 export type BodyMetric={id:string;date:string;weight?:number;waist?:number;chest?:number;arms?:number;thighs?:number};
 
