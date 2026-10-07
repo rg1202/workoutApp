@@ -176,6 +176,8 @@ test('shared state changes propagate once without persistence churn',async({page
  await page.getByLabel('Starting value').fill('197');
  await page.getByLabel('Target value').fill('190');
  await page.getByRole('button',{name:/Continue/i}).click();await page.getByRole('button',{name:/Continue/i}).click();await page.getByRole('button',{name:/Create goal/i}).click();await page.getByRole('button',{name:/Not now/i}).click();
+ const storedGoal=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.goals.v2')||'[]').find((g:any)=>g.name==='Weight Goal'));
+ expect(storedGoal).toMatchObject({type:'Body',goalTypeV2:'Body Composition',start:197,current:197,target:190,unit:'lb'});
  await nav(page,'Dashboard').click();
  const goals=page.locator('.overview-goals');
  await expect(goals.getByText(/197 \/ 190 lb/)).toBeVisible();
