@@ -20,3 +20,23 @@ export function syncCalendarBjj(sessions:BjjSession[],plan:PlannedActivity):BjjS
  };
  return [...sessions.filter(s=>s.id!==id),next];
 }
+
+export function mergeCalendarBjjForAnalytics(sessions:BjjSession[],plans:PlannedActivity[]):BjjSession[]{
+ const output=[...sessions];
+ for(const plan of plans){
+  if(plan.type!=='BJJ'||plan.status!=='Completed')continue;
+  const id=plan.linkedActivityId??'calendar:'+plan.id;
+  if(output.some(session=>session.id===id))continue;
+  output.push({
+   id,date:plan.date,sessionType:'Gi',
+   durationMinutes:plan.actuals?.actualDurationMinutes??0,
+   rpe:plan.actuals?.effort??0,
+   rounds:plan.actuals?.rounds??0,liveMinutes:plan.actuals?.liveMinutes??0,
+   techniques:plan.actuals?.techniques??'',
+   submissionsFor:plan.actuals?.submissionsFor??0,
+   submissionsAgainst:plan.actuals?.submissionsAgainst??0,
+   notes:plan.notes??''
+  });
+ }
+ return output;
+}
