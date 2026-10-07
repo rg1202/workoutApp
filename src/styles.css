@@ -452,3 +452,6 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .arc-activity-editor textarea{min-height:70px}
 .arc-activity-editor button{align-self:end}
 @media(max-width:520px){.arc-activity-editor{grid-template-columns:1fr;padding:16px}}
+
+/* Calendar actual-session provenance */
+.cal-actual{display:block;font-size:10px;line-height:1.4;margin-top:3px;white-space:normal}.cal-actual-missing{color:var(--arc-cyan)}.cal-actual-recorded{color:var(--arc-mint)}
