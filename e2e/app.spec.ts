@@ -312,12 +312,12 @@ test('adherence KPIs use current calendar week month quarter and year',async({pa
  const priorQuarter=new Date(now.getFullYear(),Math.floor(now.getMonth()/3)*3-1,15);
  const priorYear=new Date(now.getFullYear()-1,6,15);
  await page.evaluate(({current,priorWeek,priorMonth,priorQuarter,priorYear})=>localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([
-  {id:'a1',date:current,title:'Current',type:'BJJ',status:'Completed'},
-  {id:'a2',date:current,title:'Current missed',type:'BJJ',status:'Planned'},
-  {id:'a3',date:priorWeek,title:'Earlier week',type:'BJJ',status:'Completed'},
-  {id:'a4',date:priorMonth,title:'Earlier month',type:'BJJ',status:'Completed'},
-  {id:'a5',date:priorQuarter,title:'Earlier quarter',type:'BJJ',status:'Completed'},
-  {id:'a6',date:priorYear,title:'Earlier year',type:'BJJ',status:'Planned'}
+  {id:'a1',date:current,title:'Current',type:'Mobility',status:'Completed'},
+  {id:'a2',date:current,title:'Current missed',type:'Mobility',status:'Planned'},
+  {id:'a3',date:priorWeek,title:'Earlier week',type:'Mobility',status:'Completed'},
+  {id:'a4',date:priorMonth,title:'Earlier month',type:'Mobility',status:'Completed'},
+  {id:'a5',date:priorQuarter,title:'Earlier quarter',type:'Mobility',status:'Completed'},
+  {id:'a6',date:priorYear,title:'Earlier year',type:'Mobility',status:'Planned'}
  ])),{current:iso(now),priorWeek:iso(priorWeek),priorMonth:iso(priorMonth),priorQuarter:iso(priorQuarter),priorYear:iso(priorYear)});
  await page.reload();
  const kpis=page.locator('.overview-adherence .adherence-kpi');
@@ -697,13 +697,13 @@ test('Adherence retains due workouts from completed programs',async({page})=>{aw
 test('Adherence does not let unrelated same-day strength satisfy a program workout',async({page})=>{await page.addInitScript(()=>{const d=new Date();d.setDate(d.getDate()-1);const date=d.toLocaleDateString('en-CA'),program={id:'program-a',name:'Program A',goal:'Strength',weeks:1,status:'Completed',startDate:date,endDate:date,activeWeek:1,activeDayId:'day-a',createdAt:new Date().toISOString(),progression:{type:'None',loadStep:5,startRir:3,endRir:1,deloadEvery:4,deloadPercent:15},days:[{id:'day-a',name:'Program Workout',type:'Full Body',weekday:d.getDay(),prescriptions:[]}]},history=[{id:'other-strength',name:'Other Workout',programId:'program-b',programName:'Other Program',dayId:'day-b',week:1,completedAt:date+'T18:00:00.000Z',sets:[]}];localStorage.setItem('workoutapp.programs.v3',JSON.stringify({activeProgramId:'',programs:[program]}));localStorage.setItem('workoutapp.history.v2',JSON.stringify(history));});await page.goto('/');const adherence=page.locator('.overview-adherence');await expect(adherence.getByText('0/1 complete').first()).toBeVisible();});
 
 
-test('Skipped due training counts as missed adherence',async({page})=>{await page.addInitScript(()=>{const d=new Date().toLocaleDateString('en-CA');localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([{id:'done-plan',date:d,title:'Completed Training',type:'BJJ',status:'Completed'},{id:'skipped-plan',date:d,title:'Skipped Training',type:'BJJ',status:'Skipped'}]));});await page.goto('/');const adherence=page.locator('.overview-adherence');await expect(adherence.getByText('1/2 complete').first()).toBeVisible();await expect(adherence.getByText('50%').first()).toBeVisible();});
+test('Skipped due training counts as missed adherence',async({page})=>{await page.addInitScript(()=>{const d=new Date().toLocaleDateString('en-CA');localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([{id:'done-plan',date:d,title:'Completed Training',type:'Mobility',status:'Completed'},{id:'skipped-plan',date:d,title:'Skipped Training',type:'Mobility',status:'Skipped'}]));});await page.goto('/');const adherence=page.locator('.overview-adherence');await expect(adherence.getByText('1/2 complete').first()).toBeVisible();await expect(adherence.getByText('50%').first()).toBeVisible();});
 
 
 test('Program BJJ schedule contributes missed sessions to adherence',async({page})=>{await page.addInitScript(()=>{const d=new Date();d.setDate(d.getDate()-2);const date=d.toLocaleDateString('en-CA'),program={id:'bjj-block',name:'BJJ Block',goal:'Mixed',weeks:1,status:'Completed',startDate:date,endDate:new Date().toLocaleDateString('en-CA'),activeWeek:1,activeDayId:'strength-day',createdAt:new Date().toISOString(),progression:{type:'None',loadStep:5,startRir:3,endRir:1,deloadEvery:4,deloadPercent:15},days:[],generatedBjj:{title:'Gi BJJ',durationMinutes:60,weekdays:[d.getDay()]}};localStorage.setItem('workoutapp.programs.v3',JSON.stringify({activeProgramId:'',programs:[program]}));});await page.goto('/');const adherence=page.locator('.overview-adherence');await expect(adherence.getByText('0/1 complete').first()).toBeVisible();});
 
 
-test('Adherence visibly reports overdue planned sessions as missed',async({page})=>{await page.addInitScript(()=>{const d=new Date();d.setDate(d.getDate()-1);const date=d.toLocaleDateString('en-CA');localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([{id:'done',date,title:'Done',type:'BJJ',status:'Completed'},{id:'overdue',date,title:'Missed',type:'BJJ',status:'Planned'}]));});await page.goto('/');const a=page.locator('.overview-adherence');await expect(a.getByText('50%').first()).toBeVisible();await expect(a.getByText(/1\/2 complete · 1 missed/).first()).toBeVisible();});
+test('Adherence visibly reports overdue planned sessions as missed',async({page})=>{await page.addInitScript(()=>{const d=new Date();d.setDate(d.getDate()-1);const date=d.toLocaleDateString('en-CA');localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([{id:'done',date,title:'Done',type:'Mobility',status:'Completed'},{id:'overdue',date,title:'Missed',type:'Mobility',status:'Planned'}]));});await page.goto('/');const a=page.locator('.overview-adherence');await expect(a.getByText('50%').first()).toBeVisible();await expect(a.getByText(/1\/2 complete · 1 missed/).first()).toBeVisible();});
 
 
 test('Recorded BJJ attendance remains visible in adherence without a surviving plan',async({page})=>{await page.addInitScript(()=>{const d=new Date();d.setDate(d.getDate()-2);const date=d.toLocaleDateString('en-CA');localStorage.setItem('workoutapp.bjj-sessions.v1',JSON.stringify([{id:'historic-bjj',date,sessionType:'Gi',durationMinutes:60,rpe:7,rounds:5,liveMinutes:30,techniques:'',submissionsFor:0,submissionsAgainst:0,notes:''}]));});await page.goto('/');const a=page.locator('.overview-adherence');await expect(a.getByText('1/1 complete').first()).toBeVisible();});
