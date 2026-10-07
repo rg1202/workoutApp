@@ -680,3 +680,6 @@ test('Dashboard can complete a due planned activity directly',async({page})=>{aw
 
 
 test('Dashboard surfaces the latest completed training and links to History',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'Today',exact:true}).click();const first=page.locator('.exercise-card').first();if(await first.count()){await first.getByRole('button',{name:/start/i}).click().catch(()=>{});}await page.getByRole('button',{name:'Dashboard',exact:true}).click();const card=page.locator('.dashboard-last-session');if(await card.count()){await expect(card).toBeVisible();await card.getByRole('button',{name:'History'}).click();await expect(page.getByRole('button',{name:'History',exact:true})).toHaveClass(/active/);}});
+
+
+test('Analytics supports 7 30 and 90 day training ranges',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'Analytics',exact:true}).click();await expect(page.getByText('ALL TRAINING · 7D')).toBeVisible();await page.getByRole('button',{name:'30D'}).click();await expect(page.getByText('ALL TRAINING · 30D')).toBeVisible();await page.getByRole('button',{name:'90D'}).click();await expect(page.getByText('ALL TRAINING · 90D')).toBeVisible();});
