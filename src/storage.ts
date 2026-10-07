@@ -9,6 +9,8 @@ const PROGRAMS_KEY = 'workoutapp.programs.v3';
 const LEGACY_PROGRAM_KEY = 'workoutapp.program.v2';
 const CHECKINS_KEY='workoutapp.checkins.v1';
 const BODY_KEY='workoutapp.body-metrics.v1';
+const CUSTOM_EXERCISES_KEY='workoutapp.custom-exercises.v1';
+const FAVORITE_EXERCISES_KEY='workoutapp.favorite-exercises.v1';
 export const DATA_CHANGE_EVENT='workoutapp:data-change';
 
 export function loadJSON<T>(key: string, fallback: T): T {
@@ -17,4 +19,4 @@ export function loadJSON<T>(key: string, fallback: T): T {
 export function saveJSON<T>(key: string, value: T, source='app') { localStorage.setItem(key, JSON.stringify(value)); window.dispatchEvent(new CustomEvent(DATA_CHANGE_EVENT,{detail:{key,source}})); }
 export function sameJSON(a:unknown,b:unknown){return JSON.stringify(a)===JSON.stringify(b)}
 export function loadLegacyProgram<T>(): T | null { try { const raw=localStorage.getItem(LEGACY_PROGRAM_KEY); return raw?JSON.parse(raw) as T:null; } catch { return null; } }
-export const storageKeys = { session: SESSION_KEY, history: HISTORY_KEY, programs: PROGRAMS_KEY,checkins:CHECKINS_KEY,body:BODY_KEY };
+export const storageKeys = { session: SESSION_KEY, history: HISTORY_KEY, programs: PROGRAMS_KEY,checkins:CHECKINS_KEY,body:BODY_KEY,customExercises:CUSTOM_EXERCISES_KEY,favoriteExercises:FAVORITE_EXERCISES_KEY };
