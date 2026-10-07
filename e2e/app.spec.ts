@@ -704,3 +704,6 @@ test('Program BJJ schedule contributes missed sessions to adherence',async({page
 
 
 test('Adherence visibly reports overdue planned sessions as missed',async({page})=>{await page.addInitScript(()=>{const d=new Date();d.setDate(d.getDate()-1);const date=d.toLocaleDateString('en-CA');localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([{id:'done',date,title:'Done',type:'BJJ',status:'Completed'},{id:'overdue',date,title:'Missed',type:'BJJ',status:'Planned'}]));});await page.goto('/');const a=page.locator('.overview-adherence');await expect(a.getByText('50%').first()).toBeVisible();await expect(a.getByText(/1\/2 complete · 1 missed/).first()).toBeVisible();});
+
+
+test('Recorded BJJ attendance remains visible in adherence without a surviving plan',async({page})=>{await page.addInitScript(()=>{const d=new Date();d.setDate(d.getDate()-2);const date=d.toLocaleDateString('en-CA');localStorage.setItem('workoutapp.bjj-sessions.v1',JSON.stringify([{id:'historic-bjj',date,sessionType:'Gi',durationMinutes:60,rpe:7,rounds:5,liveMinutes:30,techniques:'',submissionsFor:0,submissionsAgainst:0,notes:''}]));});await page.goto('/');const a=page.locator('.overview-adherence');await expect(a.getByText('1/1 complete').first()).toBeVisible();});
