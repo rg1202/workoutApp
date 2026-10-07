@@ -30,7 +30,7 @@ test('created goal appears on dashboard',async({page})=>{
  await page.getByRole('button',{name:/Create goal/i}).click();
  await page.getByRole('button',{name:/Not now/i}).click();
  await expect(page.getByText('E2E Tournament')).toBeVisible();
- await nav(page,'Dashboard').click();
+ await nav(page,'Today').click();
  await expect(page.getByText('E2E Tournament')).toBeVisible();
 });
 
@@ -40,7 +40,7 @@ test('planned activity survives navigation and appears on dashboard',async({page
  await page.getByPlaceholder(/Gi BJJ/i).fill('E2E Training');
  await page.getByRole('button',{name:/Add to calendar/i}).click();
  await expect(page.getByText('E2E Training')).toBeVisible();
- await nav(page,'Dashboard').click();
+ await nav(page,'Today').click();
  await expect(page.locator('.today-activity-list').getByText('E2E Training',{exact:true})).toBeVisible();
 });
 
@@ -48,7 +48,7 @@ test('daily check-in persists after navigation',async({page})=>{
  const energy=page.locator('.dashboard-checkin input[type=range]').first();
  await energy.fill('5');
  await nav(page,'Goals').click();
- await nav(page,'Dashboard').click();
+ await nav(page,'Today').click();
  await expect(page.locator('.dashboard-checkin input[type=range]').first()).toHaveValue('5');
 });
 
@@ -65,6 +65,7 @@ test('active program schedules into Calendar and Today',async({page})=>{
  await nav(page,'Calendar').click();
  await expect(page.getByText('E2E Lower').first()).toBeVisible();
  await nav(page,'Today').click();
+ await page.getByRole('button',{name:/Start workout/i}).click();
  await expect(page.locator('main h1').first()).toHaveText('E2E Lower');
  await expect(page.getByText(/E2E Strength · Week 1/)).toBeVisible();
 });
@@ -79,6 +80,7 @@ test('finishing Today workout syncs History Calendar and Analytics',async({page}
  },{date,weekday});
  await page.reload();
  await nav(page,'Today').click();
+ await page.getByRole('button',{name:/Start workout/i}).click();
  await page.getByRole('button',{name:/Working set/i}).first().click();
  page.once('dialog',dialog=>dialog.accept());
  await page.getByRole('button',{name:/Finish workout/i}).click();
@@ -136,7 +138,7 @@ test('creating a weight goal uses Analytics weight and syncs Dashboard progress'
  await page.getByRole('button',{name:/Continue/i}).click();await page.getByRole('button',{name:/Continue/i}).click();await page.getByRole('button',{name:/Create goal/i}).click();await page.getByRole('button',{name:/Not now/i}).click();
  await expect(page.getByText(/198/).first()).toBeVisible();
  await expect(page.getByText(/^0%/)).toBeVisible();
- await nav(page,'Dashboard').click();
+ await nav(page,'Today').click();
  const goals=page.locator('.overview-goals');
  await expect(goals.getByText('Competition Cut')).toBeVisible();
  await expect(goals.getByText(/198 \/ 194 lb/)).toBeVisible();
@@ -144,7 +146,7 @@ test('creating a weight goal uses Analytics weight and syncs Dashboard progress'
  await nav(page,'Progress').click();
  await page.locator('#bm-weight').fill('196');
  await page.getByRole('button',{name:/Save measurements/i}).click();
- await nav(page,'Dashboard').click();
+ await nav(page,'Today').click();
  await expect(goals.getByText(/196 \/ 194 lb/)).toBeVisible();
  await expect(goals.getByText(/^50%/)).toBeVisible();
  const track=goals.locator('.overview-progress').first(),fill=track.locator('i');
@@ -178,7 +180,7 @@ test('shared state changes propagate once without persistence churn',async({page
  await page.getByRole('button',{name:/Continue/i}).click();await page.getByRole('button',{name:/Continue/i}).click();await page.getByRole('button',{name:/Create goal/i}).click();await page.getByRole('button',{name:/Not now/i}).click();
  const storedGoal=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.goals.v2')||'[]').find((g:any)=>g.name==='Weight Goal'));
  expect(storedGoal).toMatchObject({type:'Body',goalTypeV2:'Body Composition',start:197,current:197,target:190,unit:'lb'});
- await nav(page,'Dashboard').click();
+ await nav(page,'Today').click();
  const goals=page.locator('.overview-goals');
  await expect(goals.getByText(/197 \/ 190 lb/)).toBeVisible();
  const snapshot=await page.evaluate(()=>({goals:localStorage.getItem('workoutapp.goals.v2'),body:localStorage.getItem('workoutapp.body-metrics.v1')}));
@@ -636,7 +638,7 @@ test('Dashboard surfaces upcoming training as part of the daily workflow',async(
 test('Dashboard can complete a due planned activity directly',async({page})=>{await page.addInitScript(()=>{const d=new Date(),date=d.toLocaleDateString('en-CA');localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([{id:'dashboard-action',date,title:'Dashboard Action',type:'Mobility',status:'Planned'}]));});await page.goto('/');await page.getByRole('button',{name:'Mark Dashboard Action complete'}).click();await expect(page.getByRole('button',{name:'Mark Dashboard Action planned'})).toBeVisible();await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.id==='dashboard-action')?.status)).toBe('Completed');});
 
 
-test('Dashboard surfaces the latest completed training and links to History',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'Today',exact:true}).click();const first=page.locator('.exercise-card').first();if(await first.count()){await first.getByRole('button',{name:/start/i}).click().catch(()=>{});}await page.getByRole('button',{name:'Dashboard',exact:true}).click();const card=page.locator('.dashboard-last-session');if(await card.count()){await expect(card).toBeVisible();await card.getByRole('button',{name:'History'}).click();await expect(page.getByRole('button',{name:'History',exact:true})).toHaveClass(/active/);}});
+test('Dashboard surfaces the latest completed training and links to History',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'Today',exact:true}).click();const first=page.locator('.exercise-card').first();if(await first.count()){await first.getByRole('button',{name:/start/i}).click().catch(()=>{});}await page.getByRole('button',{name:'Today',exact:true}).first().click();const card=page.locator('.dashboard-last-session');if(await card.count()){await expect(card).toBeVisible();await card.getByRole('button',{name:'History'}).click();await expect(page.getByRole('button',{name:'History',exact:true})).toHaveClass(/active/);}});
 
 
 test('Analytics supports 7 30 and 90 day training ranges',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'Progress',exact:true}).click();await expect(page.getByText('ALL TRAINING · 7D')).toBeVisible();await page.getByRole('button',{name:'30D'}).click();await expect(page.getByText('ALL TRAINING · 30D')).toBeVisible();await page.getByRole('button',{name:'90D'}).click();await expect(page.getByText('ALL TRAINING · 90D')).toBeVisible();});
@@ -647,7 +649,7 @@ test('Analytics compares current training with the previous period',async({page}
 
 test('Editing a weight goal persists its target and goal fields',async({page})=>{await nav(page,'Goals').click();await page.getByRole('button',{name:/New goal/i}).click();await page.locator('.goal-type-v2').getByRole('button',{name:/^Body Composition/}).click();await page.getByLabel('Goal name').fill('Weight Goal');await page.getByRole('button',{name:/Continue/i}).click();const builder=page.locator('.goal-wizard');await builder.getByLabel('Unit').fill('lb');await builder.getByLabel('Starting value').fill('200');await builder.getByLabel('Target value').fill('190');await builder.getByRole('button',{name:/Continue/i}).click();await builder.getByRole('button',{name:/Continue/i}).click();await builder.getByRole('button',{name:'Create goal'}).click();await page.getByRole('button',{name:/Not now/i}).click();const card=page.locator('.goal-card').filter({hasText:'Weight Goal'});await card.getByRole('button',{name:'Edit goal'}).click();await builder.getByRole('button',{name:/Continue/i}).click();await builder.getByLabel('Target value').fill('185');await builder.getByRole('button',{name:/Continue/i}).click();await builder.getByRole('button',{name:/Continue/i}).click();await builder.getByRole('button',{name:'Save goal'}).click();await expect(card.getByText(/of 185 lb/)).toBeVisible();await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.goals.v2')||'[]').find((g:any)=>g.name==='Weight Goal')?.target)).toBe(185);});
 
-test('BJJ calendar sessions remain manually completable while adherence requires attendance',async({page})=>{await page.addInitScript(()=>{const d=new Date();d.setDate(d.getDate()-1);const date=d.toLocaleDateString('en-CA');if(!localStorage.getItem('workoutapp.planned-activities.v1'))localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([{id:'calendar-toggle-bjj',date,title:'BJJ',type:'BJJ',status:'Planned'}]));if(!localStorage.getItem('workoutapp.bjj-sessions.v1'))localStorage.setItem('workoutapp.bjj-sessions.v1','[]');});await page.goto('/');await page.getByRole('button',{name:'Calendar',exact:true}).first().click();const plan=page.getByText('○ BJJ').first();await expect(plan).toBeVisible();await plan.click();await expect(page.getByText('✓ BJJ').first()).toBeVisible();await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.id==='calendar-toggle-bjj')?.status)).toBe('Completed');await page.reload();await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.id==='calendar-toggle-bjj')?.status)).toBe('Completed');await page.getByRole('button',{name:'Calendar',exact:true}).first().click();await expect(page.getByText('✓ BJJ').first()).toBeVisible();await page.getByRole('button',{name:'Dashboard',exact:true}).first().click();await expect(page.getByText('Today',{exact:true}).first()).toBeVisible();});
+test('BJJ calendar sessions remain manually completable while adherence requires attendance',async({page})=>{await page.addInitScript(()=>{const d=new Date();d.setDate(d.getDate()-1);const date=d.toLocaleDateString('en-CA');if(!localStorage.getItem('workoutapp.planned-activities.v1'))localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([{id:'calendar-toggle-bjj',date,title:'BJJ',type:'BJJ',status:'Planned'}]));if(!localStorage.getItem('workoutapp.bjj-sessions.v1'))localStorage.setItem('workoutapp.bjj-sessions.v1','[]');});await page.goto('/');await page.getByRole('button',{name:'Calendar',exact:true}).first().click();const plan=page.getByText('○ BJJ').first();await expect(plan).toBeVisible();await plan.click();await expect(page.getByText('✓ BJJ').first()).toBeVisible();await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.id==='calendar-toggle-bjj')?.status)).toBe('Completed');await page.reload();await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.id==='calendar-toggle-bjj')?.status)).toBe('Completed');await page.getByRole('button',{name:'Calendar',exact:true}).first().click();await expect(page.getByText('✓ BJJ').first()).toBeVisible();await page.getByRole('button',{name:'Today',exact:true}).first().click();await expect(page.getByText('Today',{exact:true}).first()).toBeVisible();});
 
 
 test('Arc goal supporting targets can create a Calendar plan',async({page})=>{await nav(page,'Goals').click();await page.getByRole('button',{name:'New goal'}).click();await page.locator('.goal-type-v2').getByRole('button',{name:/^Event/}).click();await page.getByLabel('Goal name').fill('Arc Test Event');await page.getByRole('button',{name:'Continue'}).click();await page.getByRole('button',{name:'Continue'}).click();await page.getByRole('button',{name:/Supporting target/i}).click();await page.getByRole('textbox',{name:'Supporting target 1',exact:true}).fill('BJJ practice');await page.locator('.goal-support-list select').selectOption('BJJ');await page.getByRole('button',{name:'Continue'}).click();await page.getByRole('button',{name:'Create goal'}).click();await page.getByRole('button',{name:/Add to Calendar/i}).click();await expect(page.locator('main h1').first()).toHaveText('Calendar');await expect(page.getByText('BJJ practice').first()).toBeVisible();const plans=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]'));expect(plans.some((p:any)=>p.title==='BJJ practice'&&p.id.startsWith('goal:'))).toBeTruthy();});
