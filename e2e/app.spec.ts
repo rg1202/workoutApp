@@ -667,3 +667,6 @@ test('BJJ My Game techniques can be prioritized within a route',async({page})=>{
 
 
 test('BJJ My Game techniques can be assigned strategic roles',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'BJJ'}).click();await page.getByRole('button',{name:'My Game',exact:true}).click();const row=page.locator('.my-game-row').first();if(await row.count()){const name=(await row.locator('.my-game-primary b').textContent())!;const role=page.getByLabel('Role for '+name);await role.selectOption('Primary');await expect(role).toHaveValue('Primary');await page.reload();await page.getByRole('button',{name:'BJJ'}).click();await page.getByRole('button',{name:'My Game',exact:true}).click();await expect(page.getByLabel('Role for '+name)).toHaveValue('Primary');}});
+
+
+test('Dashboard surfaces upcoming training as part of the daily workflow',async({page})=>{await page.goto('/');await expect(page.getByText('UP NEXT',{exact:true})).toBeVisible();await expect(page.locator('.dashboard-up-next')).toBeVisible();await expect(page.locator('.dashboard-up-next').getByRole('button',{name:/Calendar/})).toBeVisible();});
