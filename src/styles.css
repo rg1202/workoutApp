@@ -153,3 +153,25 @@
 @media(max-width:900px){.workout-session-toolbar{grid-template-columns:1fr}.rest-timer{justify-content:flex-start;flex-wrap:wrap}}
 
 .exercise-library-filters{display:grid;grid-template-columns:minmax(220px,2fr) repeat(4,minmax(120px,1fr)) auto;gap:8px}.exercise-library-filters button.selected{background:#dfffc8;color:#102017;border-color:#dfffc8}.custom-exercise-form{margin-bottom:18px}.custom-exercise-form .primary{margin-top:12px}.exercise-library-card{padding:0;overflow:hidden}.exercise-library-title{display:grid;grid-template-columns:34px 1fr auto;align-items:start}.exercise-open{display:block;width:100%;padding:18px 10px;border:0;background:transparent;color:inherit;text-align:left}.exercise-open h3{margin:7px 0 4px}.exercise-open p,.exercise-open small{display:block;color:#83939c}.favorite-button{margin:16px 0 0 10px;padding:5px;border:0;background:transparent;color:#50616a;font-size:18px}.favorite-button.selected{color:#dfffc8}.exercise-library-title>.icon-button{margin:14px 12px 0 0}.exercise-detail{padding:0 18px 18px;border-top:1px solid #22313a}.exercise-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:14px 0}.exercise-facts span{display:grid;gap:3px;padding:9px;border-radius:7px;background:#101a20;color:#a7b3ba;font-size:10px}.exercise-facts b{font-size:8px;color:#687a84;text-transform:uppercase;letter-spacing:.06em}.exercise-detail ol{margin:4px 0 0;padding-left:22px;color:#b3c0c6;font-size:11px;line-height:1.7}.exercise-detail-empty{color:#71828b;font-size:10px}.exercise-tips{display:grid;gap:5px;margin-top:12px;padding:11px;border-left:2px solid #7da36d;background:#101a20;font-size:10px}.exercise-tips b{color:#dfffc8}.exercise-tips span{color:#a7b3ba}@media(max-width:1000px){.exercise-library-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.exercise-library-filters .search{grid-column:1/-1}.exercise-facts{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.exercise-library-filters,.exercise-facts{grid-template-columns:1fr}}
+
+/* Exercise library card reset */
+.exercise-grid:has(.exercise-library-card){grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;align-items:start}
+.exercise-library-card{position:relative;min-width:0;min-height:142px;padding:0!important;background:#0e171d!important;border:1px solid #21313a!important;border-radius:12px!important}
+.exercise-library-card:hover{border-color:#354a55!important;background:#101b22!important}
+.exercise-library-title{position:relative;display:block!important;min-height:142px}
+.exercise-open{display:flex!important;flex-direction:column;width:100%;min-height:142px;padding:18px 44px 18px 20px!important;border:0!important;background:transparent!important;text-align:left;overflow:hidden}
+.exercise-open .tag{align-self:flex-start;margin:0 0 13px;padding:4px 7px;border-radius:5px;background:#17262e;color:#a8d991;font-size:9px;font-weight:800;line-height:1.2;white-space:nowrap}
+.exercise-open h3{margin:0 0 7px!important;color:#e5edf1;font-size:17px!important;line-height:1.25!important;white-space:normal;overflow-wrap:normal;word-break:normal}
+.exercise-open p{margin:0!important;color:#92a2aa!important;font-size:11px!important;line-height:1.35}
+.exercise-open small{margin-top:5px;color:#647781!important;font-size:10px!important;line-height:1.3}
+.favorite-button{position:absolute;z-index:2;top:13px;right:12px;margin:0!important;width:28px;height:28px;padding:0!important;border:1px solid transparent!important;border-radius:7px!important;background:transparent!important;color:#5f727c!important;font-size:16px!important}
+.favorite-button:hover{background:#17252c!important;color:#c6d4da!important}
+.favorite-button.selected{color:#dfffc8!important}
+.exercise-library-title>.icon-button{position:absolute;z-index:3;right:11px;bottom:10px;margin:0!important}
+.exercise-library-card.expanded{grid-column:span 2;min-height:0}
+.exercise-library-card.expanded .exercise-library-title,.exercise-library-card.expanded .exercise-open{min-height:120px}
+.exercise-detail{padding:16px 20px 20px!important;background:#0c1419;border-top:1px solid #1f3038!important}
+.exercise-library-filters{margin-bottom:20px}
+.exercise-library-filters select,.exercise-library-filters .search,.exercise-library-filters>button{height:44px}
+.exercise-library-filters>button{white-space:nowrap;padding:0 14px}
+@media(max-width:720px){.exercise-grid:has(.exercise-library-card){grid-template-columns:1fr}.exercise-library-card.expanded{grid-column:span 1}}
