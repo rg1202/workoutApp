@@ -397,3 +397,13 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .today-result input{grid-column:1/-1;width:100%;border:1px solid #203646;background:#08131c;color:#edf6fa;border-radius:8px;padding:8px 10px;font-size:11px}
 .today-result input:focus{outline:none;border-color:var(--arc-cyan);box-shadow:0 0 0 3px var(--arc-ring)}
 @media(max-width:650px){.today-activity-main{grid-template-columns:auto 1fr}.today-activity-meta{grid-column:2}.today-result{margin-left:0;grid-template-columns:1fr}.today-result input{grid-column:auto}}
+
+/* Today V2 — recovery response */
+.today-recovery{grid-column:1/-1;margin-top:2px;padding-top:11px;border-top:1px solid rgba(53,217,232,.12);display:grid;grid-template-columns:minmax(150px,1fr) auto auto;gap:10px;align-items:center}
+.today-recovery>div:first-child{display:grid;gap:2px}.today-recovery>div:first-child span{font-size:9px;font-weight:800;letter-spacing:1px;color:var(--arc-cyan)}.today-recovery>div:first-child b{font-size:11px;color:#dce9ef}
+.today-recovery-options{display:flex;gap:4px}.today-recovery-options button{min-height:29px;padding:0 8px;border:1px solid #284153;border-radius:7px;background:#09151f;color:#8096a7;font-size:10px;cursor:pointer}
+.today-recovery-options button.selected{border-color:var(--arc-cyan);background:rgba(53,217,232,.1);color:#dffcff}
+.today-recovery-options button:last-child.selected{border-color:#e6a65b;background:rgba(230,166,91,.09);color:#f0c486}
+.today-recovery label{display:flex;align-items:center;gap:7px}.today-recovery label>span{font-size:10px;color:#8298a9}.today-recovery select{border:1px solid #284153;background:#09151f;color:#dce8ee;border-radius:7px;height:30px;padding:0 7px}
+.today-recovery>input{grid-column:1/-1}
+@media(max-width:760px){.today-recovery{grid-template-columns:1fr}.today-recovery>input{grid-column:auto}.today-recovery label{justify-content:space-between}}
