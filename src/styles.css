@@ -455,3 +455,15 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 
 /* Calendar actual-session provenance */
 .cal-actual{display:block;font-size:10px;line-height:1.4;margin-top:3px;white-space:normal}.cal-actual-missing{color:var(--arc-cyan)}.cal-actual-recorded{color:var(--arc-mint)}
+
+/* Compact calendar event controls: prevent narrow week cells from overflowing */
+.cal-week .cal-event.cal-planned,.cal-month .cal-event.cal-planned{min-width:0;max-width:100%;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:2px;padding:3px 4px}
+.cal-week .cal-plan-main,.cal-month .cal-plan-main{grid-column:1;min-width:0;width:100%;padding:3px 4px;display:block;overflow:hidden}
+.cal-week .cal-plan-main b,.cal-month .cal-plan-main b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}
+.cal-week .cal-plan-main span,.cal-week .cal-plan-main small,.cal-month .cal-plan-main small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cal-week .cal-event .cal-edit,.cal-month .cal-event .cal-edit{grid-column:2;font-size:10px;padding:4px 5px;white-space:nowrap;min-width:0;max-width:40px;align-self:center}
+.cal-week .cal-event .cal-delete,.cal-month .cal-event .cal-delete{grid-column:3;position:static;opacity:1;width:24px;min-width:24px;height:24px;min-height:24px;padding:0;display:grid;place-items:center;border:0;background:transparent;color:var(--arc-muted)}
+.cal-week .cal-event .cal-delete:hover,.cal-month .cal-event .cal-delete:hover{background:var(--arc-surface-2);color:var(--arc-text)}
+.cal-week .cal-event .cal-move,.cal-month .cal-event .cal-move{grid-column:2;grid-row:2;min-width:24px;width:24px;height:24px;justify-self:center}
+.cal-week .cal-event .cal-actual,.cal-month .cal-event .cal-actual{display:block;max-width:100%;white-space:normal;overflow-wrap:anywhere;font-size:10px}
+@media(max-width:850px){.cal-week .cal-event.cal-planned,.cal-month .cal-event.cal-planned{grid-template-columns:minmax(0,1fr) auto}.cal-week .cal-event .cal-delete,.cal-month .cal-event .cal-delete{grid-column:2;grid-row:2;justify-self:end}.cal-week .cal-event .cal-edit,.cal-month .cal-event .cal-edit{grid-column:2;grid-row:1}}
