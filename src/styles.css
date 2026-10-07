@@ -412,3 +412,14 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .today-header-time{display:flex;align-items:center;gap:10px}.today-header-time span{color:var(--arc-cyan);font-variant-numeric:tabular-nums}
 .today-complete-action{border-color:rgba(104,245,167,.35)!important;color:var(--arc-mint)!important}
 .today-complete-action:hover{border-color:var(--arc-mint)!important;background:rgba(104,245,167,.07)!important}
+
+/* Today V2 — make unanswered post-session inputs visibly actionable */
+.today-result-options button,.today-result .state-scale button,.today-recovery-options button{border-color:#35566b;background:#0d1d29;color:#b7c8d3}
+.today-result-options button:hover,.today-result .state-scale button:hover,.today-recovery-options button:hover{border-color:var(--arc-cyan);background:rgba(53,217,232,.08);color:#f4fdff}
+.today-result label>span,.today-recovery label>span{color:#9eb2c0}
+.today-recovery>div:first-child b{color:#f0f6f8}
+.today-recovery select{border-color:#35566b;background:#0d1d29;color:#e8f1f5}
+.today-result input,.today-recovery>input{border-color:#29485b;background:#0a1823;color:#edf6fa}
+.today-result input::placeholder,.today-recovery>input::placeholder{color:#71899b;opacity:1}
+.today-result-options button.selected{border-color:var(--arc-mint);background:rgba(104,245,167,.12);color:var(--arc-mint)}
+.today-result .state-scale button.selected,.today-recovery-options button.selected{border-color:var(--arc-cyan);background:rgba(53,217,232,.14);color:#f5feff}
