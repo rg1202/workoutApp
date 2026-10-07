@@ -22,21 +22,25 @@ export function syncCalendarBjj(sessions:BjjSession[],plan:PlannedActivity):BjjS
 }
 
 export function mergeCalendarBjjForAnalytics(sessions:BjjSession[],plans:PlannedActivity[]):BjjSession[]{
- const output=[...sessions];
+ const byId=new Map(sessions.map(session=>[session.id,session]));
+ const planIds=new Set(plans.map(plan=>'calendar:'+plan.id));
+ for(const id of planIds)byId.delete(id);
  for(const plan of plans){
   if(plan.type!=='BJJ'||plan.status!=='Completed')continue;
   const id=plan.linkedActivityId??'calendar:'+plan.id;
-  if(output.some(session=>session.id===id))continue;
-  output.push({
-   id,date:plan.date,sessionType:'Gi',
-   durationMinutes:plan.actuals?.actualDurationMinutes??0,
-   rpe:plan.actuals?.effort??0,
-   rounds:plan.actuals?.rounds??0,liveMinutes:plan.actuals?.liveMinutes??0,
-   techniques:plan.actuals?.techniques??'',
-   submissionsFor:plan.actuals?.submissionsFor??0,
-   submissionsAgainst:plan.actuals?.submissionsAgainst??0,
-   notes:plan.notes??''
+  const existing=byId.get(id);
+  const actuals=plan.actuals;
+  byId.set(id,{
+   id,date:plan.date,sessionType:existing?.sessionType??'Gi',
+   durationMinutes:actuals?.actualDurationMinutes??(plan.linkedActivityId?existing?.durationMinutes:undefined)??0,
+   rpe:actuals?.effort??(plan.linkedActivityId?existing?.rpe:undefined)??0,
+   rounds:actuals?.rounds??existing?.rounds??0,
+   liveMinutes:actuals?.liveMinutes??existing?.liveMinutes??0,
+   techniques:actuals?.techniques??existing?.techniques??'',
+   submissionsFor:actuals?.submissionsFor??existing?.submissionsFor??0,
+   submissionsAgainst:actuals?.submissionsAgainst??existing?.submissionsAgainst??0,
+   notes:plan.notes??existing?.notes??''
   });
  }
- return output;
+ return [...byId.values()];
 }
