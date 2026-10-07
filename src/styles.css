@@ -407,3 +407,8 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .today-recovery label{display:flex;align-items:center;gap:7px}.today-recovery label>span{font-size:10px;color:#8298a9}.today-recovery select{border:1px solid #284153;background:#09151f;color:#dce8ee;border-radius:7px;height:30px;padding:0 7px}
 .today-recovery>input{grid-column:1/-1}
 @media(max-width:760px){.today-recovery{grid-template-columns:1fr}.today-recovery>input{grid-column:auto}.today-recovery label{justify-content:space-between}}
+
+/* Today V2 — shared completion + live clock */
+.today-header-time{display:flex;align-items:center;gap:10px}.today-header-time span{color:var(--arc-cyan);font-variant-numeric:tabular-nums}
+.today-complete-action{border-color:rgba(104,245,167,.35)!important;color:var(--arc-mint)!important}
+.today-complete-action:hover{border-color:var(--arc-mint)!important;background:rgba(104,245,167,.07)!important}
