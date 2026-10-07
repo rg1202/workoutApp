@@ -664,3 +664,6 @@ test('BJJ My Game can remove a technique without deleting it from the library',a
 
 
 test('BJJ My Game techniques can be prioritized within a route',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'BJJ'}).click();await page.getByRole('button',{name:'My Game',exact:true}).click();const route=page.locator('#game-route-2');const rows=route.locator('.my-game-row');if(await rows.count()>1){const second=rows.nth(1);const name=(await second.locator('.my-game-primary b').textContent())!;await second.getByRole('button',{name:'Move '+name+' up'}).click();await expect(route.locator('.my-game-row').first().locator('.my-game-primary b')).toHaveText(name);}});
+
+
+test('BJJ My Game techniques can be assigned strategic roles',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'BJJ'}).click();await page.getByRole('button',{name:'My Game',exact:true}).click();const row=page.locator('.my-game-row').first();if(await row.count()){const name=(await row.locator('.my-game-primary b').textContent())!;const role=page.getByLabel('Role for '+name);await role.selectOption('Primary');await expect(role).toHaveValue('Primary');await page.reload();await page.getByRole('button',{name:'BJJ'}).click();await page.getByRole('button',{name:'My Game',exact:true}).click();await expect(page.getByLabel('Role for '+name)).toHaveValue('Primary');}});
