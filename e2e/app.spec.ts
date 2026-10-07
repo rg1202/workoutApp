@@ -670,3 +670,6 @@ test('BJJ My Game techniques can be assigned strategic roles',async({page})=>{aw
 
 
 test('Dashboard surfaces upcoming training as part of the daily workflow',async({page})=>{await page.goto('/');await expect(page.getByText('UP NEXT',{exact:true})).toBeVisible();await expect(page.locator('.dashboard-up-next')).toBeVisible();await expect(page.locator('.dashboard-up-next').getByRole('button',{name:/Calendar/})).toBeVisible();});
+
+
+test('Dashboard adherence does not penalize future planned training',async({page})=>{await page.addInitScript(()=>{const d=new Date();d.setDate(d.getDate()+2);const date=d.toLocaleDateString('en-CA');localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([{id:'future-adherence',date,title:'Future Training',type:'Strength',status:'Planned'}]));});await page.goto('/');const adherence=page.locator('.overview-adherence');await expect(adherence).toBeVisible();await expect(adherence.locator('.adherence-kpi').first().getByText('0/0 complete')).toBeVisible();await expect(page.getByText('Future Training')).toBeVisible();});
