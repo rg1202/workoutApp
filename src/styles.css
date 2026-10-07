@@ -384,3 +384,16 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .today-session-state .state-scale button.selected{border-color:var(--arc-cyan);background:linear-gradient(135deg,rgba(46,116,243,.26),rgba(53,217,232,.18));color:#fff;box-shadow:0 0 0 2px var(--arc-ring);font-weight:800}
 @media(max-width:850px){.today-session-state{grid-template-columns:1fr}.session-state-item{justify-content:space-between}}
 @media(max-width:420px){.session-state-item{display:grid}.today-session-state .state-scale button{flex:1;width:auto}}
+
+/* Today V2 — post-session result */
+.today-activity-list>div{display:block}
+.today-activity-main{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center}
+.today-result{margin:11px 0 2px 31px;padding:11px 12px;border:1px solid rgba(104,245,167,.16);border-radius:10px;background:rgba(104,245,167,.035);display:grid;grid-template-columns:auto auto 1fr;gap:10px;align-items:center}
+.today-result>span{font-size:9px;font-weight:800;letter-spacing:1px;color:var(--arc-mint)}
+.today-result-options{display:flex;gap:4px}.today-result-options button,.today-result .state-scale button{border:1px solid #284153;background:#09151f;color:#8096a7;border-radius:7px;min-height:29px;padding:0 8px;cursor:pointer;font-size:10px}
+.today-result-options button.selected{border-color:var(--arc-mint);background:rgba(104,245,167,.1);color:var(--arc-mint)}
+.today-result label{display:flex;align-items:center;gap:7px}.today-result label>span{font-size:10px;color:#8298a9}.today-result .state-scale{display:flex;gap:3px}.today-result .state-scale button{width:28px;padding:0}
+.today-result .state-scale button.selected{border-color:var(--arc-cyan);color:#fff;background:rgba(53,217,232,.12)}
+.today-result input{grid-column:1/-1;width:100%;border:1px solid #203646;background:#08131c;color:#edf6fa;border-radius:8px;padding:8px 10px;font-size:11px}
+.today-result input:focus{outline:none;border-color:var(--arc-cyan);box-shadow:0 0 0 3px var(--arc-ring)}
+@media(max-width:650px){.today-activity-main{grid-template-columns:auto 1fr}.today-activity-meta{grid-column:2}.today-result{margin-left:0;grid-template-columns:1fr}.today-result input{grid-column:auto}}
