@@ -117,3 +117,5 @@
 .today-activity-status{border:0;background:transparent;padding:3px;color:#89a0aa;cursor:pointer}.today-activity-status:hover{color:#dfffc8}.today-activity-meta>button{border:1px solid #263a43;background:#132128;color:#aebdc4;border-radius:6px;padding:4px 7px;font-size:8px;font-weight:700}.today-activity-meta>button:hover{border-color:#49616c;color:#e7f5dc}
 
 .dashboard-last-session{min-width:0}.last-session-summary{display:grid;grid-template-columns:92px 1fr;gap:12px;align-items:center;margin-top:14px;padding:11px 12px;border:1px solid #1e3038;border-radius:8px;background:#101b20}.last-session-summary>div{display:grid;gap:3px}.last-session-summary b{font-size:10px;text-transform:uppercase;letter-spacing:.05em}.last-session-summary strong{font-size:11px}.last-session-summary small{font-size:8px;color:#73858e}
+
+.analytics-range{display:flex;gap:6px}.analytics-range button{min-width:48px;padding:7px 10px;border:1px solid #263a43;border-radius:7px;background:#101b20;color:#8799a2;font-size:9px;font-weight:800;letter-spacing:.06em}.analytics-range button.selected{background:#dfffc8;color:#102017;border-color:#dfffc8}
