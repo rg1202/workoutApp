@@ -683,3 +683,6 @@ test('Dashboard surfaces the latest completed training and links to History',asy
 
 
 test('Analytics supports 7 30 and 90 day training ranges',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'Analytics',exact:true}).click();await expect(page.getByText('ALL TRAINING · 7D')).toBeVisible();await page.getByRole('button',{name:'30D'}).click();await expect(page.getByText('ALL TRAINING · 30D')).toBeVisible();await page.getByRole('button',{name:'90D'}).click();await expect(page.getByText('ALL TRAINING · 90D')).toBeVisible();});
+
+
+test('Analytics compares current training with the previous period',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'Analytics',exact:true}).click();const trends=page.locator('.analytics-trends');await expect(trends).toBeVisible();await expect(trends.getByRole('heading',{name:'Compared with previous 7 days'})).toBeVisible();await expect(trends.getByText('Training frequency')).toBeVisible();await expect(trends.getByText('Strength volume')).toBeVisible();await expect(trends.getByText('BJJ load')).toBeVisible();await expect(trends.getByText('Readiness')).toBeVisible();await page.getByRole('button',{name:'30D'}).click();await expect(trends.getByRole('heading',{name:'Compared with previous 30 days'})).toBeVisible();});
