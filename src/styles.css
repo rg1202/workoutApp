@@ -374,3 +374,13 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .today-state-row .state-scale button.selected{font-weight:800}
 .today-state-row .state-scale button.selected:after{content:"";position:absolute;left:7px;right:7px;bottom:3px;height:2px;border-radius:2px;background:var(--arc-brand-gradient)}
 @media(max-width:520px){.today-state-row{grid-template-columns:1fr}.today-state-row .state-scale{width:100%}.today-state-row .state-scale button{flex:1}}
+
+/* Today V2 — pre-session state */
+.today-session-state{grid-column:1/-1;display:grid;grid-template-columns:minmax(180px,1fr) auto auto;gap:18px;align-items:center;border-top:1px solid rgba(53,217,232,.14);padding-top:16px}
+.today-session-heading{display:grid;gap:3px}.today-session-heading b{font-size:13px;color:#eef7fa}
+.session-state-item{display:flex;align-items:center;gap:9px}.session-state-item>span{font-size:10px;color:#8298a9;text-transform:uppercase;letter-spacing:.5px}
+.today-session-state .state-scale{display:flex;gap:4px}.today-session-state .state-scale button{width:30px;height:30px;border:1px solid #274254;background:#091722;color:#71899b;border-radius:7px;cursor:pointer}
+.today-session-state .state-scale button:hover{border-color:var(--arc-cyan);color:#eefcff}
+.today-session-state .state-scale button.selected{border-color:var(--arc-cyan);background:linear-gradient(135deg,rgba(46,116,243,.26),rgba(53,217,232,.18));color:#fff;box-shadow:0 0 0 2px var(--arc-ring);font-weight:800}
+@media(max-width:850px){.today-session-state{grid-template-columns:1fr}.session-state-item{justify-content:space-between}}
+@media(max-width:420px){.session-state-item{display:grid}.today-session-state .state-scale button{flex:1;width:auto}}
