@@ -1,7 +1,7 @@
 import{test,expect,Page}from'@playwright/test';
 
 const nav=(page:Page,name:string)=>
- page.locator('aside nav').getByRole('button',{name,exact:true});
+ page.locator('aside').getByRole('button',{name,exact:true}).first();
 
 test.beforeEach(async({page})=>{
  await page.goto('/');
