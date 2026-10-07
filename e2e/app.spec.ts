@@ -457,7 +457,8 @@ test('adherence includes the final day of calendar periods',async({page})=>{
  await page.reload();
  const card=page.locator('.overview-adherence');
  const total=async(label:string)=>{const text=await card.locator('.adherence-kpi').filter({hasText:label}).locator('small').innerText();return Number(text.match(/\/(\d+) complete$/)?.[1]??-1)};
- const expected=(start:Date,end:Date)=>[monthEnd,quarterEnd,yearEnd].filter(d=>d>=start&&d<=end).length;
+ const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+ const expected=(start:Date,end:Date)=>[monthEnd,quarterEnd,yearEnd].filter(d=>d>=start&&d<=end&&d<=today).length;
  const monthStart=new Date(now.getFullYear(),now.getMonth(),1);
  const quarterStart=new Date(now.getFullYear(),quarterStartMonth,1);
  const yearStart=new Date(now.getFullYear(),0,1);
