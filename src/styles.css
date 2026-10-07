@@ -423,3 +423,8 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .today-result input::placeholder,.today-recovery>input::placeholder{color:#71899b;opacity:1}
 .today-result-options button.selected{border-color:var(--arc-mint);background:rgba(104,245,167,.12);color:var(--arc-mint)}
 .today-result .state-scale button.selected,.today-recovery-options button.selected{border-color:var(--arc-cyan);background:rgba(53,217,232,.14);color:#f5feff}
+
+/* Today V2 — prior-session recovery context */
+.today-recovery-carry{border:1px solid rgba(53,217,232,.16);border-radius:9px;padding:10px 11px;margin-top:8px;background:rgba(53,217,232,.035)}
+.today-recovery-carry b{color:var(--arc-cyan)!important}
+.today-recovery-carry span{line-height:1.45}
