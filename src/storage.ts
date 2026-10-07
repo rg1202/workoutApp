@@ -2,6 +2,7 @@ export type StoredSet = { weight: number; reps: number; rir: number; completedAt
 export type SessionRecord = { id: string; name: string; programId?: string; programName?: string; dayId?: string; week?: number; completedAt: string; durationMinutes?:number; notes?:string; exerciseNotes?:Record<string,string>; sets: { exerciseId: string; exerciseName: string; set: StoredSet }[] };
 export type DailyCheckIn={date:string;energy:number;mood:number;soreness:number;stress:number;sleepQuality:number;sleepHours:number;notes:string};
 export type BodyMetric={id:string;date:string;weight?:number;waist?:number;chest?:number;arms?:number;thighs?:number};
+export type InjuryStatus='Active'|'Improving'|'Resolved';export type InjuryImpact='No change'|'Improved'|'Aggravated';export type Injury={id:string;name:string;bodyArea:string;side:'Left'|'Right'|'Both'|'N/A';type:string;onsetDate:string;severity:number;status:InjuryStatus;notes:string;strengthRestriction?:string;bjjRestriction?:string;resolvedDate?:string};
 
 const SESSION_KEY = 'workoutapp.active-session.v3';
 const HISTORY_KEY = 'workoutapp.history.v2';
@@ -11,6 +12,7 @@ const CHECKINS_KEY='workoutapp.checkins.v1';
 const BODY_KEY='workoutapp.body-metrics.v1';
 const CUSTOM_EXERCISES_KEY='workoutapp.custom-exercises.v1';
 const FAVORITE_EXERCISES_KEY='workoutapp.favorite-exercises.v1';
+const INJURIES_KEY='workoutapp.injuries.v1';
 export const DATA_CHANGE_EVENT='workoutapp:data-change';
 
 export function loadJSON<T>(key: string, fallback: T): T {
@@ -19,4 +21,4 @@ export function loadJSON<T>(key: string, fallback: T): T {
 export function saveJSON<T>(key: string, value: T, source='app') { localStorage.setItem(key, JSON.stringify(value)); window.dispatchEvent(new CustomEvent(DATA_CHANGE_EVENT,{detail:{key,source}})); }
 export function sameJSON(a:unknown,b:unknown){return JSON.stringify(a)===JSON.stringify(b)}
 export function loadLegacyProgram<T>(): T | null { try { const raw=localStorage.getItem(LEGACY_PROGRAM_KEY); return raw?JSON.parse(raw) as T:null; } catch { return null; } }
-export const storageKeys = { session: SESSION_KEY, history: HISTORY_KEY, programs: PROGRAMS_KEY,checkins:CHECKINS_KEY,body:BODY_KEY,customExercises:CUSTOM_EXERCISES_KEY,favoriteExercises:FAVORITE_EXERCISES_KEY };
+export const storageKeys = { session: SESSION_KEY, history: HISTORY_KEY, programs: PROGRAMS_KEY,checkins:CHECKINS_KEY,body:BODY_KEY,customExercises:CUSTOM_EXERCISES_KEY,favoriteExercises:FAVORITE_EXERCISES_KEY,injuries:INJURIES_KEY };
