@@ -75,7 +75,8 @@ test('finishing Today workout syncs History Calendar and Analytics',async({page}
  },{date,weekday});
  await page.reload();
  await nav(page,'Today').click();
- await page.getByRole('button',{name:/Log set/i}).first().click();
+ await page.getByRole('button',{name:/Working set/i}).first().click();
+ page.once('dialog',dialog=>dialog.accept());
  await page.getByRole('button',{name:/Finish workout/i}).click();
  await nav(page,'History').click();
  await expect(page.getByText('E2E Flow Workout')).toBeVisible();
