@@ -10,11 +10,11 @@ test.beforeEach(async({page})=>{
 });
 
 test('app shell loads and primary navigation works',async({page})=>{
- await expect(page.getByText('WorkoutApp')).toBeVisible();
- for(const name of['Goals','Calendar','BJJ','Programs','Analytics']){
+ await expect(page.getByText('Arc',{exact:true})).toBeVisible();
+ for(const name of['Goals','Calendar','BJJ','Programs','Progress']){
   await nav(page,name).click();
   await expect(page.locator('main h1').first()).toContainText(
-   name==='BJJ'?/BJJ|Jiu/i:name==='Analytics'?/Performance/i:new RegExp(name,'i')
+   name==='BJJ'?/BJJ|Jiu/i:name==='Progress'?/Performance/i:new RegExp(name,'i')
   );
  }
 });
@@ -83,7 +83,7 @@ test('finishing Today workout syncs History Calendar and Analytics',async({page}
  await nav(page,'Calendar').click();
  await expect(page.getByText('E2E Flow Workout').first()).toBeVisible();
  await expect(page.getByText(/✓ E2E Flow Workout/)).toBeVisible();
- await nav(page,'Analytics').click();
+ await nav(page,'Progress').click();
  await expect(page.getByText('ALL TRAINING · 7D')).toBeVisible();
  await expect(page.locator('.analytics-summary article').first().locator('b')).toHaveText('1');
 });
@@ -103,7 +103,7 @@ test('latest body weight drives weight-loss goal progress',async({page})=>{
  const initialWidths=await Promise.all([initialBar,initialFill].map(async x=>(await x.boundingBox())?.width??0));
  expect(initialWidths[1]/initialWidths[0]).toBeGreaterThan(.45);
  expect(initialWidths[1]/initialWidths[0]).toBeLessThan(.55);
- await nav(page,'Analytics').click();
+ await nav(page,'Progress').click();
  await page.locator('#bm-weight').fill('192');
  await page.getByRole('button',{name:/Save measurements/i}).click();
  await nav(page,'Goals').click();
@@ -137,7 +137,7 @@ test('creating a weight goal uses Analytics weight and syncs Dashboard progress'
  await expect(goals.getByText('Competition Cut')).toBeVisible();
  await expect(goals.getByText(/198 \/ 194 lb/)).toBeVisible();
  await expect(goals.getByText(/^0%/)).toBeVisible();
- await nav(page,'Analytics').click();
+ await nav(page,'Progress').click();
  await page.locator('#bm-weight').fill('196');
  await page.getByRole('button',{name:/Save measurements/i}).click();
  await nav(page,'Dashboard').click();
@@ -161,7 +161,7 @@ test('moves one program workout without changing its recurring weekday',async({p
 
 
 test('shared state changes propagate once without persistence churn',async({page})=>{
- await nav(page,'Analytics').click();
+ await nav(page,'Progress').click();
  await page.locator('#bm-weight').fill('197');
  await page.getByRole('button',{name:/Save measurements/i}).click();
  await nav(page,'Goals').click();
@@ -630,10 +630,10 @@ test('Dashboard can complete a due planned activity directly',async({page})=>{aw
 test('Dashboard surfaces the latest completed training and links to History',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'Today',exact:true}).click();const first=page.locator('.exercise-card').first();if(await first.count()){await first.getByRole('button',{name:/start/i}).click().catch(()=>{});}await page.getByRole('button',{name:'Dashboard',exact:true}).click();const card=page.locator('.dashboard-last-session');if(await card.count()){await expect(card).toBeVisible();await card.getByRole('button',{name:'History'}).click();await expect(page.getByRole('button',{name:'History',exact:true})).toHaveClass(/active/);}});
 
 
-test('Analytics supports 7 30 and 90 day training ranges',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'Analytics',exact:true}).click();await expect(page.getByText('ALL TRAINING · 7D')).toBeVisible();await page.getByRole('button',{name:'30D'}).click();await expect(page.getByText('ALL TRAINING · 30D')).toBeVisible();await page.getByRole('button',{name:'90D'}).click();await expect(page.getByText('ALL TRAINING · 90D')).toBeVisible();});
+test('Analytics supports 7 30 and 90 day training ranges',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'Progress',exact:true}).click();await expect(page.getByText('ALL TRAINING · 7D')).toBeVisible();await page.getByRole('button',{name:'30D'}).click();await expect(page.getByText('ALL TRAINING · 30D')).toBeVisible();await page.getByRole('button',{name:'90D'}).click();await expect(page.getByText('ALL TRAINING · 90D')).toBeVisible();});
 
 
-test('Analytics compares current training with the previous period',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'Analytics',exact:true}).click();const trends=page.locator('.analytics-trends');await expect(trends).toBeVisible();await expect(trends.getByRole('heading',{name:'Compared with previous 7 days'})).toBeVisible();await expect(trends.getByText('Training frequency')).toBeVisible();await expect(trends.getByText('Strength volume')).toBeVisible();await expect(trends.getByText('BJJ load')).toBeVisible();await expect(trends.getByText('Readiness')).toBeVisible();await page.getByRole('button',{name:'30D'}).click();await expect(trends.getByRole('heading',{name:'Compared with previous 30 days'})).toBeVisible();});
+test('Analytics compares current training with the previous period',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'Progress',exact:true}).click();const trends=page.locator('.analytics-trends');await expect(trends).toBeVisible();await expect(trends.getByRole('heading',{name:'Compared with previous 7 days'})).toBeVisible();await expect(trends.getByText('Training frequency')).toBeVisible();await expect(trends.getByText('Strength volume')).toBeVisible();await expect(trends.getByText('BJJ load')).toBeVisible();await expect(trends.getByText('Readiness')).toBeVisible();await page.getByRole('button',{name:'30D'}).click();await expect(trends.getByRole('heading',{name:'Compared with previous 30 days'})).toBeVisible();});
 
 
 test('Editing a weight goal persists its target and goal fields',async({page})=>{await page.goto('/');await nav(page,'Goals').click();await page.getByRole('button',{name:'Add goal'}).click();await page.getByRole('button',{name:'Body',exact:true}).click();const builder=page.locator('.typed-goal-builder');await builder.getByLabel('Target').fill('190');await builder.getByRole('button',{name:'Create body goal'}).click();const card=page.locator('.goal-card').filter({hasText:'Weight Goal'});await card.getByRole('button',{name:'Edit goal'}).click();await builder.getByLabel('Target').fill('185');await builder.getByRole('button',{name:'Save changes'}).click();await expect(card.getByText(/of 185 lb/)).toBeVisible();await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.goals.v2')||'[]').find((g:any)=>g.name==='Weight Goal')?.target)).toBe(185);});
