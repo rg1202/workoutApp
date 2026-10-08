@@ -1,6 +1,6 @@
 # Arc V2 — Pilot participant notice and acknowledgment
 
-**Status:** Draft for owner review; not yet implemented in the application.
+**Status:** Implemented on `product/v2`; pending build, automated tests, owner wording approval and pilot authorization.
 **Pilot:** Invitation-only, approximately 5–10 selected testers.
 **Effective date:** To be set before invitations are issued.
 **Contact:** rgould.midwest@gmail.com
@@ -42,3 +42,11 @@ If you report bugs, avoid sending sensitive data, screenshots with personal deta
 6. Acknowledgment is browser/profile-specific; clearing local storage resets it. Cloudflare Access remains the actual allowlist gate.
 7. Add automated tests for accept, decline, reload persistence, new-version re-acknowledgment and storage clearing.
 8. Before implementation or invitations: owner approves wording, effective date, third-party processing/retention disclosure and any applicable legal review. No claim of regulatory compliance is implied.
+
+## Implementation log — October 8, 2026
+
+- Added `src/arc/PilotNoticeGate.tsx` and wrapped `Root` in `src/main.tsx` so no Arc app UI mounts before first-use acknowledgment.
+- Added responsive notice styles in `src/styles.css`, including keyboard focus visibility and scrollable notice.
+- Acceptance key: `arc.pilot-acknowledgment.v1`; notice version `2026-10-08-v1`. This is local browser acknowledgment, not verified identity or a server-side consent record.
+- Added Playwright coverage for decline, disabled continue, persistence, review link, version mismatch, and clearing storage. Existing E2E setup now acknowledges the notice before testing Arc features.
+- **Not yet verified:** local build and full release test suite, live deployment, owner wording approval, Cloudflare retention review and final go/no-go. Do not invite testers until verified.
