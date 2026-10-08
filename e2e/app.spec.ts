@@ -912,3 +912,17 @@ test('rescheduling a goal-linked activity preserves identity, status, and goal a
  await nav(page,'Goals').click();
  await expect(page.getByText('Run Consistently').first()).toBeVisible();
 });
+
+
+test('Progress counts a linked completed activity once across duplicate plan representations',async({page})=>{
+ const today=await page.evaluate(()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')});
+ await page.evaluate(date=>localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([
+  {id:'progress-original',linkedActivityId:'same-session',date,title:'Progress Original',type:'Cardio',status:'Planned',durationMinutes:30},
+  {id:'progress-completed',linkedActivityId:'same-session',date,title:'Progress Completed',type:'Cardio',status:'Completed',durationMinutes:30,actuals:{actualDurationMinutes:32}}
+ ])),today);
+ await page.reload();
+ await nav(page,'Progress').click();
+ await expect(page.locator('.progress-snapshot')).toContainText('1 of 1 planned sessions completed');
+ await expect(page.locator('.progress-recent')).toContainText('Progress Completed');
+ await expect(page.locator('.progress-recent')).not.toContainText('Progress Original');
+});
