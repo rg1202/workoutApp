@@ -685,7 +685,7 @@ test('goal tracker registry selects only the relevant measurement and persists h
 
 
 test('Focus catalog explains a new focus and preserves sidebar selection',async({page})=>{
- await page.getByRole('button',{name:'Add focus'}).click();
+ await page.getByRole('button',{name:'Add / Manage'}).click();
  await expect(page.getByRole('heading',{name:'Manage your focuses'})).toBeVisible();
  await page.getByRole('button',{name:/Swimming.*Preview focus/i}).click();
  await expect(page.getByText('Swimming blends efficient technique')).toBeVisible();
@@ -698,7 +698,7 @@ test('Focus catalog explains a new focus and preserves sidebar selection',async(
 });
 
 test('optional Focus can be hidden and restored without deleting records',async({page})=>{
- await page.getByRole('button',{name:'Add focus'}).click();
+ await page.getByRole('button',{name:'Add / Manage'}).click();
  await page.getByRole('button',{name:/Swimming.*Preview focus/i}).click();
  await page.getByRole('button',{name:'Add Swimming'}).click();
  await page.getByRole('button',{name:'Remove from sidebar'}).click();
@@ -707,7 +707,7 @@ test('optional Focus can be hidden and restored without deleting records',async(
  await expect(page.locator('aside').getByRole('button',{name:'Swimming'})).toHaveCount(0);
  await page.reload();
  await expect(page.locator('aside').getByRole('button',{name:'Swimming'})).toHaveCount(0);
- await page.getByRole('button',{name:'Add focus'}).click();
+ await page.getByRole('button',{name:'Add / Manage'}).click();
  await page.getByRole('button',{name:/Swimming.*Preview focus/i}).click();
  await page.getByRole('button',{name:'Add Swimming'}).click();
  await expect(page.locator('aside').getByRole('button',{name:'Swimming'})).toBeVisible();
@@ -852,14 +852,14 @@ test('defocusing retains a focus without deleting data and refocusing restores i
   localStorage.setItem('workoutapp.goals.v2',JSON.stringify([{id:'defocus-running-goal',name:'Keep Running History',type:'Cardio',status:'Active',focus:'running'}]));
  });
  await page.reload();
- await page.getByRole('button',{name:'Add focus'}).click();
+ await page.getByRole('button',{name:'Add / Manage'}).click();
  await page.getByRole('button',{name:/Running.*Focused/i}).click();
  await page.getByRole('button',{name:'Defocus Running'}).click();
  await expect(page.locator('aside').getByRole('button',{name:'Running',exact:true})).toBeVisible();
  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('arc.hidden-focuses.v1')||'[]'))).toContain('running');
  await page.reload();
  await expect(page.locator('aside').getByRole('button',{name:'Running',exact:true})).toBeVisible();
- await page.getByRole('button',{name:'Add focus'}).click();
+ await page.getByRole('button',{name:'Add / Manage'}).click();
  await page.getByRole('button',{name:/Running.*Defocused/i}).click();
  await page.getByRole('button',{name:'Focus Running'}).click();
  await expect(page.locator('aside').getByRole('button',{name:'Running'})).toBeVisible();
@@ -871,7 +871,7 @@ test('sidebar eye defocuses Running and catalog eye restores it',async({page})=>
  await expect(page.locator('aside').getByRole('button',{name:'Running',exact:true})).toBeVisible();
  await page.locator('aside').getByRole('button',{name:'Defocus Running'}).click();
  await expect(page.locator('aside').getByRole('button',{name:'Running',exact:true})).toBeVisible();
- await page.getByRole('button',{name:'Add focus'}).click();
+ await page.getByRole('button',{name:'Add / Manage'}).click();
  await page.getByRole('button',{name:/Running.*Defocused/i}).click();
  await page.getByRole('button',{name:'Focus Running'}).click();
  await expect(page.locator('aside').getByRole('button',{name:'Running',exact:true})).toBeVisible();
@@ -881,7 +881,7 @@ test('sidebar eye defocuses Running and catalog eye restores it',async({page})=>
 test('removing an accidentally added focus removes membership but preserves its goals',async({page})=>{
  await page.evaluate(()=>localStorage.setItem('workoutapp.goals.v2',JSON.stringify([{id:'preserved-cycling-goal',name:'Cycling History',type:'Cardio',status:'Active',focus:'cycling'}])));
  await page.reload();
- await page.getByRole('button',{name:'Add focus'}).click();
+ await page.getByRole('button',{name:'Add / Manage'}).click();
  await page.getByRole('button',{name:/Cycling.*Focused/i}).click();
  await page.getByRole('button',{name:'Remove focus'}).click();
  await page.getByRole('group',{name:'Confirm remove focus'}).getByRole('button',{name:'Remove focus'}).click();
