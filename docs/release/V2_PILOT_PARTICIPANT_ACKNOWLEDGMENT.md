@@ -1,6 +1,6 @@
 # Arc V2 — Pilot participant notice and acknowledgment
 
-**Status:** Implemented on `product/v2`; pending build, automated tests, owner wording approval and pilot authorization.
+**Status:** Implemented and automated release tests passed (owner-reported); owner conditionally approved wording October 8, 2026. Effective date, Cloudflare retention verification and pilot authorization remain pending.
 **Pilot:** Invitation-only, approximately 5–10 selected testers.
 **Effective date:** To be set before invitations are issued.
 **Contact:** rgould.midwest@gmail.com
@@ -50,3 +50,7 @@ If you report bugs, avoid sending sensitive data, screenshots with personal deta
 - Acceptance key: `arc.pilot-acknowledgment.v1`; notice version `2026-10-08-v1`. This is local browser acknowledgment, not verified identity or a server-side consent record.
 - Added Playwright coverage for decline, disabled continue, persistence, review link, version mismatch, and clearing storage. Existing E2E setup now acknowledges the notice before testing Arc features.
 - **Not yet verified:** local build and full release test suite, live deployment, owner wording approval, Cloudflare retention review and final go/no-go. Do not invite testers until verified.
+
+## Owner wording decision — October 8, 2026
+
+Owner explicitly approved current Arc V2 pilot notice wording **subject to** (1) setting an effective date and (2) verifying Cloudflare retention practices. This is **conditional wording approval only**, not permission to invite testers or final legal/privacy sign-off. Confirm live deployed notice and analytics/Access disclosures before opening the pilot.
