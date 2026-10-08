@@ -1144,6 +1144,11 @@ test('Arc restores a validated backup after confirmation',async({page})=>{
  ]);
  const stored=await page.evaluate(()=>localStorage.getItem('workoutapp.goals.v2'));
  expect(stored).toContain('Restore test goal');
+ // Restore replaces Arc storage, including any prior pilot acknowledgment.
+ // The restored browser must explicitly accept the notice again.
+ await expect(page.getByRole('heading',{name:'Welcome to Arc'})).toBeVisible();
+ await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
+ await page.getByRole('button',{name:'Continue to Arc'}).click();
  await nav(page,'Goals').click();
  await expect(page.getByText('Restore test goal')).toBeVisible();
 });
