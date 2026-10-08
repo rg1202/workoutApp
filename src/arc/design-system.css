@@ -109,3 +109,44 @@
 .unified-shell main .today-goal-measure-entry .arc-ui-button:focus-visible{
  outline:3px solid var(--arc-focus-outline);outline-offset:3px;
 }
+
+/* UI-1.4 Today: goal direction empty-state composition */
+.unified-shell main .today-goal-intelligence--empty{
+ display:grid;gap:0;padding:24px 28px;
+ background:linear-gradient(115deg,#0e1a27 0%,#0a121d 70%);
+ border:1px solid var(--arc-border);border-radius:var(--arc-radius);
+}
+.unified-shell main .today-goal-intelligence--empty>.overview-heading{
+ display:flex;align-items:flex-start;justify-content:space-between;gap:20px;
+ margin:0;padding:0 0 18px;border-bottom:1px solid var(--arc-border);
+}
+.unified-shell main .today-goal-intelligence--empty>.overview-heading h2{margin:7px 0 5px}
+.unified-shell main .today-goal-intelligence--empty>.overview-heading p{margin:0;max-width:560px}
+.unified-shell main .today-goal-intelligence--empty>.overview-heading>.arc-ui-button{
+ flex:0 0 auto;min-height:38px;padding:8px 12px;
+ background:transparent;border-color:var(--arc-border);
+ color:var(--arc-action-text);font-size:.78rem;
+}
+.unified-shell main .today-goal-intelligence--empty .today-goal-empty{
+ margin:0;padding:25px 0 4px;text-align:left;
+ border:0;background:transparent;max-width:none;
+}
+.unified-shell main .today-goal-intelligence--empty .today-goal-empty-copy{
+ max-width:520px;display:flex;flex-direction:column;align-items:flex-start;gap:9px;
+}
+.unified-shell main .today-goal-intelligence--empty .today-goal-empty-copy>strong{
+ font-size:1.06rem;color:var(--arc-text);font-weight:750;line-height:1.35;
+}
+.unified-shell main .today-goal-intelligence--empty .today-goal-empty-copy>p{
+ color:#9bb0c2;margin:0 0 8px;line-height:1.55;
+}
+.unified-shell main .today-goal-intelligence--empty .today-goal-empty .arc-ui-button--primary{
+ width:auto;max-width:100%;min-height:44px;padding:11px 16px;
+ background:var(--arc-action-primary-bg);border:1px solid var(--arc-action-primary-border);
+ color:var(--arc-action-primary-text);border-radius:var(--arc-action-radius);
+}
+@media(max-width:600px){
+ .unified-shell main .today-goal-intelligence--empty{padding:19px}
+ .unified-shell main .today-goal-intelligence--empty>.overview-heading{gap:12px;flex-wrap:wrap}
+ .unified-shell main .today-goal-intelligence--empty .today-goal-empty{padding-top:20px}
+}
