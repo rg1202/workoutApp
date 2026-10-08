@@ -6,3 +6,15 @@ export const goalTrackerRegistry:GoalTrackerDefinition[]=[{
  matches:g=>g.status==='Active'&&(g.type==='Body'||g.goalTypeV2==='Body Composition')
 }];
 export const activeGoalTrackers=(goals:Goal[])=>goalTrackerRegistry.filter(t=>goals.some(t.matches));
+
+export type BodyMetricField='weight'|'waist'|'chest'|'arms'|'thighs';
+export function goalBodyMetricField(goal:Goal):BodyMetricField|null{
+ if(!goalTrackerRegistry[0].matches(goal))return null;
+ const metric=(goal.metric??goal.name).toLowerCase();
+ if(/waist/.test(metric))return'waist';
+ if(/chest/.test(metric))return'chest';
+ if(/arm|bicep/.test(metric))return'arms';
+ if(/thigh|leg circumference/.test(metric))return'thighs';
+ if(/weight|bodyweight|weigh/.test(metric))return'weight';
+ return null;
+}
