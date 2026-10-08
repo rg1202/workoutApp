@@ -1318,3 +1318,16 @@ test('restore detects silently ignored writes and rolls back existing data',asyn
  expect(result.error).toContain('original data restored');
  expect(result.units).toBe('{"preset":"US"}');
 });
+
+test('saveJSON refuses to overwrite corrupted records',async({page})=>{
+ const result=await page.evaluate(async()=>{
+  const storage=await import('/src/storage.ts');
+  localStorage.setItem('arc.corrupt-test.v1','{broken');
+  let rejected=false;
+  try{storage.saveJSON('arc.corrupt-test.v1',{valid:true});}catch{rejected=true;}
+  return {rejected,value:localStorage.getItem('arc.corrupt-test.v1')};
+ });
+ expect(result.rejected).toBe(true);
+ expect(result.value).toBe('{broken');
+ await expect(page.getByRole('alert')).toBeVisible();
+});
