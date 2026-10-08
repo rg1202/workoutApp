@@ -551,3 +551,14 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .cal-month section>.cal-add-activity{position:absolute;top:5px;right:5px;z-index:1}
 .cal-day>.cal-add-activity{margin-bottom:12px}
 @media(hover:none){.cal-add-activity{opacity:1}}
+
+
+/* Focus visibility controls */
+.arc-focus-nav-row{display:flex;align-items:center;min-width:0;border-radius:9px}
+.arc-focus-nav-row>button:first-child{flex:1;min-width:0}
+.arc-nav-section .arc-focus-nav-row .arc-focus-eye{flex:0 0 auto;padding:8px;margin-right:4px;color:#81909e;opacity:.45}
+.arc-focus-nav-row:hover .arc-focus-eye,.arc-focus-nav-row:focus-within .arc-focus-eye{opacity:1}
+.arc-nav-section .arc-focus-nav-row .arc-focus-eye:hover{color:var(--arc-accent);background:#1b2830}
+.arc-focus-visibility{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--arc-border);background:transparent;color:inherit;border-radius:9px;padding:9px 12px;cursor:pointer}
+.arc-focus-visibility:hover{border-color:var(--arc-accent)}
+@media(hover:none){.arc-nav-section .arc-focus-nav-row .arc-focus-eye{opacity:1}}
