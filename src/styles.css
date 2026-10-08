@@ -793,3 +793,17 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
   padding:8px 12px;
   cursor:pointer;
 }
+
+
+/* M3.8: keep sidebar utility controls reachable on shorter desktop viewports.
+   The fixed-height sidebar previously allowed its contents to extend below the viewport. */
+@media (min-width:761px) {
+  .unified-shell > aside {
+    min-height:0;
+    overflow-y:auto;
+    overscroll-behavior-y:contain;
+  }
+  .unified-shell > aside .aside-foot {
+    flex-shrink:0;
+  }
+}
