@@ -104,3 +104,12 @@ These are initial findings and priorities, not a completed security or UX audit.
 - **Outstanding:** demonstrate export/restore round-trip including malformed source data, verify that failed rollback is communicated safely, review direct localStorage writes outside `saveJSON`, and design schema migration/version handling.
 - **Risk:** backup export copies raw eligible key values, including unreadable records; those backups may not be restorable until repaired. Exporting a backup does not repair data.
 - **Release gate:** M3.4 remains in progress; M3.5 and public launch are not approved.
+
+## M3.5 checkpoint — October 2026
+
+- Owner confirmed **100/100 Playwright tests passing** after M3.4 schema-regex correction. This is a local report, not CI or production verification.
+- **Security:** development Strava server now binds to loopback and checks single-use expiring OAuth state. It still persists one shared token set on disk; **public integration deployment remains blocked** pending per-user isolation, credential handling and security review.
+- **Build reproducibility:** added `npm run check:release` and a lockfile presence gate. The repository did not contain `package-lock.json` when inspected and `package.json` still uses `latest` ranges. **The release command is expected to fail until a reviewed lockfile is committed.** Pin versions, generate lockfile with the user's installed toolchain, and confirm `npm ci` before declaring this gate passed.
+- **Deployment:** see `docs/release/V2_DEPLOYMENT_RUNBOOK.md`. Static-only HTTPS pilot is the proposed boundary; integration server is excluded. No hosting deployment has been verified.
+- **Privacy:** Arc stores potentially sensitive personal development and activity data in browser storage. Backup files are unencrypted and may include malformed records. A backup export does not imply successful restoration; clear user-facing notice, retention limitations, support contact and privacy/terms review are still required.
+- **Release status:** M3.5 in progress; M3.6 release candidate and public launch are **not approved**.
