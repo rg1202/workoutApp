@@ -1121,3 +1121,17 @@ test('Arc backup exports local goals and excludes unrelated storage',async({page
  expect(backup.data['arc.units.v1']).toBeTruthy();
  expect(backup.data['unrelated.secret']).toBeUndefined();
 });
+
+test('Arc restores a validated backup after confirmation',async({page})=>{
+ const backup={format:'arc-local-backup',version:1,exportedAt:'2026-10-07T12:00:00.000Z',data:{'workoutapp.goals.v2':JSON.stringify([{id:'restored-goal',name:'Restore test goal'}])}};
+ page.on('dialog',dialog=>dialog.accept());
+ await page.locator('input[aria-label="Restore Arc backup file"]').setInputFiles({name:'arc-backup.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
+ await expect.poll(()=>page.evaluate(()=>localStorage.getItem('workoutapp.goals.v2'))).toContain('Restore test goal');
+});
+test('Arc rejects unsupported backups without overwriting browser data',async({page})=>{
+ await page.evaluate(()=>localStorage.setItem('workoutapp.goals.v2','[]'));
+ page.on('dialog',dialog=>dialog.accept());
+ const backup={format:'arc-local-backup',version:999,exportedAt:'2026-10-07T12:00:00.000Z',data:{'workoutapp.goals.v2':'[1]'}};
+ await page.locator('input[aria-label="Restore Arc backup file"]').setInputFiles({name:'bad.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
+ expect(await page.evaluate(()=>localStorage.getItem('workoutapp.goals.v2'))).toBe('[]');
+});
