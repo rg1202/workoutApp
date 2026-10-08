@@ -141,7 +141,7 @@ test('creating a weight goal uses Analytics weight and syncs Dashboard progress'
  await expect(page.getByText(/^0%/)).toBeVisible();
  await nav(page,'Today').click();
  await expect(page.locator('.today-goal-intelligence').getByText('Competition Cut')).toBeVisible();
- await nav(page,'Progress').click();
+ await nav(page,'Today').click();
  await page.locator('#bm-weight').fill('196');
  await page.getByRole('button',{name:/Save measurements/i}).click();
  await nav(page,'Goals').click();
@@ -161,9 +161,6 @@ test('moves one program workout without changing its recurring weekday',async({p
 
 
 test('shared state changes propagate once without persistence churn',async({page})=>{
- await nav(page,'Progress').click();
- await page.locator('#bm-weight').fill('197');
- await page.getByRole('button',{name:/Save measurements/i}).click();
  await nav(page,'Goals').click();
  await page.getByRole('button',{name:/New goal/i}).click();
  await page.locator('.goal-type-v2').getByRole('button',{name:/^Body Composition/}).click();
@@ -172,6 +169,9 @@ test('shared state changes propagate once without persistence churn',async({page
  await page.getByLabel('Starting value').fill('197');
  await page.getByLabel('Target value').fill('190');
  await page.getByRole('button',{name:/Continue/i}).click();await page.getByRole('button',{name:/Continue/i}).click();await page.getByRole('button',{name:/Create goal/i}).click();await page.getByRole('button',{name:/Not now/i}).click();
+ await nav(page,'Today').click();
+ await page.locator('#bm-weight').fill('197');
+ await page.getByRole('button',{name:/Save measurements/i}).click();
  const storedGoal=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.goals.v2')||'[]').find((g:any)=>g.name==='Weight Goal'));
  expect(storedGoal).toMatchObject({type:'Body',goalTypeV2:'Body Composition',start:197,current:197,target:190,unit:'lb'});
  await nav(page,'Today').click();
