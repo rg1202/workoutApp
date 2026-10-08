@@ -1048,7 +1048,7 @@ test('Endurance focus honors linked goal over ambiguous session title',async({pa
  await expect(page.locator('.arc-endurance-recent')).not.toContainText('Evening Cardio');
  await expect(page.locator('.arc-endurance-recent')).not.toContainText('Cardio Workout');
  await nav(page,'Cycling').click();
- await expect(page.getByRole('region',{name:'Cycling 7-day summary'})).toContainText('18 km');
+ await expect(page.getByRole('region',{name:'Cycling 7-day summary'})).toContainText('11.2 mi');
  await expect(page.locator('.arc-endurance-recent')).toContainText('Evening Cardio');
  await expect(page.locator('.arc-endurance-recent')).not.toContainText('Morning Cardio');
  await expect(page.locator('.arc-endurance-recent')).not.toContainText('Cardio Workout');
