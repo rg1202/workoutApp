@@ -744,3 +744,21 @@ test('BJJ goal lifecycle connects Calendar Today completion and reload',async({p
  await expect(page.getByText('✓ BJJ Lifecycle Practice').first()).toBeVisible();
  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').filter((p:any)=>p.title==='BJJ Lifecycle Practice').length)).toBe(1);
 });
+
+
+test('BJJ lifecycle preserves goal progress when a completed session is reloaded',async({page})=>{
+ const today=await page.evaluate(()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')});
+ await page.evaluate(date=>{
+  localStorage.setItem('workoutapp.goals.v2',JSON.stringify([{id:'bjj-progress-check',name:'BJJ Weekly Practice',type:'BJJ',status:'Active',goalTypeV2:'Consistency',priority:'Primary',focus:'bjj',supportingTargets:[{name:'Gi class',activityType:'BJJ',frequencyPerWeek:2,durationMinutes:60}]}]));
+  localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([{id:'bjj-progress-session',date,title:'Gi class',type:'BJJ',status:'Planned',goalIds:['bjj-progress-check'],sourceType:'Goal',sourceId:'bjj-progress-check',durationMinutes:60}]));
+ },today);
+ await page.reload();
+ await nav(page,'Calendar').click();
+ await expect(page.getByText('○ Gi class').first()).toBeVisible();
+ await page.getByText('○ Gi class').first().click();
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.id==='bjj-progress-session')?.status)).toBe('Completed');
+ await page.reload();
+ await nav(page,'Calendar').click();
+ await expect(page.getByText('✓ Gi class').first()).toBeVisible();
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').filter((p:any)=>p.id==='bjj-progress-session').length)).toBe(1);
+});
