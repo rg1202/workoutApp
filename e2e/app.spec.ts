@@ -1259,3 +1259,23 @@ test('restore backup is reachable and operable by keyboard',async({page})=>{
  await page.keyboard.press('Enter');
  await expect(page.locator('input[aria-label="Restore Arc backup file"]')).toHaveCount(1);
 });
+
+test('calendar view controls expose selection to assistive technology',async({page})=>{
+ await nav(page,'Calendar').click();
+ const week=page.getByRole('button',{name:'Week',exact:true});
+ const month=page.getByRole('button',{name:'Month',exact:true});
+ await expect(week).toHaveAttribute('aria-pressed','true');
+ await month.click();
+ await expect(month).toHaveAttribute('aria-pressed','true');
+ await expect(week).toHaveAttribute('aria-pressed','false');
+ await expect(page.getByRole('button',{name:'Previous calendar period'})).toBeVisible();
+ await expect(page.getByRole('button',{name:'Next calendar period'})).toBeVisible();
+});
+
+test('primary navigation exposes active destination to screen readers',async({page})=>{
+ const navigation=page.getByRole('navigation',{name:'Primary navigation'});
+ await expect(navigation.getByRole('button',{name:'Today'})).toHaveAttribute('aria-current','page');
+ await navigation.getByRole('button',{name:'Goals'}).click();
+ await expect(navigation.getByRole('button',{name:'Goals'})).toHaveAttribute('aria-current','page');
+ await expect(page.locator('main#arc-main')).toBeVisible();
+});
