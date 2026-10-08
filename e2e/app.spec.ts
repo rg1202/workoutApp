@@ -845,3 +845,23 @@ test('editing and skipping a goal-linked activity preserves identity and actuals
  await page.reload();
  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.id==='integrity-session')?.status)).toBe('Skipped');
 });
+
+
+test('defocusing hides a focus without deleting data and refocusing restores it',async({page})=>{
+ await page.evaluate(()=>{
+  localStorage.setItem('workoutapp.goals.v2',JSON.stringify([{id:'defocus-running-goal',name:'Keep Running History',type:'Cardio',status:'Active',focus:'running'}]));
+ });
+ await page.reload();
+ await page.getByRole('button',{name:'Add focus'}).click();
+ await page.getByRole('button',{name:/Running.*Focused/i}).click();
+ await page.getByRole('button',{name:'Defocus Running'}).click();
+ await expect(page.locator('aside').getByRole('button',{name:'Running'})).toHaveCount(0);
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('arc.hidden-focuses.v1')||'[]'))).toContain('running');
+ await page.reload();
+ await expect(page.locator('aside').getByRole('button',{name:'Running'})).toHaveCount(0);
+ await page.getByRole('button',{name:'Add focus'}).click();
+ await page.getByRole('button',{name:/Running.*Defocused/i}).click();
+ await page.getByRole('button',{name:'Focus Running'}).click();
+ await expect(page.locator('aside').getByRole('button',{name:'Running'})).toBeVisible();
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.goals.v2')||'[]').some((g:any)=>g.id==='defocus-running-goal'))).toBe(true);
+});
