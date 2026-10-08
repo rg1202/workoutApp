@@ -1,5 +1,5 @@
 import type {PlannedActivity} from '../plans';
-export const timeMinutes=(value:string)=>{if(!/^([01]\\d|2[0-3]):[0-5]\\d$/.test(value))return null;const [h,m]=value.split(':').map(Number);return h*60+m};
+export const timeMinutes=(value:string)=>{if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(value))return null;const [h,m]=value.split(':').map(Number);return h*60+m};
 export function timeConflicts(plans:PlannedActivity[],date:string,time:string,duration:number){
  const start=timeMinutes(time);if(start===null||!Number.isFinite(duration)||duration<=0)return [];
  return plans.filter(p=>p.date===date&&p.status!=='Skipped'&&p.time&&p.durationMinutes&&timeMinutes(p.time)!==null).filter(p=>{
