@@ -624,3 +624,15 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .arc-today-top .arc-avatar-portrait{flex-shrink:0;max-width:100%}
 .arc-today-top .arc-weather-hours{min-width:0;max-width:100%;overflow-x:auto}
 @media(max-width:900px){.arc-today-top{grid-template-columns:minmax(0,1fr)}.arc-today-top>header{align-items:flex-start}}
+
+/* Compact Today masthead refinements */
+.arc-today-top{grid-template-columns:minmax(195px,245px) minmax(0,1fr);gap:16px;margin-bottom:12px}
+.arc-today-top .arc-today-avatar{gap:8px;padding:12px 0 0}
+.arc-today-top .arc-avatar-portrait{width:124px;height:124px}
+.arc-today-top .arc-avatar-controls{gap:6px}
+.arc-today-top .arc-avatar-controls button{padding:5px 8px;font-size:.7rem}
+.arc-today-top .arc-today-weather{padding:12px 16px}
+.arc-today-top .arc-weather-current{margin:8px 0}
+.arc-today-top .arc-weather-hours article{padding:7px;flex-basis:75px}
+.arc-today-top .arc-weather-hours{padding-bottom:3px}
+@media(max-width:900px){.arc-today-top{grid-template-columns:minmax(0,1fr)}}
