@@ -265,3 +265,46 @@
 .unified-shell main .today-v2>.today-context--empty p{
  color:var(--today-muted);
 }
+
+/* UI-2.1 Goals: action hierarchy matches Today and the canonical Arc palette. */
+.unified-shell main .arc-goals-page-header>.arc-ui-button,
+.unified-shell main .goal-wizard-top>.arc-ui-button,
+.unified-shell main .goal-support-head>.arc-ui-button,
+.unified-shell main .goal-wizard-actions>.arc-ui-button,
+.unified-shell main .goal-support-empty>.arc-ui-button,
+.unified-shell main .goal-plan-actions>.arc-ui-button{
+ display:inline-flex;align-items:center;justify-content:center;gap:8px;
+ min-height:var(--arc-action-height);padding:10px 15px;
+ border:1px solid var(--arc-action-border);border-radius:var(--arc-action-radius);
+ background:var(--arc-control);color:var(--arc-action-text);
+ font:inherit;font-size:.85rem;font-weight:700;line-height:1.25;
+ box-shadow:none;text-shadow:none;cursor:pointer;
+}
+.unified-shell main .arc-goals-page-header>.arc-ui-button--primary,
+.unified-shell main .goal-wizard-actions>.arc-ui-button--primary,
+.unified-shell main .goal-support-empty>.arc-ui-button--primary,
+.unified-shell main .goal-plan-actions>.arc-ui-button--primary{
+ background:var(--arc-action-primary-bg);
+ border-color:var(--arc-action-primary-border);
+ color:var(--arc-action-primary-text);
+}
+.unified-shell main .arc-goals-page-header>.arc-ui-button:hover:not(:disabled),
+.unified-shell main .goal-wizard-top>.arc-ui-button:hover:not(:disabled),
+.unified-shell main .goal-support-head>.arc-ui-button:hover:not(:disabled),
+.unified-shell main .goal-wizard-actions>.arc-ui-button:hover:not(:disabled),
+.unified-shell main .goal-support-empty>.arc-ui-button:hover:not(:disabled),
+.unified-shell main .goal-plan-actions>.arc-ui-button:hover:not(:disabled){
+ background:var(--arc-control-hover);border-color:var(--arc-cyan);
+}
+.unified-shell main .arc-goals-page-header>.arc-ui-button--primary:hover:not(:disabled),
+.unified-shell main .goal-wizard-actions>.arc-ui-button--primary:hover:not(:disabled),
+.unified-shell main .goal-support-empty>.arc-ui-button--primary:hover:not(:disabled),
+.unified-shell main .goal-plan-actions>.arc-ui-button--primary:hover:not(:disabled){background:#166476}
+.unified-shell main .goal-wizard-actions>.arc-ui-button:disabled,
+.unified-shell main .goal-plan-actions>.arc-ui-button:disabled{opacity:.48;cursor:not-allowed}
+.unified-shell main .arc-goals-page-header>.arc-ui-button:focus-visible,
+.unified-shell main .goal-wizard .arc-ui-button:focus-visible,
+.unified-shell main .goal-support-empty>.arc-ui-button:focus-visible,
+.unified-shell main .goal-plan-actions>.arc-ui-button:focus-visible{
+ outline:3px solid var(--arc-focus-outline);outline-offset:3px;
+}
