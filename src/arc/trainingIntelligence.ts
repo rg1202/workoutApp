@@ -1,3 +1,4 @@
+import {uniqueActivities} from './uniqueActivities';
 import type {PlannedActivity} from '../plans';
 import type {Goal} from '../goals';
 import type {DailyState} from './dailyState';
@@ -8,6 +9,7 @@ const iso=(d:Date)=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'
 const shift=(date:string,days:number)=>{const d=new Date(date+'T12:00:00');d.setDate(d.getDate()+days);return iso(d)};
 export function trainingIntelligence(plans:PlannedActivity[],goals:Goal[],today:string,states:DailyState[]=[],history:StateObservation[]=[]){
  const start=shift(today,-6),end=shift(today,6);
+ plans=uniqueActivities(plans);
  const past=plans.filter(p=>p.date>=start&&p.date<=today&&p.status!=='Skipped');
  const completed=past.filter(p=>p.status==='Completed');
  const upcoming=plans.filter(p=>p.date>today&&p.date<=end&&p.status==='Planned').sort((a,b)=>a.date.localeCompare(b.date)||(a.time??'').localeCompare(b.time??''));
