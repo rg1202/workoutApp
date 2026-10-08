@@ -1000,3 +1000,28 @@ test('goal-linked activity reconciles across Goals Calendar Today and Progress a
   return a.length===1&&a[0].id==='crossview-session'&&a[0].title==='Cross View Tempo Run'&&a[0].status==='Completed'&&a[0].actuals?.actualDurationMinutes===38&&a[0].goalIds?.includes('crossview-goal');
  })).toBe(true);
 });
+
+
+test('Running and Cycling focus overviews use completed activity actuals without cross-counting',async({page})=>{
+ const today=await page.evaluate(()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')});
+ await page.evaluate(date=>{
+  localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([
+   {id:'focus-run',date,title:'Morning Run',type:'Cardio',status:'Completed',durationMinutes:30,actuals:{actualDurationMinutes:35,distanceKm:6.5}},
+   {id:'focus-ride',date,title:'Evening Ride',type:'Cardio',status:'Completed',durationMinutes:50,actuals:{actualDurationMinutes:52,distanceKm:20}},
+   {id:'focus-pending',date,title:'Easy Run',type:'Cardio',status:'Planned',durationMinutes:25}
+  ]));
+ },today);
+ await page.reload();
+ await nav(page,'Running').click();
+ const running=page.getByRole('region',{name:'Running 7-day summary'});
+ await expect(running).toContainText('6.5 km');
+ await expect(running).toContainText('35 min');
+ await expect(page.locator('.arc-endurance-recent')).toContainText('Morning Run');
+ await expect(page.locator('.arc-endurance-recent')).not.toContainText('Evening Ride');
+ await nav(page,'Cycling').click();
+ const cycling=page.getByRole('region',{name:'Cycling 7-day summary'});
+ await expect(cycling).toContainText('20 km');
+ await expect(cycling).toContainText('52 min');
+ await expect(page.locator('.arc-endurance-recent')).toContainText('Evening Ride');
+ await expect(page.locator('.arc-endurance-recent')).not.toContainText('Morning Run');
+});
