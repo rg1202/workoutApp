@@ -23,3 +23,15 @@ For pilot support, privacy questions, and requests about the pilot, contact **rg
 - Verify third-party services, cookies, retention, and applicable legal requirements before publication.
 
 This document is a **draft**, not a finalized legal privacy policy or evidence of compliance.
+
+## Hosting, access and analytics — October 8, 2026 pilot disclosure draft
+
+Arc V2 is hosted using Cloudflare Pages and protected during the invitation-only pilot by Cloudflare Access. Access authentication and security/hosting services may process email identifiers, IP addresses, request metadata and related technical logs under Cloudflare's applicable terms and retention settings. Cloudflare Access authentication is distinct from an Arc account and does not synchronize Arc goals or activities across devices.
+
+**Cloudflare Web Analytics is enabled for arc-v2-staging.pages.dev** (owner confirmation and dashboard screenshot, October 8, 2026). The screenshot showed zero visits and page views at the time of capture; that does not establish that analytics collection is inactive. Website usage/performance metrics may be collected through Cloudflare. Do not claim no analytics or no third-party processing. Verify whether beacon injection is active on the deployed site and check Cloudflare's current documentation for specific collection, cookies, retention, and legal wording before publication.
+
+Arc's Content Security Policy allows requests to api.open-meteo.com and geocoding-api.open-meteo.com for weather and location-search features. When a tester uses those features, network requests may disclose technical connection information and requested location/search parameters to those services. Confirm actual feature behavior before final wording.
+
+Arc goals, calendars, activity records and preferences are stored in the user's browser rather than Arc-hosted account storage in this pilot. Clearing browser data can remove them. Downloaded backups are unencrypted and should not be shared with pilot support or placed in public bug reports.
+
+**Status:** Draft disclosure, not final legal approval. Before inviting testers: verify deployed analytics configuration and any cookies, Cloudflare retention and relevant notices, consent/onboarding method, effective date, and owner approval.
