@@ -1447,3 +1447,15 @@ test('future goal storage schema is rejected before restore',async({page})=>{
  });
  expect(result).toContain('migration required');
 });
+
+test('Arc restores backups containing a profile avatar data URL',async({page})=>{
+ const avatar='data:image/png;base64,iVBORw0KGgo=';
+ const backup={format:'arc-local-backup',version:1,exportedAt:'2026-10-08T12:00:00.000Z',data:{'arc.profile.avatar.v1':avatar,'workoutapp.goals.v2':JSON.stringify([{id:'avatar-backup-goal',name:'Avatar backup goal',status:'Active',type:'Milestone'}])}};
+ page.on('dialog',dialog=>dialog.accept());
+ await Promise.all([
+  page.waitForEvent('load'),
+  page.locator('input[aria-label="Restore Arc backup file"]').setInputFiles({name:'avatar-backup.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))})
+ ]);
+ expect(await page.evaluate(()=>localStorage.getItem('arc.profile.avatar.v1'))).toBe(avatar);
+ expect(await page.evaluate(()=>localStorage.getItem('workoutapp.goals.v2'))).toContain('Avatar backup goal');
+});
