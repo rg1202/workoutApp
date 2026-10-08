@@ -1,6 +1,6 @@
 # Arc V2 — M3.8 Controlled Pilot Readiness
 
-Status: **In progress — not pilot-approved**
+Status: **Accessibility gate passed (owner-reported); security/privacy gates remain — not pilot-approved**
 Source branch: `product/v2`
 Staging: `https://arc-v2-staging.pages.dev` (owner-reported deployment)
 Baseline release SHA: `7c58b58c2c0dd6a2a96c4820dc00680f685a97ba` (reconfirm deployment SHA in Cloudflare)
@@ -55,3 +55,13 @@ Baseline release SHA: `7c58b58c2c0dd6a2a96c4820dc00680f685a97ba` (reconfirm depl
 - M3.9: Controlled 5–10 person pilot with opt-in, task completion, anonymous issue IDs and qualitative feedback; no sensitive personal data.
 - M3.10: Review usability, early return engagement, defects and any multi-focus adoption; do not infer long-term retention or monetization from a small short pilot.
 - M4.0: Separate explicit public-release go/no-go decision.
+
+## October 8, 2026 — owner validation update
+
+- **Deployment:** Cloudflare Pages production shows `f02be50` active on `arc-v2-staging.pages.dev` (owner screenshot and confirmation).
+- **Backup/restore:** Owner reports successful restore following avatar data-URL parser fix. Earlier restore failed on raw avatar data URL; fix commit `5921a03`, regression test commit `f02be50`.
+- **Rollback drill:** Owner rolled back to a previous successful deployment, then returned to `f02be50`; verified goal, location and avatar still present. **Pass, owner-reported.**
+- **Mobile:** Owner reports all seven mobile smoke checks passed. **Pass, owner-reported.**
+- **Accessibility:** Owner completed 16/16 manual checks with pass and no observations, covering keyboard, zoom/reflow, forms, and Narrator/NVDA. **Manual accessibility gate passed; not a formal WCAG conformance audit.**
+- **Remaining before pilot approval:** Independently confirm preview URL Access policy in signed-out session; verify live security headers/CSP and browser console; verify production artifact has no secrets or exposed integrations; confirm browser-profile isolation and full core-loop acceptance evidence; finalize privacy notice, support contact, tester consent and onboarding; record owner go/no-go.
+- **Severity classification:** No accessibility P0/P1 issues reported. Prior avatar restore defect was a P1 pilot blocker, now owner-reported resolved. Security/privacy gates not yet cleared.
