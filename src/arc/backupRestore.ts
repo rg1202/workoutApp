@@ -10,6 +10,26 @@ export function parseBackup(source: string): ArcBackup {
     throw new Error('Unsupported backup schema; migration required');
   if (typeof obj.exportedAt !== 'string' || !Number.isFinite(Date.parse(obj.exportedAt))) throw new Error('Invalid backup date');
   if (!obj.data || typeof obj.data !== 'object' || Array.isArray(obj.data)) throw new Error('Invalid backup entries');
+  // Reject unsupported future storage-key versions rather than treating them as compatible.
+  const supportedVersions: Record<string, number> = {
+    'workoutapp.goals': 2,
+    'workoutapp.planned-activities': 1,
+    'workoutapp.history': 2,
+    'workoutapp.programs': 3,
+    'workoutapp.active-session': 3,
+    'workoutapp.checkins': 1,
+    'workoutapp.body-metrics': 1,
+    'workoutapp.injuries': 1,
+    'arc.units': 1,
+    'arc.state-history': 1
+  };
+  for (const key of Object.keys(obj.data as Record<string, unknown>)) {
+    const match = /^(.*)\\.v(\\d+)$/.exec(key);
+    if (match && Object.hasOwn(supportedVersions, match[1]) &&
+        Number(match[2]) > supportedVersions[match[1]]) {
+      throw new Error('Unsupported storage schema for '+key+'; migration required');
+    }
+  }
   for (const [key, entry] of Object.entries(obj.data)) {
     if (!isBackupKey(key) || typeof entry !== 'string') throw new Error('Invalid backup entry');
     if (key === 'workoutapp.sidebar-collapsed.v1') {
