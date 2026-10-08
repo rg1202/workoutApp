@@ -626,7 +626,7 @@ test('BJJ My Game techniques can be prioritized within a route',async({page})=>{
 test('BJJ My Game techniques can be assigned strategic roles',async({page})=>{await page.goto('/');await page.getByRole('button',{name:'BJJ'}).click();await page.getByRole('button',{name:'My Game',exact:true}).click();const row=page.locator('.my-game-row').first();if(await row.count()){const name=(await row.locator('.my-game-primary b').textContent())!;const role=page.getByLabel('Role for '+name);await role.selectOption('Primary');await expect(role).toHaveValue('Primary');await page.reload();await page.getByRole('button',{name:'BJJ'}).click();await page.getByRole('button',{name:'My Game',exact:true}).click();await expect(page.getByLabel('Role for '+name)).toHaveValue('Primary');}});
 
 
-test('Today surfaces a timed activity as Up Next with session state',async({page})=>{await page.addInitScript(()=>{const d=new Date(),date=d.toLocaleDateString('en-CA'),time=new Date(Date.now()+60*60*1000).toTimeString().slice(0,5);localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([{id:'today-timed',date,time,title:'Timed BJJ',type:'BJJ',status:'Planned'}]));});await page.goto('/');await expect(page.getByText('UP NEXT',{exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'Timed BJJ',exact:true})).toBeVisible();await expect(page.getByText('FOR THIS SESSION')).toBeVisible();await page.getByRole('button',{name:'Session motivation 5'}).click();await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.id==='today-timed')?.sessionMotivation)).toBe(5);});
+test('Today surfaces a timed activity as Up Next with session state',async({page})=>{await page.addInitScript(()=>{const d=new Date(),date=d.toLocaleDateString('en-CA'),time=d.toTimeString().slice(0,5);localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([{id:'today-timed',date,time,title:'Timed BJJ',type:'BJJ',status:'Planned'}]));});await page.goto('/');await expect(page.getByText('UP NEXT',{exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'Timed BJJ',exact:true})).toBeVisible();await expect(page.getByText('FOR THIS SESSION')).toBeVisible();await page.getByRole('button',{name:'Session motivation 5'}).click();await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.id==='today-timed')?.sessionMotivation)).toBe(5);});
 
 
 
@@ -1093,7 +1093,7 @@ test('Endurance trend windows compare completed recorded sessions with preceding
  await expect(trends).toContainText('Previous 30 days: 0');
  await trends.getByRole('button',{name:'7D'}).click();
  await expect(trends).toContainText('Previous 7 days: 1');
- await expect(trends).toContainText('Previous 7 days: 10');
+ await expect(trends).toContainText('Previous 7 days: 6.2 mi');
  await trends.getByRole('button',{name:'90D'}).click();
  await expect(trends).toContainText('Previous 90 days: 0');
 });
