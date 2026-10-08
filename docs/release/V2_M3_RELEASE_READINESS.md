@@ -54,3 +54,24 @@ npx playwright test --workers=4
 - V3 Custom Focus Builder is planned, not implemented as part of M3.
 - No V4 engineering scope in this release.
 - A release is not approved solely because automated tests pass.
+
+## M3.1 repository inventory — initial findings
+
+Verified by inspecting the current `product/v2` files:
+
+- `package.json` identifies version `0.2.0`; `npm run build` executes TypeScript build plus Vite, and Playwright is the configured E2E runner.
+- Dependencies currently use `latest` version ranges; review lockfile and pinning strategy before release to avoid unexpected upgrades.
+- Goals use the browser key `workoutapp.goals.v2`; planned activities use `workoutapp.planned-activities.v1`. The application also reads multiple additional local JSON stores. **Browser storage is not a cloud backup.** Audit backup/export and migration before inviting external users.
+- The optional Node integration server supports Strava OAuth and stores tokens in a local `.strava-tokens.json` file. Before public deployment, review token storage, isolation between users, OAuth state/CSRF protection, server error handling, and secure credential management. **Do not deploy this integration as-is without security review.**
+- Current `src/App.tsx` is large and contains legacy workout/program functionality; assess user-facing release scope rather than assuming every internal feature is ready.
+- The owner reports 76/76 Playwright tests passing. This confirms the tested flows, not production readiness.
+
+### Immediate release blockers / investigations
+
+1. **P0 security review:** Strava OAuth callback and token persistence before any publicly accessible integration server.
+2. **P0 data-loss prevention:** Confirm whether V2 offers export/backup and a safe way to recover from browser storage loss.
+3. **P1 reproducible builds:** Verify lockfile and deterministic installation; consider pinning dependency ranges.
+4. **P1 release boundary:** Decide whether integrations and legacy program features ship, are hidden, or are marked experimental.
+5. **P1 local baseline:** Confirm clean working tree and successful `npm run build`; Playwright pass reported.
+
+These are initial findings and priorities, not a completed security or UX audit.
