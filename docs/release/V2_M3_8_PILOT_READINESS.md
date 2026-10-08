@@ -111,3 +111,10 @@ Baseline release SHA: `7c58b58c2c0dd6a2a96c4820dc00680f685a97ba` (reconfirm depl
 - Owner DevTools screenshot filtered to `/cdn-cgi/rum` shows an XHR request with **HTTP 204**. Endpoint responded successfully.
 - Initiator appears as `VM148 activeContentBlocker.js:1`, not the Cloudflare beacon; do not attribute this request conclusively to the Arc analytics script or assert recorded visits based solely on this screenshot.
 - Combined evidence: Cloudflare Web Analytics site enabled; `beacon.min.js` HTTP 200 after CSP update; RUM endpoint HTTP 204. Analytics CSP incident resolved; dashboard metrics and precise collection behavior can be verified separately.
+
+## October 8 — pilot acknowledgment release regression verification
+
+- Owner confirms full `npm run check:release` **PASS** after production smoke compatibility fix `8cfde0d`.
+- Development E2E: **104 passed**; production E2E: **2 passed**; total **106 passed**, owner-reported. No failures reported in final run.
+- Pilot first-use acknowledgment tests passed in prior run; backup restore and production smoke were updated to explicitly acknowledge the notice before app navigation.
+- Automated release gate: **PASS**. Still pending: owner approval of notice wording/effective date and retention disclosures, deployment SHA/live first-use smoke, and explicit go/no-go before adding pilot testers to Cloudflare Access.
