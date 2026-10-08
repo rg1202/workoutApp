@@ -6,3 +6,6 @@ dist/
 .strava-tokens.json
 *.log
 .DS_Store
+test-results/
+playwright-report/
+*.tsbuildinfo
