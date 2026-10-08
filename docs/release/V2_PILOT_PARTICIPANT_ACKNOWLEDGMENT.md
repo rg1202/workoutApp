@@ -2,7 +2,7 @@
 
 **Status:** Implemented and automated release tests passed (owner-reported); owner conditionally approved wording October 8, 2026. Effective date, Cloudflare retention verification and pilot authorization remain pending.
 **Pilot:** Invitation-only, approximately 5–10 selected testers.
-**Effective date:** To be set before invitations are issued.
+**Effective date:** October 8, 2026 (owner approved).
 **Contact:** rgould.midwest@gmail.com
 
 ## Welcome to the Arc private beta
@@ -54,3 +54,7 @@ If you report bugs, avoid sending sensitive data, screenshots with personal deta
 ## Owner wording decision — October 8, 2026
 
 Owner explicitly approved current Arc V2 pilot notice wording **subject to** (1) setting an effective date and (2) verifying Cloudflare retention practices. This is **conditional wording approval only**, not permission to invite testers or final legal/privacy sign-off. Confirm live deployed notice and analytics/Access disclosures before opening the pilot.
+
+## Effective date approval
+
+Owner explicitly approved **October 8, 2026** as the pilot notice effective date. Cloudflare retention verification, live deployment validation, and final invitation authorization remain outstanding. Do not expand the Access allowlist yet.
