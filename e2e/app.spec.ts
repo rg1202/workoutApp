@@ -814,3 +814,34 @@ test('Cycling goal connects Calendar Today completion and reload',async({page})=
  await expect(page.getByText('✓ Cycling Lifecycle Ride').first()).toBeVisible();
  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').filter((p:any)=>p.title==='Cycling Lifecycle Ride').length)).toBe(1);
 });
+
+
+test('editing and skipping a goal-linked activity preserves identity and actuals',async({page})=>{
+ const today=await page.evaluate(()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')});
+ await page.evaluate(date=>{
+  localStorage.setItem('workoutapp.goals.v2',JSON.stringify([{id:'integrity-goal',name:'Running Integrity',type:'Cardio',activity:'Running',status:'Active',goalTypeV2:'Consistency',focus:'running',supportingTargets:[{name:'Run',activityType:'Cardio',frequencyPerWeek:2}]}]));
+  localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([{id:'integrity-session',date,title:'Easy Run',type:'Cardio',status:'Planned',goalIds:['integrity-goal'],durationMinutes:30}]));
+ },today);
+ await page.reload();
+ await nav(page,'Calendar').click();
+ await page.getByRole('button',{name:'Edit Easy Run'}).first().click();
+ const dialog=page.getByRole('dialog',{name:'Edit activity'});
+ await dialog.getByLabel('Title').fill('Tempo Run');
+ await dialog.getByLabel('Actual minutes').fill('36');
+ await dialog.getByLabel('Distance (km)').fill('6.2');
+ await dialog.getByLabel('Status').selectOption('Completed');
+ await dialog.getByRole('button',{name:'Save activity'}).click();
+ await expect.poll(()=>page.evaluate(()=>{
+  const a=JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]');
+  return a.length===1&&a[0].id==='integrity-session'&&a[0].title==='Tempo Run'&&a[0].status==='Completed'&&a[0].actuals?.distanceKm===6.2&&a[0].actuals?.actualDurationMinutes===36&&a[0].goalIds?.includes('integrity-goal');
+ })).toBe(true);
+ await page.getByRole('button',{name:'Edit Tempo Run'}).first().click();
+ await page.getByRole('dialog',{name:'Edit activity'}).getByLabel('Status').selectOption('Skipped');
+ await page.getByRole('dialog',{name:'Edit activity'}).getByRole('button',{name:'Save activity'}).click();
+ await expect.poll(()=>page.evaluate(()=>{
+  const a=JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]');
+  return a.length===1&&a[0].id==='integrity-session'&&a[0].status==='Skipped'&&a[0].goalIds?.includes('integrity-goal');
+ })).toBe(true);
+ await page.reload();
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.id==='integrity-session')?.status)).toBe('Skipped');
+});
