@@ -122,3 +122,7 @@ Baseline release SHA: `7c58b58c2c0dd6a2a96c4820dc00680f685a97ba` (reconfirm depl
 ## October 8 — owner conditional privacy approval
 
 Owner approves the current Arc V2 pilot notice wording **subject to effective date and Cloudflare retention verification**. This is not unconditional privacy sign-off or pilot GO. Keep Cloudflare Access owner-only pending confirmation of the effective date, retention disclosures, live deployment and explicit invitation authorization.
+
+## October 8 — effective date approved
+
+Owner approved **October 8, 2026** as the Arc V2 pilot privacy notice effective date. This resolves the date gate, but Cloudflare retention verification, live deployment/first-use smoke, and final explicit GO authorization remain pending. Cloudflare Access allowlist must not be expanded before GO.
