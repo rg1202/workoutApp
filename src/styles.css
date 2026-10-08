@@ -467,3 +467,6 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .cal-week .cal-event .cal-move,.cal-month .cal-event .cal-move{grid-column:2;grid-row:2;min-width:24px;width:24px;height:24px;justify-self:center}
 .cal-week .cal-event .cal-actual,.cal-month .cal-event .cal-actual{display:block;max-width:100%;white-space:normal;overflow-wrap:anywhere;font-size:10px}
 @media(max-width:850px){.cal-week .cal-event.cal-planned,.cal-month .cal-event.cal-planned{grid-template-columns:minmax(0,1fr) auto}.cal-week .cal-event .cal-delete,.cal-month .cal-event .cal-delete{grid-column:2;grid-row:2;justify-self:end}.cal-week .cal-event .cal-edit,.cal-month .cal-event .cal-edit{grid-column:2;grid-row:1}}
+
+/* Calendar weekly actuals summary */
+.cal-recorded-detail{display:block;margin-top:5px;font-size:10px;line-height:1.4;color:var(--arc-cyan);font-weight:500;white-space:normal}
