@@ -78,6 +78,10 @@ export function restoreBackup(backup: ArcBackup, storage: Storage = localStorage
       if (value !== null) previous.set(key, value);
     }
   }
+  // Refuse destructive restore when an existing key cannot be read reliably.
+  for (const [key, value] of previous) {
+    if (storage.getItem(key) !== value) throw new Error('Storage changed during restore preparation; retry.');
+  }
   const touched = new Set([...previous.keys(), ...Object.keys(verified.data)]);
   try {
     for (const key of touched) {
