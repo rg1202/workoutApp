@@ -1279,3 +1279,20 @@ test('primary navigation exposes active destination to screen readers',async({pa
  await expect(navigation.getByRole('button',{name:'Goals'})).toHaveAttribute('aria-current','page');
  await expect(page.locator('main#arc-main')).toBeVisible();
 });
+
+test('empty Progress gives a direct path to creating a goal',async({page})=>{
+ await nav(page,'Progress').click();
+ await expect(page.getByText('No active goals yet.')).toBeVisible();
+ await page.getByRole('button',{name:'Create a goal'}).click();
+ await expect(page.getByRole('heading',{name:'Goals',exact:true})).toBeVisible();
+});
+
+test('mobile Goals and Progress remain usable at narrow width',async({page})=>{
+ await page.setViewportSize({width:375,height:812});
+ await nav(page,'Goals').click();
+ await expect(page.getByRole('heading',{name:'Goals',exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Create your first goal'}).click();
+ await expect(page.getByLabel('Goal name')).toBeVisible();
+ await nav(page,'Progress').click();
+ await expect(page.getByRole('heading',{name:'Progress',exact:true})).toBeVisible();
+});
