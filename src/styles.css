@@ -540,3 +540,14 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .arc-brand .arc-brand-philosophy{display:block;max-width:175px;font-size:10px;line-height:1.5;letter-spacing:0;color:var(--arc-muted);font-weight:500;text-wrap:pretty}.arc-brand>span:last-child{min-width:0}.sidebar-collapsed .arc-brand-philosophy{display:none}
 
 .arc-focus-detail-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.arc-focus-remove{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--arc-border);background:transparent;color:var(--arc-muted);border-radius:9px;padding:10px 13px;cursor:pointer}.arc-focus-remove:hover{border-color:var(--arc-accent);color:var(--arc-text)}.arc-focus-confirm{margin-top:14px;padding:14px;border:1px solid var(--arc-border);border-radius:11px;background:var(--arc-surface-2)}.arc-focus-confirm p{margin:0 0 12px}.arc-focus-confirm button{margin-right:8px;border:1px solid var(--arc-border);background:var(--arc-surface);color:var(--arc-text);padding:9px 13px;border-radius:8px;cursor:pointer}
+
+
+/* Contextual calendar planning: reveal on hover/focus; show on touch. */
+.cal-week section,.cal-month section,.cal-day{position:relative}
+.cal-add-activity{display:inline-flex;align-items:center;justify-content:center;gap:4px;border:1px dashed var(--arc-border);border-radius:8px;background:var(--arc-surface-2);color:var(--arc-text);padding:5px 8px;font:inherit;font-size:11px;line-height:1.25;cursor:pointer;opacity:0;transition:opacity .15s ease,border-color .15s ease}
+.cal-add-activity:hover,.cal-add-activity:focus-visible{border-color:var(--arc-accent);color:var(--arc-accent)}
+.cal-week section:hover .cal-add-activity,.cal-week section:focus-within .cal-add-activity,.cal-month section:hover .cal-add-activity,.cal-month section:focus-within .cal-add-activity,.cal-day:hover .cal-add-activity,.cal-day:focus-within .cal-add-activity{opacity:1}
+.cal-week section header .cal-add-activity{margin-left:auto}
+.cal-month section>.cal-add-activity{position:absolute;top:5px;right:5px;z-index:1}
+.cal-day>.cal-add-activity{margin-bottom:12px}
+@media(hover:none){.cal-add-activity{opacity:1}}
