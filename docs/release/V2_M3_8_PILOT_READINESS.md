@@ -105,3 +105,9 @@ Baseline release SHA: `7c58b58c2c0dd6a2a96c4820dc00680f685a97ba` (reconfirm depl
 - Subsequent Chrome DevTools Network screenshot shows `beacon.min.js` **HTTP 200**, initiator `(index):14`, confirming the deployed script now loads. **PASS: analytics script loading.**
 - The screenshot does **not** show a successful analytics reporting POST or nonzero dashboard metrics. Reporting/collection remains to be verified separately.
 - Privacy draft discloses enabled analytics; final approval, retention and tester onboarding still pending.
+
+## October 8 — analytics endpoint response
+
+- Owner DevTools screenshot filtered to `/cdn-cgi/rum` shows an XHR request with **HTTP 204**. Endpoint responded successfully.
+- Initiator appears as `VM148 activeContentBlocker.js:1`, not the Cloudflare beacon; do not attribute this request conclusively to the Arc analytics script or assert recorded visits based solely on this screenshot.
+- Combined evidence: Cloudflare Web Analytics site enabled; `beacon.min.js` HTTP 200 after CSP update; RUM endpoint HTTP 204. Analytics CSP incident resolved; dashboard metrics and precise collection behavior can be verified separately.
