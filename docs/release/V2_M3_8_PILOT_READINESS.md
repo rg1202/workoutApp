@@ -97,3 +97,11 @@ Baseline release SHA: `7c58b58c2c0dd6a2a96c4820dc00680f685a97ba` (reconfirm depl
 - Full staging script **PASS (owner-reported)**: TypeScript/Vite build, expanded production artifact heuristic scan, and `check-staging-output.mjs` header/distribution validation.
 - This verifies locally built artifacts and configuration, not the exact deployed Cloudflare SHA or third-party processing disclosures.
 - Remaining: privacy/analytics disclosure verification, deployed SHA and live behavior check, explicit pilot go/no-go.
+
+## October 8 — Cloudflare Web Analytics CSP verification
+
+- Owner enabled Cloudflare Web Analytics for `arc-v2-staging.pages.dev` and observed injected `beacon.min.js` blocked by CSP.
+- Owner committed CSP allowlist changes locally and pushed to `product/v2`; push advanced remote branch to `93a3bd8`.
+- Subsequent Chrome DevTools Network screenshot shows `beacon.min.js` **HTTP 200**, initiator `(index):14`, confirming the deployed script now loads. **PASS: analytics script loading.**
+- The screenshot does **not** show a successful analytics reporting POST or nonzero dashboard metrics. Reporting/collection remains to be verified separately.
+- Privacy draft discloses enabled analytics; final approval, retention and tester onboarding still pending.
