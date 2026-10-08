@@ -470,3 +470,18 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 
 /* Calendar weekly actuals summary */
 .cal-recorded-detail{display:block;margin-top:5px;font-size:10px;line-height:1.4;color:var(--arc-cyan);font-weight:500;white-space:normal}
+
+/* Arc Calendar — readable full-width Day activity cards */
+.cal-day .cal-event.cal-planned{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:start;gap:8px;max-width:100%;min-width:0;padding:12px 14px;overflow:hidden;border-radius:12px}
+.cal-day .cal-event.cal-planned .cal-plan-main{grid-column:1;grid-row:1;display:flex;flex-direction:column;align-items:flex-start;gap:5px;min-width:0;width:100%;padding:0;overflow:hidden}
+.cal-day .cal-plan-main b{font-size:14px;line-height:1.4;white-space:normal;overflow-wrap:anywhere;text-overflow:clip}
+.cal-day .cal-plan-main span{font-size:12px;line-height:1.4;white-space:normal;overflow-wrap:anywhere}
+.cal-day .cal-plan-main .cal-source{font-size:10px;line-height:1.4}
+.cal-day .cal-plan-main .cal-actual{font-size:12px;line-height:1.5;white-space:normal;color:var(--arc-mint);overflow-wrap:anywhere}
+.cal-day .cal-event.cal-planned .cal-edit{grid-column:2;grid-row:1;align-self:start;width:auto;min-width:0;max-width:none;white-space:nowrap;padding:6px 10px;font-size:12px}
+.cal-day .cal-event.cal-planned .cal-delete{grid-column:3;grid-row:1;align-self:start;justify-self:end;position:static;display:grid;place-items:center;width:30px;height:30px;min-width:30px;min-height:30px;padding:0;margin:0;opacity:1;background:transparent;border:1px solid var(--arc-border);border-radius:8px;color:var(--arc-muted)}
+.cal-day .cal-event.cal-planned .cal-delete:hover{background:var(--arc-surface-2);color:var(--arc-text)}
+.cal-day .cal-event.cal-planned .cal-move{grid-column:2;grid-row:2;width:30px;height:30px;justify-self:end}
+.cal-day .cal-plan-complete{opacity:1}
+.cal-day .cal-plan-complete .cal-plan-main b{text-decoration:none;color:var(--arc-text)}
+@media(max-width:520px){.cal-day .cal-event.cal-planned{grid-template-columns:minmax(0,1fr) auto auto;padding:10px;gap:5px}.cal-day .cal-event.cal-planned .cal-edit{padding:5px 7px;font-size:11px}}
