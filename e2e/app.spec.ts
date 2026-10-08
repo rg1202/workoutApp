@@ -894,14 +894,14 @@ test('removing an accidentally added focus removes membership but preserves its 
 
 
 test('rescheduling a goal-linked activity preserves identity, status, and goal association',async({page})=>{
- const dates=await page.evaluate(()=>{const d=new Date(),next=new Date(d);next.setDate(d.getDate()+1);const fmt=(v:Date)=>[v.getFullYear(),String(v.getMonth()+1).padStart(2,'0'),String(v.getDate()).padStart(2,'0')].join('-');return {from:fmt(d),to:fmt(next)}});
+ const dates=await page.evaluate(()=>{const d=new Date(),sun=new Date(d.getFullYear(),d.getMonth(),d.getDate()-d.getDay()),mon=new Date(sun);mon.setDate(sun.getDate()+1);const fmt=(v:Date)=>[v.getFullYear(),String(v.getMonth()+1).padStart(2,'0'),String(v.getDate()).padStart(2,'0')].join('-');return {from:fmt(sun),to:fmt(mon)}});
  await page.evaluate(({from})=>{
   localStorage.setItem('workoutapp.goals.v2',JSON.stringify([{id:'reschedule-goal',name:'Run Consistently',type:'Cardio',activity:'Running',status:'Active',goalTypeV2:'Consistency',focus:'running',supportingTargets:[{name:'Run',activityType:'Cardio',frequencyPerWeek:2}]}]));
   localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([{id:'reschedule-session',date:from,title:'Reschedule Run',type:'Cardio',status:'Planned',goalIds:['reschedule-goal'],durationMinutes:40}]));
  },dates);
  await page.reload();
  await nav(page,'Calendar').click();
- await page.getByText('Reschedule Run').first().dragTo(page.locator('[data-date="'+dates.to+'"]').first());
+ await page.locator('[data-date="'+dates.from+'"] .cal-draggable').filter({hasText:'Reschedule Run'}).dragTo(page.locator('[data-date="'+dates.to+'"]').first());
  const invariant=()=>page.evaluate(()=>{const a=JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]');const match=a.filter((p:any)=>p.id==='reschedule-session');return {count:match.length,date:match[0]?.date,status:match[0]?.status,goalIds:match[0]?.goalIds,duration:match[0]?.durationMinutes}});
  await expect.poll(invariant).toEqual({count:1,date:dates.to,status:'Planned',goalIds:['reschedule-goal'],duration:40});
  await page.reload();
