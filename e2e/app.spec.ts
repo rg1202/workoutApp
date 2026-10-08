@@ -962,3 +962,41 @@ test('Progress lifecycle reflects completion and skipping after reload without i
   return a.length===2&&a.find((p:any)=>p.id==='lifecycle-one')?.actuals?.actualDurationMinutes===34&&a.find((p:any)=>p.id==='lifecycle-two')?.status==='Skipped';
  })).toBe(true);
 });
+
+
+test('goal-linked activity reconciles across Goals Calendar Today and Progress after edit and reload',async({page})=>{
+ const today=await page.evaluate(()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')});
+ await page.evaluate(date=>{
+  localStorage.setItem('workoutapp.goals.v2',JSON.stringify([{id:'crossview-goal',name:'Cross View Running',type:'Cardio',activity:'Running',status:'Active',goalTypeV2:'Consistency',focus:'running',supportingTargets:[{name:'Run',activityType:'Cardio',frequencyPerWeek:2,durationMinutes:30}]}]));
+  localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([{id:'crossview-session',date,title:'Cross View Easy Run',type:'Cardio',status:'Planned',goalIds:['crossview-goal'],durationMinutes:30}]));
+ },today);
+ await page.reload();
+ await nav(page,'Goals').click();
+ await expect(page.getByText('Cross View Running').first()).toBeVisible();
+ await nav(page,'Today').click();
+ await expect(page.locator('.today-goal-intelligence')).toContainText('Cross View Easy Run');
+ await nav(page,'Progress').click();
+ await expect(page.locator('.progress-snapshot')).toContainText('0 of 1 planned sessions completed');
+ await nav(page,'Calendar').click();
+ await page.getByRole('button',{name:'Edit Cross View Easy Run'}).first().click();
+ const dialog=page.getByRole('dialog',{name:'Edit activity'});
+ await dialog.getByLabel('Title').fill('Cross View Tempo Run');
+ await dialog.getByLabel('Status').selectOption('Completed');
+ await dialog.getByLabel('Actual minutes').fill('38');
+ await dialog.getByRole('button',{name:'Save activity'}).click();
+ await nav(page,'Progress').click();
+ await expect(page.locator('.progress-snapshot')).toContainText('1 of 1 planned sessions completed');
+ await expect(page.locator('.progress-recent')).toContainText('Cross View Tempo Run');
+ await expect(page.locator('.progress-recent')).not.toContainText('Cross View Easy Run');
+ await nav(page,'Goals').click();
+ await expect(page.getByText('Cross View Running').first()).toBeVisible();
+ await nav(page,'Calendar').click();
+ await expect(page.getByText('✓ Cross View Tempo Run').first()).toBeVisible();
+ await page.reload();
+ await nav(page,'Progress').click();
+ await expect(page.locator('.progress-snapshot')).toContainText('1 of 1 planned sessions completed');
+ await expect.poll(()=>page.evaluate(()=>{
+  const a=JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]');
+  return a.length===1&&a[0].id==='crossview-session'&&a[0].title==='Cross View Tempo Run'&&a[0].status==='Completed'&&a[0].actuals?.actualDurationMinutes===38&&a[0].goalIds?.includes('crossview-goal');
+ })).toBe(true);
+});
