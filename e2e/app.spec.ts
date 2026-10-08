@@ -1098,3 +1098,26 @@ test('Endurance trend windows compare completed recorded sessions with preceding
  await trends.getByRole('button',{name:'90D'}).click();
  await expect(trends).toContainText('Previous 90 days: 0');
 });
+
+
+test('Arc backup exports local goals and excludes unrelated storage',async({page})=>{
+ await page.evaluate(()=>{
+  localStorage.setItem('workoutapp.goals.v2',JSON.stringify([{id:'backup-goal',name:'Read 24 books'}]));
+  localStorage.setItem('arc.units.v1',JSON.stringify({preset:'US'}));
+  localStorage.setItem('unrelated.secret','do-not-export');
+ });
+ const [download]=await Promise.all([
+  page.waitForEvent('download'),
+  page.getByRole('button',{name:'Download Arc backup'}).click()
+ ]);
+ expect(download.suggestedFilename()).toMatch(/^arc-backup-\\d{4}-\\d{2}-\\d{2}\\.json$/);
+ const stream=await download.createReadStream();
+ const chunks:Buffer[]=[];
+ for await(const chunk of stream)chunks.push(Buffer.from(chunk));
+ const backup=JSON.parse(Buffer.concat(chunks).toString('utf8'));
+ expect(backup.format).toBe('arc-local-backup');
+ expect(backup.version).toBe(1);
+ expect(JSON.parse(backup.data['workoutapp.goals.v2'])[0].name).toBe('Read 24 books');
+ expect(backup.data['arc.units.v1']).toBeTruthy();
+ expect(backup.data['unrelated.secret']).toBeUndefined();
+});
