@@ -9,7 +9,20 @@ export function parseBackup(source: string): ArcBackup {
   if (!obj.data || typeof obj.data !== 'object' || Array.isArray(obj.data)) throw new Error('Invalid backup entries');
   for (const [key, entry] of Object.entries(obj.data)) {
     if (!(key.startsWith('arc.') || key.startsWith('workoutapp.')) || typeof entry !== 'string') throw new Error('Invalid backup entry');
-    if (key !== 'workoutapp.sidebar-collapsed.v1') JSON.parse(entry);
+    if (key === 'workoutapp.sidebar-collapsed.v1') {
+      if (entry !== '0' && entry !== '1') throw new Error('Invalid sidebar setting');
+      continue;
+    }
+    const decoded: unknown = JSON.parse(entry);
+    if (key === 'workoutapp.goals.v2') {
+      if (!Array.isArray(decoded) || !decoded.every(goal =>
+        goal !== null && typeof goal === 'object' && !Array.isArray(goal) &&
+        typeof goal.id === 'string' && goal.id.length > 0 &&
+        typeof goal.name === 'string' && goal.name.trim().length > 0 &&
+        ['Active', 'Completed', 'Paused'].includes(goal.status) &&
+        typeof goal.type === 'string'
+      )) throw new Error('Invalid goals in backup');
+    }
   }
   return obj as ArcBackup;
 }
@@ -31,11 +44,18 @@ export function restoreBackup(backup: ArcBackup, storage: Storage = localStorage
       else storage.removeItem(key);
     }
   } catch {
+    let rollbackFailed = false;
     for (const key of touched) {
-      if (previous.has(key)) storage.setItem(key, previous.get(key)!);
-      else storage.removeItem(key);
+      try {
+        if (previous.has(key)) storage.setItem(key, previous.get(key)!);
+        else storage.removeItem(key);
+      } catch {
+        rollbackFailed = true;
+      }
     }
-    throw new Error('Restore failed; original data restored');
+    throw new Error(rollbackFailed
+      ? 'Restore failed and rollback was incomplete. Do not reload; recover from a separate backup.'
+      : 'Restore failed; original data restored');
   }
   return Object.keys(verified.data).length;
 }
