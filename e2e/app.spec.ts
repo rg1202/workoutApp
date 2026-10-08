@@ -645,3 +645,18 @@ test('BJJ calendar sessions remain manually completable while adherence requires
 
 
 test('Arc goal supporting targets can create a Calendar plan',async({page})=>{await nav(page,'Goals').click();await page.getByRole('button',{name:'New goal'}).click();await page.locator('.goal-type-v2').getByRole('button',{name:/^Event/}).click();await page.getByLabel('Goal name').fill('Arc Test Event');await page.getByRole('button',{name:'Continue'}).click();await page.getByRole('button',{name:'Continue'}).click();await page.getByRole('button',{name:/Supporting target/i}).click();await page.getByRole('textbox',{name:'Supporting target 1',exact:true}).fill('BJJ practice');await page.locator('.goal-support-list select').selectOption('BJJ');await page.getByRole('button',{name:'Continue'}).click();await page.getByRole('button',{name:'Create goal'}).click();await page.getByRole('button',{name:/Add to Calendar/i}).click();await expect(page.locator('main h1').first()).toHaveText('Calendar');await expect(page.getByText('BJJ practice').first()).toBeVisible();const plans=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]'));expect(plans.some((p:any)=>p.title==='BJJ practice'&&p.id.startsWith('goal:'))).toBeTruthy();});
+
+test('new Calendar activity can support an active goal immediately',async({page})=>{
+ await page.evaluate(()=>{
+  localStorage.setItem('workoutapp.goals.v2',JSON.stringify([{id:'goal-link-e2e',name:'Competition Prep',type:'BJJ',status:'Active',goalTypeV2:'Event',priority:'Primary',focus:'bjj'}]));
+ });
+ await page.reload();
+ await nav(page,'Calendar').click();
+ await page.getByRole('button',{name:/Plan activity/i}).click();
+ await page.getByPlaceholder(/Gi BJJ/i).fill('Competition Drilling');
+ await page.locator('.plan-form').getByText('Competition Prep').click();
+ await page.getByRole('button',{name:/Add to calendar/i}).click();
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.title==='Competition Drilling')?.goalIds)).toEqual(['goal-link-e2e']);
+ await nav(page,'Today').click();
+ await expect(page.locator('.today-goal-intelligence').getByText('Competition Drilling')).toBeVisible();
+});
