@@ -224,3 +224,44 @@
 @media(max-width:600px){
  .unified-shell main .today-v2>.today-context{padding:17px}
 }
+
+/* UI-1.7 Today: one restrained surface palette, one accent hero. */
+.unified-shell main .today-v2{
+ --today-surface:#0b1420;
+ --today-border:#1c3042;
+ --today-muted:#9aafc0;
+ --today-hero-start:#0b1c2a;
+ --today-hero-end:#0b2829;
+}
+.unified-shell main .today-v2>.today-goal-intelligence,
+.unified-shell main .today-v2>.today-context,
+.unified-shell main .today-v2>.today-v2-grid>.builder-card{
+ background:var(--today-surface);
+ border-color:var(--today-border);
+ box-shadow:none;
+}
+.unified-shell main .today-v2>.today-next{
+ background:linear-gradient(110deg,var(--today-hero-start),var(--today-hero-end));
+ border-color:#1b5961;
+ box-shadow:none;
+}
+.unified-shell main .today-v2>.today-next .eyebrow{color:var(--arc-cyan)}
+.unified-shell main .today-v2>.today-goal-intelligence .eyebrow,
+.unified-shell main .today-v2>.today-context .eyebrow,
+.unified-shell main .today-v2>.today-v2-grid>.builder-card .eyebrow{
+ color:#8eaec1;
+}
+.unified-shell main .today-v2>.today-goal-intelligence p,
+.unified-shell main .today-v2>.today-context p,
+.unified-shell main .today-v2>.today-v2-grid>.builder-card>p{
+ color:var(--today-muted);
+}
+.unified-shell main .today-v2>.today-goal-intelligence--empty>.overview-heading{
+ border-bottom-color:var(--today-border);
+}
+.unified-shell main .today-v2>.today-goal-intelligence--empty .today-goal-empty-copy>p{
+ color:var(--today-muted);
+}
+.unified-shell main .today-v2>.today-context--empty p{
+ color:var(--today-muted);
+}
