@@ -78,3 +78,34 @@
 .unified-shell .arc-ui-today .arc-weather-location button:focus-visible{
  outline:3px solid var(--arc-focus-outline);outline-offset:3px;
 }
+
+/* UI-1.3 follow-up: normalize Today action controls without changing state-scale buttons. */
+.unified-shell main .today-goal-empty .arc-ui-button,
+.unified-shell main .today-next-actions .arc-ui-button,
+.unified-shell main .today-activity-main .arc-ui-button,
+.unified-shell main .today-goal-measure-entry .arc-ui-button{
+ min-height:var(--arc-action-height);padding:10px 15px;
+ border-radius:var(--arc-action-radius);border:1px solid var(--arc-action-border);
+ background:var(--arc-control);color:var(--arc-action-text);
+ font:inherit;font-size:.85rem;font-weight:700;line-height:1.25;
+ box-shadow:none;text-shadow:none;
+ display:inline-flex;align-items:center;justify-content:center;gap:8px;
+}
+.unified-shell main .today-goal-empty .arc-ui-button--primary{
+ background:var(--arc-action-primary-bg);border-color:var(--arc-action-primary-border);
+ color:var(--arc-action-primary-text);
+}
+.unified-shell main .today-goal-empty .arc-ui-button--primary:hover:not(:disabled){background:#166476}
+.unified-shell main .today-goal-measure-entry .arc-ui-button--quiet,
+.unified-shell main .today-activity-main .arc-ui-button--quiet{background:transparent}
+.unified-shell main .today-next-actions .arc-ui-button:hover:not(:disabled),
+.unified-shell main .today-activity-main .arc-ui-button:hover:not(:disabled),
+.unified-shell main .today-goal-measure-entry .arc-ui-button:hover:not(:disabled){
+ background:var(--arc-control-hover);border-color:var(--arc-cyan);
+}
+.unified-shell main .today-goal-empty .arc-ui-button:focus-visible,
+.unified-shell main .today-next-actions .arc-ui-button:focus-visible,
+.unified-shell main .today-activity-main .arc-ui-button:focus-visible,
+.unified-shell main .today-goal-measure-entry .arc-ui-button:focus-visible{
+ outline:3px solid var(--arc-focus-outline);outline-offset:3px;
+}
