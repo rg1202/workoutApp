@@ -113,3 +113,23 @@ These are initial findings and priorities, not a completed security or UX audit.
 - **Deployment:** see `docs/release/V2_DEPLOYMENT_RUNBOOK.md`. Static-only HTTPS pilot is the proposed boundary; integration server is excluded. No hosting deployment has been verified.
 - **Privacy:** Arc stores potentially sensitive personal development and activity data in browser storage. Backup files are unencrypted and may include malformed records. A backup export does not imply successful restoration; clear user-facing notice, retention limitations, support contact and privacy/terms review are still required.
 - **Release status:** M3.5 in progress; M3.6 release candidate and public launch are **not approved**.
+
+## M3.5 follow-up and M3.6 entry criteria
+
+- Owner confirmed **101/101 development Playwright tests passing** before this batch.
+- Recovery warning now states that backup exports are unencrypted and damaged records may not restore.
+- Production smoke coverage is separated into `playwright.production.config.ts` and `e2e-production/production.spec.ts`; `npm run test:production` exercises a built preview and checks that Strava connect controls are absent. **Not yet owner-verified.**
+- Release command includes the production smoke suite and still intentionally fails until dependency lockfile requirements are satisfied.
+- `docs/release/V2_DEPENDENCY_FREEZE.md` documents the required owner-side dependency resolution and lockfile commit. **No pinned versions or lockfile have been committed by this batch.**
+
+### M3.6 entry / go-no-go checklist
+
+- [ ] Owner confirms `npm ci`, `npm run check:release` and clean working tree on a pinned release SHA.
+- [ ] Production preview smoke test passes, including the absence of development Strava calls.
+- [ ] Manual mobile, keyboard and screen-reader-oriented navigation audit completed.
+- [ ] Local backup export and restore verified using disposable data; recovery limits acknowledged.
+- [ ] Static HTTPS staging deployment and rollback drill completed; integration server not deployed.
+- [ ] Privacy notice, support contact and legal/terms review completed.
+- [ ] Small pilot and blocker triage completed.
+
+**No public release approval is implied by these changes.**
