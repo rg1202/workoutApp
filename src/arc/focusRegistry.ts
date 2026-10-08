@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { Bike, Footprints, Mountain, PersonStanding, Waves, Dumbbell, HeartPulse, Snowflake, Sailboat, Goal, Activity, Flame, CircleDot, Trees, Shield, StretchHorizontal, Zap } from 'lucide-react';
+import { Bike, Footprints, Mountain, PersonStanding, Waves, Dumbbell, HeartPulse, Snowflake, Sailboat, Goal, Activity, CircleDot, Shield, StretchHorizontal, Zap } from 'lucide-react';
 
 export type FocusId='bjj'|'running'|'cycling'|'yoga'|'judo'|'karate'|'swimming'|'hiking'|'climbing'|'crossfit'|'strength'|'walking'|'pilates'|'rowing'|'triathlon'|'soccer'|'basketball'|'tennis'|'dance'|'skiing'|'mobility'|'boxing';
 export type FocusStatus='active'|'coming-soon';
