@@ -6,6 +6,7 @@ import './styles.css';
 import './integrations.css';
 import './bjj.css';
 import './calendar.css';
+import './arc/design-system.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
