@@ -1181,12 +1181,15 @@ test('Arc previews backup contents and deletion impact before restore',async({pa
   localStorage.setItem('arc.units.v1','{"preset":"US"}');
  });
  const backup={format:'arc-local-backup',version:1,exportedAt:'2026-10-07T12:00:00.000Z',data:{'workoutapp.goals.v2':'[]'}};
+ const expectedDeleted=await page.evaluate(()=>Object.keys(localStorage).filter(key=>
+  (key.startsWith('arc.')||key.startsWith('workoutapp.'))&&key!=='workoutapp.goals.v2'
+ ).length);
  const dialogPromise=page.waitForEvent('dialog');
  await page.locator('input[aria-label="Restore Arc backup file"]').setInputFiles({name:'preview.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
  const dialog=await dialogPromise;
  const preview=dialog.message();
  expect(dialog.type()).toBe('confirm');
- expect(preview).toContain('Existing categories DELETED: 1');
+ expect(preview).toContain('Existing categories DELETED: '+expectedDeleted);
  expect(preview).toContain('Goals: 0');
  await dialog.dismiss();
  expect(await page.evaluate(()=>localStorage.getItem('arc.units.v1'))).toBe('{"preset":"US"}');
