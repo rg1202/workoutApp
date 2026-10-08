@@ -1123,7 +1123,7 @@ test('Arc backup exports local goals and excludes unrelated storage',async({page
 });
 
 test('Arc restores a validated backup after confirmation',async({page})=>{
- const backup={format:'arc-local-backup',version:1,exportedAt:'2026-10-07T12:00:00.000Z',data:{'workoutapp.goals.v2':JSON.stringify([{id:'restored-goal',name:'Restore test goal'}])}};
+ const backup={format:'arc-local-backup',version:1,exportedAt:'2026-10-07T12:00:00.000Z',data:{'workoutapp.goals.v2':JSON.stringify([{id:'restored-goal',name:'Restore test goal',status:'Active',type:'Milestone',goalTypeV2:'Outcome',priority:'Primary',focus:'general'}])}};
  page.on('dialog',dialog=>dialog.accept());
  await Promise.all([
   page.waitForEvent('load'),
