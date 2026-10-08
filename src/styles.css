@@ -615,3 +615,12 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .arc-avatar-input{display:none}
 .arc-avatar-error{font-size:.75rem;color:#e6a3a3}
 @media(max-width:900px){.arc-today-avatar{align-items:flex-start}.arc-avatar-controls{justify-content:flex-start}}
+
+.arc-today-top{width:100%;min-width:0}
+.arc-today-top>header{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:0;min-width:0;width:100%;margin:0;padding:0}
+.arc-today-top>header>div{min-width:0}
+.arc-today-top>.arc-today-weather{min-width:0;width:100%;max-width:100%;box-sizing:border-box;margin:0}
+.arc-today-top .arc-today-avatar{box-sizing:border-box;width:100%;max-width:100%}
+.arc-today-top .arc-avatar-portrait{flex-shrink:0;max-width:100%}
+.arc-today-top .arc-weather-hours{min-width:0;max-width:100%;overflow-x:auto}
+@media(max-width:900px){.arc-today-top{grid-template-columns:minmax(0,1fr)}.arc-today-top>header{align-items:flex-start}}
