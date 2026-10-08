@@ -1194,3 +1194,35 @@ test('Arc previews backup contents and deletion impact before restore',async({pa
  await dialog.dismiss();
  expect(await page.evaluate(()=>localStorage.getItem('arc.units.v1'))).toBe('{"preset":"US"}');
 });
+
+test('Arc excludes credential-like keys from exported backups',async({page})=>{
+ await page.evaluate(()=>{
+  localStorage.setItem('arc.oauth.token','should-never-export');
+  localStorage.setItem('workoutapp.strava.refresh-token','should-never-export');
+  localStorage.setItem('arc.units.v1','{"preset":"US"}');
+ });
+ const [download]=await Promise.all([
+  page.waitForEvent('download'),
+  page.getByRole('button',{name:'Download Arc backup'}).click()
+ ]);
+ const stream=await download.createReadStream();
+ const chunks:Buffer[]=[];
+ for await(const chunk of stream)chunks.push(Buffer.from(chunk));
+ const data=JSON.parse(Buffer.concat(chunks).toString('utf8')).data;
+ expect(data['arc.oauth.token']).toBeUndefined();
+ expect(data['workoutapp.strava.refresh-token']).toBeUndefined();
+ expect(data['arc.units.v1']).toBeDefined();
+});
+
+test('Arc rejects malformed activity history and calendar backups',async({page})=>{
+ await page.evaluate(()=>localStorage.setItem('workoutapp.history.v2','[]'));
+ page.on('dialog',dialog=>dialog.accept());
+ for(const [key,invalid] of [
+  ['workoutapp.history.v2',[{id:'session-without-sets',name:'Bad session'}]],
+  ['workoutapp.planned-activities.v1',[{id:'plan-without-date',title:'Bad plan',status:'Planned'}]]
+ ] as const){
+  const backup={format:'arc-local-backup',version:1,exportedAt:'2026-10-07T12:00:00.000Z',data:{[key]:JSON.stringify(invalid)}};
+  await page.locator('input[aria-label="Restore Arc backup file"]').setInputFiles({name:'invalid-'+key+'.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
+  expect(await page.evaluate(()=>localStorage.getItem('workoutapp.history.v2'))).toBe('[]');
+ }
+});
