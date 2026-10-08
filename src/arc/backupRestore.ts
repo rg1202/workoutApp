@@ -36,6 +36,13 @@ export function parseBackup(source: string): ArcBackup {
       if (entry !== '0' && entry !== '1') throw new Error('Invalid sidebar setting');
       continue;
     }
+    // Avatar storage is a raw image data URL, not JSON. Preserve it in backups,
+    // but validate its type before allowing restore to write it.
+    if (key === 'arc.profile.avatar.v1') {
+      if (!/^data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+/]+={0,2}$/.test(entry))
+        throw new Error('Invalid avatar image in backup');
+      continue;
+    }
     const decoded: unknown = JSON.parse(entry);
     const object = (item: unknown): item is Record<string, unknown> =>
       item !== null && typeof item === 'object' && !Array.isArray(item);
