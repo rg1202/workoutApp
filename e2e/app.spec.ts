@@ -1127,6 +1127,7 @@ test('Arc restores a validated backup after confirmation',async({page})=>{
  page.on('dialog',dialog=>dialog.accept());
  await page.locator('input[aria-label="Restore Arc backup file"]').setInputFiles({name:'arc-backup.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
  await page.waitForLoadState('load');
+ await nav(page,'Goals').click();
  await expect(page.getByText('Restore test goal')).toBeVisible();
 });
 test('Arc rejects unsupported backups without overwriting browser data',async({page})=>{
