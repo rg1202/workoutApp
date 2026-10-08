@@ -7,6 +7,8 @@ test.beforeEach(async({page})=>{
  await page.goto('/');
  await page.evaluate(()=>localStorage.clear());
  await page.reload();
+ await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
+ await page.getByRole('button',{name:'Continue to Arc'}).click();
 });
 
 test('app shell loads and primary navigation works',async({page})=>{
@@ -1480,4 +1482,36 @@ test('Arc restores backups containing a profile avatar data URL',async({page})=>
  ]);
  expect(await page.evaluate(()=>localStorage.getItem('arc.profile.avatar.v1'))).toBe(avatar);
  expect(await page.evaluate(()=>localStorage.getItem('workoutapp.goals.v2'))).toContain('Avatar backup goal');
+});
+
+test('pilot notice is required and acknowledgment persists only in this browser',async({page})=>{
+ await page.evaluate(()=>localStorage.removeItem('arc.pilot-acknowledgment.v1'));
+ await page.reload();
+ await expect(page.getByRole('heading',{name:'Welcome to Arc'})).toBeVisible();
+ await expect(page.getByRole('button',{name:'Continue to Arc'})).toBeDisabled();
+ await expect(page.locator('aside')).toHaveCount(0);
+ await page.getByRole('button',{name:'Not now'}).click();
+ await expect(page.getByText('You have not accepted the pilot notice.')).toBeVisible();
+ await expect(page.locator('aside')).toHaveCount(0);
+ await page.getByRole('button',{name:'Review notice'}).click();
+ await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
+ await page.getByRole('button',{name:'Continue to Arc'}).click();
+ await expect(page.locator('aside')).toBeVisible();
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('arc.pilot-acknowledgment.v1')||'null')?.version)).toBe('2026-10-08-v1');
+ await page.reload();
+ await expect(page.locator('aside')).toBeVisible();
+ await page.getByRole('button',{name:'Pilot privacy notice'}).click();
+ await expect(page.getByRole('heading',{name:'Welcome to Arc'})).toBeVisible();
+ await page.getByRole('button',{name:'Return to Arc'}).click();
+ await expect(page.locator('aside')).toBeVisible();
+});
+test('pilot notice requires renewed acknowledgment after version mismatch or storage clearing',async({page})=>{
+ await page.evaluate(()=>localStorage.setItem('arc.pilot-acknowledgment.v1',JSON.stringify({version:'older-notice',acceptedAt:new Date().toISOString()})));
+ await page.reload();
+ await expect(page.getByRole('heading',{name:'Welcome to Arc'})).toBeVisible();
+ await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
+ await page.getByRole('button',{name:'Continue to Arc'}).click();
+ await page.evaluate(()=>localStorage.clear());
+ await page.reload();
+ await expect(page.getByRole('heading',{name:'Welcome to Arc'})).toBeVisible();
 });
