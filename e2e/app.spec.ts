@@ -1296,3 +1296,25 @@ test('mobile Goals and Progress remain usable at narrow width',async({page})=>{
  await nav(page,'Progress').click();
  await expect(page.getByRole('heading',{name:'Progress',exact:true})).toBeVisible();
 });
+
+test('restore detects silently ignored writes and rolls back existing data',async({page})=>{
+ const result=await page.evaluate(async()=>{
+  const {restoreBackup}=await import('/src/arc/backupRestore.ts');
+  const values=new Map([['arc.units.v1','{"preset":"US"}']]);
+  const storage={
+   get length(){return values.size;},
+   key(i:number){return [...values.keys()][i]??null;},
+   getItem(k:string){return values.get(k)??null;},
+   setItem(k:string,v:string){if(k==='arc.units.v1'&&v==='{"preset":"Metric"}')return;values.set(k,v);},
+   removeItem(k:string){values.delete(k);},
+   clear(){values.clear();}
+  } as Storage;
+  let error='';
+  try{
+   restoreBackup({format:'arc-local-backup',version:1,exportedAt:new Date().toISOString(),data:{'arc.units.v1':'{"preset":"Metric"}'}},storage);
+  }catch(e){error=e instanceof Error?e.message:String(e)}
+  return {error,units:values.get('arc.units.v1')};
+ });
+ expect(result.error).toContain('original data restored');
+ expect(result.units).toBe('{"preset":"US"}');
+});
