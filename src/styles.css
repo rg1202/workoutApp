@@ -921,3 +921,38 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
  .unified-shell main .arc-focus-catalog-buttons{max-height:300px;grid-template-columns:1fr 1fr}
 }
 @media(max-width:460px){.unified-shell main .arc-focus-catalog-buttons{grid-template-columns:1fr}}
+
+/* Focus manager refinement: one page scroll, quiet surfaces, clear selected state. */
+.unified-shell main .arc-focus-catalog{--focus-bg:#0b141d;--focus-panel:#101c27;--focus-line:#253847;--focus-active:#15333b;--focus-highlight:#52d6cc}
+.unified-shell main .arc-focus-catalog-list{background:var(--focus-bg);border-color:var(--focus-line);padding:16px}
+.unified-shell main .arc-focus-catalog-detail{background:var(--focus-panel);border-color:var(--focus-line);min-height:0}
+.unified-shell main .arc-focus-catalog-layout{align-items:start}
+.unified-shell main .arc-focus-catalog-buttons{
+ max-height:none;overflow:visible;scrollbar-width:auto;
+ display:flex;flex-direction:column;gap:5px;
+}
+.unified-shell main .arc-focus-list-caption{font-size:.65rem;font-weight:800;letter-spacing:.13em;color:#88a7b9;margin:20px 8px 10px}
+.unified-shell main .arc-focus-catalog-buttons button{
+ width:100%;min-height:61px;padding:11px 12px;border:1px solid transparent;
+ border-radius:10px;background:transparent;color:#e5eef4;
+}
+.unified-shell main .arc-focus-catalog-buttons button:hover{
+ background:#142532;border-color:#284252;
+}
+.unified-shell main .arc-focus-catalog-buttons button.selected{
+ background:var(--focus-active);border-color:#34777b;
+ box-shadow:inset 3px 0 0 var(--focus-highlight);
+}
+.unified-shell main .arc-focus-catalog-buttons button.selected>svg:first-child{color:var(--focus-highlight)}
+.unified-shell main .arc-focus-catalog-buttons small{color:#93aebe}
+.unified-shell main .arc-focus-catalog-detail .eyebrow{color:#79c8ca}
+.unified-shell main .arc-focus-catalog-detail h2,
+.unified-shell main .arc-focus-catalog-detail h3{color:#e9f2f7}
+.unified-shell main .arc-focus-catalog-detail p{color:#a9becb}
+.unified-shell main .arc-focus-catalog-detail .arc-focus-lede{color:#d6e5ec}
+.unified-shell main .arc-focus-catalog>.arc-page-header{margin-bottom:25px}
+.unified-shell main .arc-focus-catalog>.arc-page-header .arc-focus-back:hover{border-color:#43898d;background:#163039}
+@media(max-width:760px){
+ .unified-shell main .arc-focus-catalog-buttons{max-height:none;display:flex;flex-direction:column;overflow:visible}
+ .unified-shell main .arc-focus-catalog-layout{gap:14px}
+}
