@@ -1025,3 +1025,30 @@ test('Running and Cycling focus overviews use completed activity actuals without
  await expect(page.locator('.arc-endurance-recent')).toContainText('Evening Ride');
  await expect(page.locator('.arc-endurance-recent')).not.toContainText('Morning Run');
 });
+
+
+test('Endurance focus honors linked goal over ambiguous session title',async({page})=>{
+ const today=await page.evaluate(()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')});
+ await page.evaluate(date=>{
+  localStorage.setItem('workoutapp.goals.v2',JSON.stringify([
+   {id:'endurance-running-goal',name:'Running consistency',type:'Cardio',activity:'Running',focus:'running',status:'Active',goalTypeV2:'Consistency'},
+   {id:'endurance-cycling-goal',name:'Cycling consistency',type:'Cardio',activity:'Cycling',focus:'cycling',status:'Active',goalTypeV2:'Consistency'}
+  ]));
+  localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([
+   {id:'linked-run',date,title:'Morning Cardio',type:'Cardio',status:'Completed',goalIds:['endurance-running-goal'],actuals:{distanceKm:7,actualDurationMinutes:40}},
+   {id:'linked-ride',date,title:'Evening Cardio',type:'Cardio',status:'Completed',goalIds:['endurance-cycling-goal'],actuals:{distanceKm:18,actualDurationMinutes:55}},
+   {id:'unclassified',date,title:'Cardio Workout',type:'Cardio',status:'Completed',actuals:{distanceKm:4,actualDurationMinutes:25}}
+  ]));
+ },today);
+ await page.reload();
+ await nav(page,'Running').click();
+ await expect(page.getByRole('region',{name:'Running 7-day summary'})).toContainText('7 km');
+ await expect(page.locator('.arc-endurance-recent')).toContainText('Morning Cardio');
+ await expect(page.locator('.arc-endurance-recent')).not.toContainText('Evening Cardio');
+ await expect(page.locator('.arc-endurance-recent')).not.toContainText('Cardio Workout');
+ await nav(page,'Cycling').click();
+ await expect(page.getByRole('region',{name:'Cycling 7-day summary'})).toContainText('18 km');
+ await expect(page.locator('.arc-endurance-recent')).toContainText('Evening Cardio');
+ await expect(page.locator('.arc-endurance-recent')).not.toContainText('Morning Cardio');
+ await expect(page.locator('.arc-endurance-recent')).not.toContainText('Cardio Workout');
+});
