@@ -1,4 +1,4 @@
-import{useEffect,useState}from'react';
+import{useEffect,useState,type FormEvent}from'react';
 import{CloudSun,MapPin,RefreshCw}from'lucide-react';
 const KEY='arc.weather.location.v1';
 type Location={name:string;latitude:number;longitude:number;timezone?:string};
@@ -19,7 +19,7 @@ export default function TodayWeather(){
  }catch(e){if(active&&!(e instanceof DOMException&&e.name==='AbortError'))setError('Weather is unavailable. Try refreshing.')}finally{if(active)setBusy(false)}})();
  return()=>{active=false;controller.abort()};
  },[location,refresh]);
- const choose=async(e:React.FormEvent)=>{e.preventDefault();if(!query.trim())return;setBusy(true);setError('');try{
+ const choose=async(e:FormEvent)=>{e.preventDefault();if(!query.trim())return;setBusy(true);setError('');try{
   const url=new URL('https://geocoding-api.open-meteo.com/v1/search');url.searchParams.set('name',query.trim());url.searchParams.set('count','1');url.searchParams.set('language','en');url.searchParams.set('format','json');
   const response=await fetch(url.toString());if(!response.ok)throw Error('Search unavailable');const result=(await response.json()).results?.[0];if(!result){setError('No location found. Try city and state.');return}
   const next={name:[result.name,result.admin1,result.country_code].filter(Boolean).join(', '),latitude:result.latitude,longitude:result.longitude,timezone:result.timezone};localStorage.setItem(KEY,JSON.stringify(next));setLocation(next);setEditing(false);setWeather(null);
