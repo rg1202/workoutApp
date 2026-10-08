@@ -35,3 +35,7 @@ Arc's Content Security Policy allows requests to api.open-meteo.com and geocodin
 Arc goals, calendars, activity records and preferences are stored in the user's browser rather than Arc-hosted account storage in this pilot. Clearing browser data can remove them. Downloaded backups are unencrypted and should not be shared with pilot support or placed in public bug reports.
 
 **Status:** Draft disclosure, not final legal approval. Before inviting testers: verify deployed analytics configuration and any cookies, Cloudflare retention and relevant notices, consent/onboarding method, effective date, and owner approval.
+
+## Effective date decision — October 8, 2026
+
+The owner approved **October 8, 2026** as the effective date of the Arc V2 invitation-only pilot notice. The pilot notice wording was conditionally approved, subject to Cloudflare retention verification. The draft status remains until verification and final release sign-off; no invitations are authorized by this date approval alone.
