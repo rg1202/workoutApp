@@ -84,6 +84,14 @@ export function restoreBackup(backup: ArcBackup, storage: Storage = localStorage
       if (Object.hasOwn(verified.data, key)) storage.setItem(key, verified.data[key]);
       else storage.removeItem(key);
     }
+    // A storage adapter can acknowledge a write without persisting it.
+    // Verify the full result before reporting a successful restore.
+    for (const key of touched) {
+      const expected = Object.hasOwn(verified.data, key) ? verified.data[key] : null;
+      if (storage.getItem(key) !== expected) {
+        throw new Error('Restore verification failed');
+      }
+    }
   } catch {
     let rollbackFailed = false;
     for (const key of touched) {
