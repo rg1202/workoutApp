@@ -1,9 +1,12 @@
+import{recoverySignals}from'./recoveryScheduling';
+import type{DailyState}from'./dailyState';
+import type{StateObservation}from'./stateHistory';
 import type {PlannedActivity,PlannedActivityType} from '../plans';
 const iso=(d:Date)=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const parse=(date:string)=>new Date(date+'T12:00:00');
 const add=(date:string,days:number)=>{const d=parse(date);d.setDate(d.getDate()+days);return iso(d)};
 export type ScheduleSuggestion={date:string;dayLabel:string;plannedCount:number;plannedMinutes:number;reason:string;warnings:string[];score:number;weekMinutes:number;weekSessions:number;focusMinutes:number};
-export function suggestScheduleDays(plans:PlannedActivity[],today:string,limit=4,activityType?:PlannedActivityType,durationMinutes=60):ScheduleSuggestion[]{
+export function suggestScheduleDays(plans:PlannedActivity[],today:string,limit=4,activityType?:PlannedActivityType,durationMinutes=60,states:DailyState[]=[],history:StateObservation[]=[]):ScheduleSuggestion[]{
  const now=parse(today),weekEnd=new Date(now);weekEnd.setDate(now.getDate()+(6-now.getDay()));
  const end=iso(weekEnd),results:ScheduleSuggestion[]=[];
  const active=plans.filter(p=>p.status!=='Skipped');
@@ -15,7 +18,7 @@ export function suggestScheduleDays(plans:PlannedActivity[],today:string,limit=4
   const weekMinutes=weekPlans.reduce((n,p)=>n+(p.durationMinutes??0),0),weekSessions=weekPlans.length;
   const focusMinutes=weekPlans.filter(p=>p.type===activityType).reduce((n,p)=>n+(p.durationMinutes??0),0);
   const nextDay=active.filter(p=>p.date===add(date,1));
-  const warnings:string[]=[];
+  const warnings:string[]=recoverySignals(plans,date,states,history);
   if(dayPlans.some(p=>p.durationMinutes===undefined))warnings.push('Some sessions have no planned duration');
   if(dayPlans.some(p=>!p.time))warnings.push('Some sessions have no start time; conflicts cannot be checked');
   if(dayPlans.some(p=>p.type===activityType)&&activityType)warnings.push('Another '+activityType+' session is already planned');
