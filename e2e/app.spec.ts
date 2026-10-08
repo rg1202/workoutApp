@@ -927,3 +927,38 @@ test('Progress counts a linked completed activity once across duplicate plan rep
  await expect(page.locator('.progress-recent')).toContainText('Progress Completed');
  await expect(page.locator('.progress-recent')).not.toContainText('Progress Original');
 });
+
+
+test('Progress lifecycle reflects completion and skipping after reload without inflating execution',async({page})=>{
+ const today=await page.evaluate(()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')});
+ await page.evaluate(date=>localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([
+  {id:'lifecycle-one',date,title:'Lifecycle Run',type:'Cardio',status:'Planned',durationMinutes:30},
+  {id:'lifecycle-two',date,title:'Lifecycle Ride',type:'Cardio',status:'Planned',durationMinutes:45}
+ ])),today);
+ await page.reload();
+ await nav(page,'Progress').click();
+ await expect(page.locator('.progress-snapshot')).toContainText('0 of 2 planned sessions completed');
+ await nav(page,'Calendar').click();
+ await page.getByRole('button',{name:'Edit Lifecycle Run'}).first().click();
+ const dialog=page.getByRole('dialog',{name:'Edit activity'});
+ await dialog.getByLabel('Status').selectOption('Completed');
+ await dialog.getByLabel('Actual minutes').fill('34');
+ await dialog.getByRole('button',{name:'Save activity'}).click();
+ await nav(page,'Progress').click();
+ await expect(page.locator('.progress-snapshot')).toContainText('1 of 2 planned sessions completed');
+ await expect(page.locator('.progress-recent')).toContainText('Lifecycle Run');
+ await nav(page,'Calendar').click();
+ await page.getByRole('button',{name:'Edit Lifecycle Ride'}).first().click();
+ await page.getByRole('dialog',{name:'Edit activity'}).getByLabel('Status').selectOption('Skipped');
+ await page.getByRole('dialog',{name:'Edit activity'}).getByRole('button',{name:'Save activity'}).click();
+ await nav(page,'Progress').click();
+ await expect(page.locator('.progress-snapshot')).toContainText('1 of 1 planned sessions completed');
+ await expect(page.locator('.progress-recent')).not.toContainText('Lifecycle Ride');
+ await page.reload();
+ await nav(page,'Progress').click();
+ await expect(page.locator('.progress-snapshot')).toContainText('1 of 1 planned sessions completed');
+ await expect.poll(()=>page.evaluate(()=>{
+  const a=JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]');
+  return a.length===2&&a.find((p:any)=>p.id==='lifecycle-one')?.actuals?.actualDurationMinutes===34&&a.find((p:any)=>p.id==='lifecycle-two')?.status==='Skipped';
+ })).toBe(true);
+});
