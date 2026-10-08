@@ -1174,3 +1174,17 @@ test('Arc restores original records when storage fails during restore',async({pa
  expect(result.units).toBe('{"preset":"US"}');
  expect(result.goals).toBe('[]');
 });
+
+test('Arc previews backup contents and deletion impact before restore',async({page})=>{
+ await page.evaluate(()=>{
+  localStorage.setItem('workoutapp.goals.v2','[]');
+  localStorage.setItem('arc.units.v1','{"preset":"US"}');
+ });
+ const backup={format:'arc-local-backup',version:1,exportedAt:'2026-10-07T12:00:00.000Z',data:{'workoutapp.goals.v2':'[]'}};
+ let preview='';
+ page.on('dialog',async dialog=>{preview=dialog.message();await dialog.dismiss()});
+ await page.locator('input[aria-label="Restore Arc backup file"]').setInputFiles({name:'preview.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
+ expect(preview).toContain('Existing categories DELETED: 1');
+ expect(preview).toContain('Goals: 0');
+ expect(await page.evaluate(()=>localStorage.getItem('arc.units.v1'))).toBe('{"preset":"US"}');
+});
