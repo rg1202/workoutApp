@@ -6,4 +6,7 @@ export type ActivityActuals = {
  submissionsFor?: number;
  submissionsAgainst?: number;
  techniques?: string;
+ distanceKm?: number;
+ elevationMeters?: number;
+ recoveryNote?: string;
 };
