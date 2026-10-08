@@ -488,3 +488,6 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 
 /* Today — shared actual-session editor entry */
 .today-edit-session{border:1px solid var(--arc-border);border-radius:8px;background:var(--arc-surface-2);color:var(--arc-cyan);font-size:11px;padding:6px 9px;white-space:nowrap;cursor:pointer}.today-edit-session:hover{border-color:var(--arc-cyan)}@media(max-width:600px){.today-activity-main{flex-wrap:wrap}.today-edit-session{margin-left:auto}}
+
+/* Session Detail V2 */
+.arc-session-overview{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.arc-session-overview span{display:flex;flex-direction:column;gap:6px;padding:12px;border:1px solid var(--arc-border);border-radius:10px;background:var(--arc-surface-2);font-size:11px;color:var(--arc-muted)}.arc-session-overview b{font-size:16px;color:var(--arc-text)}.arc-session-history{grid-column:1/-1;border-top:1px solid var(--arc-border);padding:10px 0;color:var(--arc-muted);font-size:12px}.arc-session-history summary{cursor:pointer;color:var(--arc-cyan)}.arc-session-history p{margin:8px 0}@media(max-width:480px){.arc-session-overview{grid-template-columns:1fr}}
