@@ -118,3 +118,7 @@ Baseline release SHA: `7c58b58c2c0dd6a2a96c4820dc00680f685a97ba` (reconfirm depl
 - Development E2E: **104 passed**; production E2E: **2 passed**; total **106 passed**, owner-reported. No failures reported in final run.
 - Pilot first-use acknowledgment tests passed in prior run; backup restore and production smoke were updated to explicitly acknowledge the notice before app navigation.
 - Automated release gate: **PASS**. Still pending: owner approval of notice wording/effective date and retention disclosures, deployment SHA/live first-use smoke, and explicit go/no-go before adding pilot testers to Cloudflare Access.
+
+## October 8 — owner conditional privacy approval
+
+Owner approves the current Arc V2 pilot notice wording **subject to effective date and Cloudflare retention verification**. This is not unconditional privacy sign-off or pilot GO. Keep Cloudflare Access owner-only pending confirmation of the effective date, retention disclosures, live deployment and explicit invitation authorization.
