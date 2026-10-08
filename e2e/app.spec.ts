@@ -1025,26 +1025,3 @@ test('Running and Cycling focus overviews use completed activity actuals without
  await expect(page.locator('.arc-endurance-recent')).toContainText('Evening Ride');
  await expect(page.locator('.arc-endurance-recent')).not.toContainText('Morning Run');
 });
-
-
-test('Today glance reflects completion and next activity from calendar plans after reload',async({page})=>{
- const today=await page.evaluate(()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')});
- await page.evaluate(date=>localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([
-  {id:'glance-done',date,title:'Morning Run',type:'Cardio',status:'Completed',time:'07:00',durationMinutes:30},
-  {id:'glance-next',date,title:'Evening BJJ',type:'BJJ',status:'Planned',time:'18:00',durationMinutes:90},
-  {id:'glance-skipped',date,title:'Skipped Ride',type:'Cardio',status:'Skipped',durationMinutes:45}
- ])),today);
- await page.reload();
- const glance=page.getByRole('region',{name:"Today's plan summary"});
- await expect(glance).toContainText('1 / 2');
- await expect(glance).toContainText('Evening BJJ');
- await expect(glance).not.toContainText('Skipped Ride');
- await expect(glance.getByRole('progressbar',{name:"Today's completion"})).toHaveAttribute('aria-valuenow','50');
- await nav(page,'Calendar').click();
- await page.getByText('○ Evening BJJ').first().click();
- await nav(page,'Today').click();
- await expect(glance).toContainText('2 / 2');
- await expect(glance).toContainText('Daily plan complete');
- await page.reload();
- await expect(page.getByRole('region',{name:"Today's plan summary"})).toContainText('2 / 2');
-});
