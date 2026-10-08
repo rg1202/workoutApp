@@ -150,3 +150,60 @@
  .unified-shell main .today-goal-intelligence--empty>.overview-heading{gap:12px;flex-wrap:wrap}
  .unified-shell main .today-goal-intelligence--empty .today-goal-empty{padding-top:20px}
 }
+
+/* UI-1.5 Today: consistent lower dashboard rhythm and action hierarchy. */
+.unified-shell main .today-v2{
+ --today-card-gap:18px;
+ display:flex;flex-direction:column;gap:var(--today-card-gap);
+ min-width:0;
+}
+.unified-shell main .today-v2>.today-next,
+.unified-shell main .today-v2>.today-goal-intelligence,
+.unified-shell main .today-v2>.today-v2-grid{margin-top:0;margin-bottom:0;min-width:0}
+.unified-shell main .today-v2-grid{gap:var(--today-card-gap);align-items:start}
+.unified-shell main .today-v2-grid>.builder-card{
+ min-width:0;border-color:var(--arc-border);border-radius:var(--arc-radius);
+ background:var(--arc-surface);box-shadow:none;
+}
+.unified-shell main .today-v2-grid>.builder-card .eyebrow{color:#80a9c3}
+.unified-shell main .today-v2-grid>.builder-card .overview-heading{gap:14px}
+.unified-shell main .today-v2 .today-open-actions>.arc-ui-button,
+.unified-shell main .today-v2 .today-next-actions>.arc-ui-button,
+.unified-shell main .today-v2 .today-timeline .overview-heading .arc-ui-button,
+.unified-shell main .today-v2 .today-program-link>.arc-ui-button{
+ display:inline-flex;align-items:center;justify-content:center;gap:8px;
+ min-height:var(--arc-action-height);padding:10px 15px;
+ border:1px solid var(--arc-action-border);border-radius:var(--arc-action-radius);
+ background:var(--arc-control);color:var(--arc-action-text);
+ font:inherit;font-size:.85rem;font-weight:700;line-height:1.25;
+ box-shadow:none;text-shadow:none;cursor:pointer;
+}
+.unified-shell main .today-v2 .today-open-actions>.arc-ui-button--primary,
+.unified-shell main .today-v2 .today-next-actions>.arc-ui-button--primary,
+.unified-shell main .today-v2 .today-program-link>.arc-ui-button--primary{
+ background:var(--arc-action-primary-bg);border-color:var(--arc-action-primary-border);
+ color:var(--arc-action-primary-text);
+}
+.unified-shell main .today-v2 .today-timeline .overview-heading .arc-ui-button--quiet,
+.unified-shell main .today-v2 .today-next-actions>.arc-ui-button--quiet{background:transparent}
+.unified-shell main .today-v2 .today-open-actions>.arc-ui-button:hover:not(:disabled),
+.unified-shell main .today-v2 .today-next-actions>.arc-ui-button:hover:not(:disabled),
+.unified-shell main .today-v2 .today-timeline .overview-heading .arc-ui-button:hover:not(:disabled),
+.unified-shell main .today-v2 .today-program-link>.arc-ui-button:hover:not(:disabled){
+ border-color:var(--arc-cyan);background:var(--arc-control-hover);
+}
+.unified-shell main .today-v2 .today-open-actions>.arc-ui-button--primary:hover:not(:disabled),
+.unified-shell main .today-v2 .today-next-actions>.arc-ui-button--primary:hover:not(:disabled),
+.unified-shell main .today-v2 .today-program-link>.arc-ui-button--primary:hover:not(:disabled){background:#166476}
+.unified-shell main .today-v2 .arc-ui-button:focus-visible{
+ outline:3px solid var(--arc-focus-outline);outline-offset:3px;
+}
+.unified-shell main .today-v2 .today-state-row,
+.unified-shell main .today-v2 .today-sleep-quality,
+.unified-shell main .today-v2 .today-fuel>label{min-width:0}
+.unified-shell main .today-v2 .today-state-saved{color:var(--arc-mint)}
+@media(max-width:760px){
+ .unified-shell main .today-v2{--today-card-gap:14px}
+ .unified-shell main .today-v2 .today-next-actions{flex-wrap:wrap}
+ .unified-shell main .today-v2 .today-timeline .overview-heading{flex-wrap:wrap}
+}
