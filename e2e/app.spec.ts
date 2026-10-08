@@ -1126,7 +1126,8 @@ test('Arc restores a validated backup after confirmation',async({page})=>{
  const backup={format:'arc-local-backup',version:1,exportedAt:'2026-10-07T12:00:00.000Z',data:{'workoutapp.goals.v2':JSON.stringify([{id:'restored-goal',name:'Restore test goal'}])}};
  page.on('dialog',dialog=>dialog.accept());
  await page.locator('input[aria-label="Restore Arc backup file"]').setInputFiles({name:'arc-backup.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
- await expect.poll(()=>page.evaluate(()=>localStorage.getItem('workoutapp.goals.v2'))).toContain('Restore test goal');
+ await page.waitForLoadState('load');
+ await expect(page.getByText('Restore test goal')).toBeVisible();
 });
 test('Arc rejects unsupported backups without overwriting browser data',async({page})=>{
  await page.evaluate(()=>localStorage.setItem('workoutapp.goals.v2','[]'));
