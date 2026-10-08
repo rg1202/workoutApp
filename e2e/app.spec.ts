@@ -686,7 +686,7 @@ test('goal tracker registry selects only the relevant measurement and persists h
 
 test('Focus catalog explains a new focus and preserves sidebar selection',async({page})=>{
  await page.getByRole('button',{name:'Add focus'}).click();
- await expect(page.getByRole('heading',{name:'Add a focus'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Manage your focuses'})).toBeVisible();
  await page.getByRole('button',{name:/Swimming.*Preview focus/i}).click();
  await expect(page.getByText('Swimming blends efficient technique')).toBeVisible();
  await page.getByRole('button',{name:'Add Swimming'}).click();
@@ -695,4 +695,20 @@ test('Focus catalog explains a new focus and preserves sidebar selection',async(
  await expect(page.locator('aside').getByRole('button',{name:'Swimming'})).toBeVisible();
  await page.locator('aside').getByRole('button',{name:'Swimming'}).click();
  await expect(page.getByText('Dedicated tracking and programming for this focus are not available yet.')).toBeVisible();
+});
+
+test('optional Focus can be hidden and restored without deleting records',async({page})=>{
+ await page.getByRole('button',{name:'Add focus'}).click();
+ await page.getByRole('button',{name:/Swimming.*Preview focus/i}).click();
+ await page.getByRole('button',{name:'Add Swimming'}).click();
+ await page.getByRole('button',{name:'Remove from sidebar'}).click();
+ await expect(page.getByText(/does not delete goals, activities or history/i)).toBeVisible();
+ await page.getByRole('button',{name:'Confirm remove'}).click();
+ await expect(page.locator('aside').getByRole('button',{name:'Swimming'})).toHaveCount(0);
+ await page.reload();
+ await expect(page.locator('aside').getByRole('button',{name:'Swimming'})).toHaveCount(0);
+ await page.getByRole('button',{name:'Add focus'}).click();
+ await page.getByRole('button',{name:/Swimming.*Preview focus/i}).click();
+ await page.getByRole('button',{name:'Add Swimming'}).click();
+ await expect(page.locator('aside').getByRole('button',{name:'Swimming'})).toBeVisible();
 });
