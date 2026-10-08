@@ -901,7 +901,10 @@ test('rescheduling a goal-linked activity preserves identity, status, and goal a
  },dates);
  await page.reload();
  await nav(page,'Calendar').click();
- await page.locator('[data-date="'+dates.from+'"] .cal-draggable').filter({hasText:'Reschedule Run'}).dragTo(page.locator('[data-date="'+dates.to+'"]').first());
+ await page.getByRole('button',{name:'Move Reschedule Run'}).click();
+ await page.getByRole('button',{name:'Move activity'}).isVisible();
+ await page.locator('.cal-move-modal input').fill(dates.to);
+ await page.getByRole('button',{name:'Move activity'}).click();
  const invariant=()=>page.evaluate(()=>{const a=JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]');const match=a.filter((p:any)=>p.id==='reschedule-session');return {count:match.length,date:match[0]?.date,status:match[0]?.status,goalIds:match[0]?.goalIds,duration:match[0]?.durationMinutes}});
  await expect.poll(invariant).toEqual({count:1,date:dates.to,status:'Planned',goalIds:['reschedule-goal'],duration:40});
  await page.reload();
