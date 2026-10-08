@@ -669,3 +669,19 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 @media(max-width:700px){.arc-trend-summary{grid-template-columns:1fr}.arc-trend-bars small{font-size:.5rem}}
 
 .arc-endurance-trends .arc-trend-insight{margin:12px 0 4px;color:inherit;font-size:.88rem;line-height:1.5}
+
+/* M3.3: visible keyboard focus for interactive Arc controls. */
+.unified-shell :is(button,a,input,select,textarea,[tabindex]):focus-visible {
+  outline: 3px solid #a7f36b;
+  outline-offset: 3px;
+}
+.unified-shell :is(button,a,input,select,textarea):focus:not(:focus-visible) {
+  outline: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .unified-shell :is(button,a,input,select,textarea) {
+    scroll-behavior: auto;
+    transition-duration: 0.01ms;
+    animation-duration: 0.01ms;
+  }
+}
