@@ -1,0 +1,56 @@
+/*
+ * Arc V2 design foundation — UI-1.
+ * Canonical semantic tokens. Legacy component rules will migrate incrementally.
+ * Keep this file imported after existing stylesheets until the migration is complete.
+ */
+:root{
+ color-scheme:dark;
+ --arc-bg:#050a12;
+ --arc-surface:#0a121d;
+ --arc-surface-2:#0e1926;
+ --arc-border:#1b2b3d;
+ --arc-text:#f7f9fc;
+ --arc-muted:#8091a5;
+ --arc-accent:#35d9e8;
+ --arc-blue:#2e74f3;
+ --arc-cyan:#35d9e8;
+ --arc-mint:#68f5a7;
+ --arc-brand-gradient:linear-gradient(105deg,var(--arc-blue) 0%,var(--arc-cyan) 55%,var(--arc-mint) 100%);
+ --arc-control:#0d1722;
+ --arc-control-hover:#112031;
+ --arc-ring:rgba(53,217,232,.20);
+ --arc-radius:14px;
+ --arc-shadow:0 10px 28px rgba(0,0,0,.16);
+ --arc-action-height:44px;
+ --arc-action-radius:9px;
+ --arc-action-border:#29465b;
+ --arc-action-text:#e6f4fb;
+ --arc-action-primary-bg:#124c59;
+ --arc-action-primary-border:#248c9b;
+ --arc-action-primary-text:#eaffff;
+ --arc-focus-outline:#a7f36b;
+}
+.arc-ui-button{
+ display:inline-flex;align-items:center;justify-content:center;gap:8px;
+ min-height:var(--arc-action-height);padding:10px 15px;
+ border-radius:var(--arc-action-radius);border:1px solid var(--arc-action-border);
+ background:var(--arc-control);color:var(--arc-action-text);
+ font:inherit;font-weight:700;font-size:.85rem;line-height:1.25;
+ cursor:pointer;text-decoration:none;
+}
+.arc-ui-button:hover:not(:disabled){background:var(--arc-control-hover);border-color:var(--arc-cyan)}
+.arc-ui-button--primary{background:var(--arc-action-primary-bg);border-color:var(--arc-action-primary-border);color:var(--arc-action-primary-text)}
+.arc-ui-button--primary:hover:not(:disabled){background:#166476}
+.arc-ui-button--quiet{background:transparent}
+.arc-ui-button--danger{border-color:#815059;color:#ffb4bc;background:#311b26}
+.arc-ui-button:disabled{opacity:.48;cursor:not-allowed}
+.arc-ui-button:focus-visible,.arc-ui-field:focus-visible{outline:3px solid var(--arc-focus-outline);outline-offset:3px}
+.arc-ui-field{
+ min-height:var(--arc-action-height);width:100%;min-width:0;
+ border:1px solid var(--arc-action-border);border-radius:var(--arc-action-radius);
+ background:var(--arc-control);color:var(--arc-text);
+ padding:10px 12px;font:inherit;font-size:.88rem;
+}
+.arc-ui-panel{background:var(--arc-surface);border:1px solid var(--arc-border);border-radius:var(--arc-radius)}
+.arc-ui-muted{color:var(--arc-muted)}
+@media(prefers-reduced-motion:reduce){.arc-ui-button{transition:none}}
