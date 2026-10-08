@@ -2,21 +2,14 @@ import{ArrowRight,Bike,Clock3,Footprints,Route,Target}from'lucide-react';
 import type{Goal}from'../goals';
 import type{PlannedActivity}from'../plans';
 import{uniqueActivities}from'./uniqueActivities';
+import{enduranceFocusForActivity}from'./enduranceClassification';
 
 type EnduranceFocus='running'|'cycling';
 const iso=(d:Date)=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
-const matches=(p:PlannedActivity,focus:EnduranceFocus,goalIds:Set<string>)=>{
- if(p.type!=='Cardio')return false;
- const title=(p.title+' '+(p.sourceLabel??'')).toLowerCase();
- const positive=focus==='running'?/run|jog|tempo|interval|sprint|marathon|5k|10k/:/cycl|bike|ride|spin|peloton/;
- const negative=focus==='running'?/cycl|bike|ride|spin|peloton/:/run|jog|marathon/;
- return (positive.test(title)&&!negative.test(title))||(!negative.test(title)&&Boolean(p.goalIds?.some(id=>goalIds.has(id))));
-};
 export default function EnduranceFocusPanel({focus,plans,goals,onOpenCalendar,onOpenGoals}:{focus:EnduranceFocus;plans:PlannedActivity[];goals:Goal[];onOpenCalendar:()=>void;onOpenGoals:()=>void}){
  const running=focus==='running',name=running?'Running':'Cycling',Icon=running?Footprints:Bike;
  const relatedGoals=goals.filter(g=>g.status==='Active'&&(g.focus===focus||(running?/run/i:/cycl|bike/i).test((g.activity??'')+' '+g.name)));
- const goalIds=new Set(relatedGoals.map(g=>g.id));
- const activities=uniqueActivities(plans).filter(p=>matches(p,focus,goalIds));
+ const activities=uniqueActivities(plans).filter(p=>enduranceFocusForActivity(p,goals)===focus);
  const today=new Date(),start=new Date(today);start.setDate(today.getDate()-6);
  const recent=activities.filter(p=>p.date>=iso(start)&&p.date<=iso(today));
  const done=recent.filter(p=>p.status==='Completed'),scheduled=recent.filter(p=>p.status==='Planned');
