@@ -54,3 +54,27 @@
 .arc-ui-panel{background:var(--arc-surface);border:1px solid var(--arc-border);border-radius:var(--arc-radius)}
 .arc-ui-muted{color:var(--arc-muted)}
 @media(prefers-reduced-motion:reduce){.arc-ui-button{transition:none}}
+
+/* UI-1.3 Today: restrained hierarchy and shared controls, scoped to the command header. */
+.unified-shell .arc-ui-today>header h1{color:var(--arc-text);letter-spacing:-.045em}
+.unified-shell .arc-ui-today>header .eyebrow{color:var(--arc-cyan)}
+.unified-shell .arc-ui-today .today-header-time{color:var(--arc-muted)}
+.unified-shell .arc-ui-today .today-header-time span{color:var(--arc-text)}
+.unified-shell .arc-ui-today .arc-today-weather{
+ background:var(--arc-surface);border-color:var(--arc-border);
+ border-radius:var(--arc-radius);
+}
+.unified-shell .arc-ui-today .arc-weather-actions button,
+.unified-shell .arc-ui-today .arc-weather-location button{
+ min-height:var(--arc-action-height);border-radius:var(--arc-action-radius);
+ border-color:var(--arc-action-border);background:var(--arc-control);
+ color:var(--arc-action-text);box-shadow:none;
+}
+.unified-shell .arc-ui-today .arc-weather-actions button:hover:not(:disabled),
+.unified-shell .arc-ui-today .arc-weather-location button:hover:not(:disabled){
+ background:var(--arc-control-hover);border-color:var(--arc-cyan);
+}
+.unified-shell .arc-ui-today .arc-weather-actions button:focus-visible,
+.unified-shell .arc-ui-today .arc-weather-location button:focus-visible{
+ outline:3px solid var(--arc-focus-outline);outline-offset:3px;
+}
