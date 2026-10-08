@@ -494,3 +494,20 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 
 /* Distinct retrospective sleep and time-varying state */
 .today-state-history{display:flex;flex-direction:column;gap:7px;padding:14px 0;color:var(--arc-muted);font-size:12px}.today-state-history b{color:var(--arc-text)}.today-state-history summary{color:var(--arc-cyan);cursor:pointer}.today-state-history p{margin:7px 0}.today-sleep-card .overview-heading p{font-size:12px;color:var(--arc-muted)}.today-sleep-quality{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--arc-border)}.today-sleep-card .today-sleep{display:flex;align-items:center;gap:12px;padding:14px 0}.arc-intraday{margin-top:16px}.arc-intraday h2{margin:5px 0}.arc-intraday>p{color:var(--arc-muted);font-size:12px}.arc-intraday-entry{display:flex;gap:16px;padding:10px 0;border-top:1px solid var(--arc-border);font-size:12px}.arc-intraday-entry time{min-width:125px;color:var(--arc-muted)}.arc-intraday-entry span{color:var(--arc-cyan)}@media(max-width:560px){.today-sleep-quality{align-items:flex-start;flex-direction:column}.arc-intraday-entry{flex-direction:column;gap:3px}}
+
+/* Arc goal intelligence: execution evidence, not inferred outcome */
+.goal-intelligence{margin-top:16px;padding:14px;border:1px solid var(--arc-border);border-radius:12px;background:var(--arc-surface);display:flex;flex-direction:column;gap:10px}
+.goal-intelligence-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.goal-intelligence-head>span{font-size:10px;letter-spacing:.09em;color:var(--arc-muted)}
+.goal-intelligence-status{font-size:11px;color:var(--arc-cyan);font-weight:700}
+.goal-intelligence-status.on-pace{color:var(--arc-mint)}
+.goal-intelligence-status.needs-attention{color:#e8ac78}
+.goal-intelligence-status.no-schedule,.goal-intelligence-status.not-enough-evidence{color:var(--arc-muted)}
+.goal-intelligence-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.goal-intelligence-stats>div{min-width:0;display:flex;flex-direction:column;gap:5px}
+.goal-intelligence-stats b{font-size:19px;color:var(--arc-text);font-variant-numeric:tabular-nums}
+.goal-intelligence-stats small{font-size:10px;color:var(--arc-muted);line-height:1.4}
+.goal-intelligence p{font-size:12px;color:var(--arc-text);margin:0;line-height:1.5}
+.goal-intelligence-warning{color:#e8ac78;font-size:11px}
+.goal-intelligence-caveat{color:var(--arc-muted);font-size:10px;line-height:1.5}
+@media(max-width:480px){.goal-intelligence{padding:11px}.goal-intelligence-stats b{font-size:16px}}
