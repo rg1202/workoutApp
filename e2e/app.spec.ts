@@ -1110,7 +1110,7 @@ test('Arc backup exports local goals and excludes unrelated storage',async({page
   page.waitForEvent('download'),
   page.getByRole('button',{name:'Download Arc backup'}).click()
  ]);
- expect(download.suggestedFilename()).toMatch(/^arc-backup-\\d{4}-\\d{2}-\\d{2}\\.json$/);
+ expect(download.suggestedFilename()).toMatch(/^arc-backup-\d{4}-\d{2}-\d{2}\.json$/);
  const stream=await download.createReadStream();
  const chunks:Buffer[]=[];
  for await(const chunk of stream)chunks.push(Buffer.from(chunk));
