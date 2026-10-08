@@ -25,7 +25,8 @@ export function trackerForGoal(goal:Goal){return goalTrackerRegistry.find(t=>t.e
 export function metricForGoal(goal:Goal):TrackerMetric|null{
  const tracker=trackerForGoal(goal);if(!tracker)return null;
  const label=(goal.metric??goal.name).toLowerCase();
- return tracker.metrics.find(m=>new RegExp('\\b'+m.id+'\\b','i').test(label))??null;
+ const aliases:Record<string,RegExp>={weight:/weight|weigh/i,waist:/waist/i,chest:/chest/i,arms:/arm|bicep/i,thighs:/thigh|leg circumference/i};
+ return tracker.metrics.find(m=>(aliases[m.id]??new RegExp('\\b'+m.id+'\\b','i')).test(label))??null;
 }
 export const goalBodyMetricField=(goal:Goal):BodyMetricField|null=>metricForGoal(goal)?.bodyField??null;
 export function latestBodyMetric(entries:BodyMetric[],field:BodyMetricField):number|undefined{
