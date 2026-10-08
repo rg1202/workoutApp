@@ -1350,3 +1350,38 @@ test('failed storage write preserves existing data and reports failure',async({p
  expect(result).toEqual({rejected:true,value:'{"before":true}'});
  await expect(page.getByRole('alert')).toBeVisible();
 });
+
+test('backup export rejects a changed storage snapshot',async({page})=>{
+ const result=await page.evaluate(async()=>{
+  const {createArcBackup}=await import('/src/arc/dataBackup.ts');
+  let reads=0;
+  const store={
+   get length(){return 1;},
+   key(){return 'arc.units.v1';},
+   getItem(){reads++;return reads===1?'{"preset":"US"}':'{"preset":"Metric"}';}
+  } as unknown as Storage;
+  try{createArcBackup(store);return 'unexpected success';}
+  catch(error){return String(error);}
+ });
+ expect(result).toContain('changed during backup');
+});
+
+test('backup schema version mismatch fails before any restore writes',async({page})=>{
+ const result=await page.evaluate(async()=>{
+  const {restoreBackup}=await import('/src/arc/backupRestore.ts');
+  const backup={format:'arc-local-backup',version:1,schemaVersion:2,exportedAt:new Date().toISOString(),data:{'arc.units.v1':'{"preset":"Metric"}'}};
+  let writes=0;
+  const store={
+   get length(){return 0;},
+   key(){return null;},
+   getItem(){return null;},
+   setItem(){writes++;},
+   removeItem(){writes++;}
+  } as unknown as Storage;
+  let error='';
+  try{restoreBackup(backup as never,store);}catch(e){error=String(e);}
+  return {writes,error};
+ });
+ expect(result.writes).toBe(0);
+ expect(result.error).toContain('migration required');
+});
