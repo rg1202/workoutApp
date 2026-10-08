@@ -24,7 +24,7 @@ export function parseBackup(source: string): ArcBackup {
     'arc.state-history': 1
   };
   for (const key of Object.keys(obj.data as Record<string, unknown>)) {
-    const match = /^(.*)\\.v(\\d+)$/.exec(key);
+    const match = /^(.*)\.v(\d+)$/.exec(key);
     if (match && Object.hasOwn(supportedVersions, match[1]) &&
         Number(match[2]) > supportedVersions[match[1]]) {
       throw new Error('Unsupported storage schema for '+key+'; migration required');
