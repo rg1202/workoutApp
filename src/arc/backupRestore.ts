@@ -5,6 +5,9 @@ export function parseBackup(source: string): ArcBackup {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('Invalid backup file');
   const obj = value as Record<string, unknown>;
   if (obj.format !== 'arc-local-backup' || obj.version !== 1) throw new Error('Unsupported backup version');
+  // Explicit version gate: future formats require a reviewed migration, not implicit coercion.
+  if (Object.prototype.hasOwnProperty.call(obj, 'schemaVersion') && obj.schemaVersion !== 1)
+    throw new Error('Unsupported backup schema; migration required');
   if (typeof obj.exportedAt !== 'string' || !Number.isFinite(Date.parse(obj.exportedAt))) throw new Error('Invalid backup date');
   if (!obj.data || typeof obj.data !== 'object' || Array.isArray(obj.data)) throw new Error('Invalid backup entries');
   for (const [key, entry] of Object.entries(obj.data)) {
