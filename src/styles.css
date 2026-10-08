@@ -593,3 +593,15 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .arc-weather-hours article>span{font-size:1.4rem;font-weight:650}
 .arc-weather-hours article small{font-size:.72rem;color:var(--arc-muted,#8d9ba6)}
 @media(max-width:600px){.arc-weather-heading{flex-direction:column}.arc-weather-current>strong{font-size:2rem}}
+
+
+/* Today masthead: weather lives alongside the title, not below it */
+.arc-today-top{display:grid;grid-template-columns:minmax(200px,260px) minmax(0,1fr);align-items:start;gap:20px;margin-bottom:18px}
+.arc-today-top>header{padding-top:18px}
+.arc-today-top .arc-today-weather{margin-bottom:0;padding:14px 18px}
+.arc-today-top .arc-weather-heading h2{font-size:1rem}
+.arc-today-top .arc-weather-current{margin:10px 0;gap:12px}
+.arc-today-top .arc-weather-current>strong{font-size:2rem}
+.arc-today-top .arc-weather-hours article{flex-basis:78px;padding:8px}
+.arc-today-top .arc-weather-hours article>span{font-size:1.1rem}
+@media(max-width:900px){.arc-today-top{grid-template-columns:1fr}.arc-today-top>header{padding-top:0}}
