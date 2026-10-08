@@ -1005,6 +1005,7 @@ test('goal-linked activity reconciles across Goals Calendar Today and Progress a
 test('Running and Cycling focus overviews use completed activity actuals without cross-counting',async({page})=>{
  const today=await page.evaluate(()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')});
  await page.evaluate(date=>{
+  localStorage.setItem('arc.units.v1',JSON.stringify({preset:'Metric',distance:'km',speed:'km/h',pace:'min/km',weight:'kg',elevation:'m',temperature:'°C'}));
   localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([
    {id:'focus-run',date,title:'Morning Run',type:'Cardio',status:'Completed',durationMinutes:30,actuals:{actualDurationMinutes:35,distanceKm:6.5}},
    {id:'focus-ride',date,title:'Evening Ride',type:'Cardio',status:'Completed',durationMinutes:50,actuals:{actualDurationMinutes:52,distanceKm:20}},
