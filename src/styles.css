@@ -648,3 +648,7 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .arc-today-top .arc-weather-hours{max-width:100%;overflow-x:auto}
 .arc-today-top .arc-weather-hours article{flex:0 0 76px}
 @media(max-width:900px){.arc-today-top{grid-template-columns:minmax(0,1fr)}.arc-today-top .arc-today-avatar{padding-left:0}}
+
+.arc-endurance-performance{margin:14px 0;padding:18px}
+.arc-endurance-performance>strong{display:block;font-size:1.65rem;letter-spacing:-.035em;margin:10px 0 6px}
+.arc-endurance-performance>p{font-size:.78rem;color:#84929d;line-height:1.5;margin:0}
