@@ -59,3 +59,31 @@ export function restoreBackup(backup: ArcBackup, storage: Storage = localStorage
   }
   return Object.keys(verified.data).length;
 }
+
+/** Human-readable, non-sensitive summary shown before destructive restore. */
+export function previewBackup(backup: ArcBackup, storage: Storage = localStorage) {
+  const verified = parseBackup(JSON.stringify(backup));
+  const keys = Object.keys(verified.data);
+  const existing = keys.filter(key => storage.getItem(key) !== null).length;
+  const currentKeys: string[] = [];
+  for (let i = 0; i < storage.length; i++) {
+    const key = storage.key(i);
+    if (key && (key.startsWith('arc.') || key.startsWith('workoutapp.'))) currentKeys.push(key);
+  }
+  const removed = currentKeys.filter(key => !Object.prototype.hasOwnProperty.call(verified.data, key)).length;
+  const count = (key: string) => {
+    const raw = verified.data[key];
+    if (!raw) return 0;
+    try { const value: unknown = JSON.parse(raw); return Array.isArray(value) ? value.length : 0; }
+    catch { return 0; }
+  };
+  return {
+    exportedAt: verified.exportedAt,
+    records: keys.length,
+    replacing: existing,
+    removing: removed,
+    goals: count('workoutapp.goals.v2'),
+    sessions: count('workoutapp.history.v2'),
+    plannedActivities: count('workoutapp.planned-activities.v1')
+  };
+}
