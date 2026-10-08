@@ -865,3 +865,14 @@ test('defocusing hides a focus without deleting data and refocusing restores it'
  await expect(page.locator('aside').getByRole('button',{name:'Running'})).toBeVisible();
  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.goals.v2')||'[]').some((g:any)=>g.id==='defocus-running-goal'))).toBe(true);
 });
+
+
+test('sidebar eye defocuses Running and catalog eye restores it',async({page})=>{
+ await expect(page.locator('aside').getByRole('button',{name:'Running',exact:true})).toBeVisible();
+ await page.locator('aside').getByRole('button',{name:'Defocus Running'}).click();
+ await expect(page.locator('aside').getByRole('button',{name:'Running',exact:true})).toHaveCount(0);
+ await page.getByRole('button',{name:'Add focus'}).click();
+ await page.getByRole('button',{name:/Running.*Defocused/i}).click();
+ await page.getByRole('button',{name:'Focus Running'}).click();
+ await expect(page.locator('aside').getByRole('button',{name:'Running',exact:true})).toBeVisible();
+});
