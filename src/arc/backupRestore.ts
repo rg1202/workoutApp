@@ -109,6 +109,14 @@ export function restoreBackup(backup: ArcBackup, storage: Storage = localStorage
         rollbackFailed = true;
       }
     }
+    // A successful API call does not guarantee rollback actually persisted.
+    if (!rollbackFailed) {
+      for (const key of touched) {
+        try {
+          if (storage.getItem(key) !== (previous.get(key) ?? null)) rollbackFailed = true;
+        } catch { rollbackFailed = true; }
+      }
+    }
     throw new Error(rollbackFailed
       ? 'Restore failed and rollback was incomplete. Do not reload; recover from a separate backup.'
       : 'Restore failed; original data restored');
