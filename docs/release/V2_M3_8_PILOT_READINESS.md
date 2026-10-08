@@ -65,3 +65,11 @@ Baseline release SHA: `7c58b58c2c0dd6a2a96c4820dc00680f685a97ba` (reconfirm depl
 - **Accessibility:** Owner completed 16/16 manual checks with pass and no observations, covering keyboard, zoom/reflow, forms, and Narrator/NVDA. **Manual accessibility gate passed; not a formal WCAG conformance audit.**
 - **Remaining before pilot approval:** Independently confirm preview URL Access policy in signed-out session; verify live security headers/CSP and browser console; verify production artifact has no secrets or exposed integrations; confirm browser-profile isolation and full core-loop acceptance evidence; finalize privacy notice, support contact, tester consent and onboarding; record owner go/no-go.
 - **Severity classification:** No accessibility P0/P1 issues reported. Prior avatar restore defect was a P1 pilot blocker, now owner-reported resolved. Security/privacy gates not yet cleared.
+
+## October 8 — additional owner validation
+
+- Preview Access: owner created a temporary non-production branch, confirmed Cloudflare preview deployment required authentication. **Pass, owner-reported.** Remove the temporary branch after confirming the test is complete.
+- Browser console: owner reports clean console after removal of blocked Google Fonts import (commit `4951aa1`). **Pass, owner-reported.**
+- Security headers: owner supplied deployed response screenshot showing CSP, nosniff, frame-denial, no-referrer and permissions policy. `Access-Control-Allow-Origin: *` also appeared; its source/necessity should be reviewed before public launch.
+- Pilot model: **invitation-only**, target 5–10 people. Protocol in `docs/release/V2_INVITATION_ONLY_PILOT.md`.
+- **Outstanding:** confirm no exposed secrets/integrations in built artifact; review/finalize pilot privacy notice (including hosting logs, weather/geocoding requests, retention and effective date); confirm participant consent/onboarding and owner sign-off. No invitations authorized yet.
