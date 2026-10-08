@@ -901,7 +901,7 @@ test('rescheduling a goal-linked activity preserves identity, status, and goal a
  },dates);
  await page.reload();
  await nav(page,'Calendar').click();
- await page.getByRole('button',{name:'Move Reschedule Run'}).click();
+ await page.getByRole('button',{name:'Move Reschedule Run',exact:true}).click();
  await page.getByRole('button',{name:'New date'}).click();
  await page.locator('.cal-move-modal .arc-date-grid').getByRole('button',{name:String(Number(dates.to.slice(-2))),exact:true}).first().click();
  await page.getByRole('button',{name:'Move activity'}).click();
