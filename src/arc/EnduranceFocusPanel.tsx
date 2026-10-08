@@ -6,6 +6,7 @@ import{enduranceFocusForActivity}from'./enduranceClassification';
 import{endurancePerformance}from'./endurancePerformance';
 import EnduranceTrendPanel from './EnduranceTrendPanel';
 import type{UnitPreferences}from'./units';
+import{distanceLabel}from'./units';
 
 type EnduranceFocus='running'|'cycling';
 const iso=(d:Date)=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
@@ -16,19 +17,20 @@ export default function EnduranceFocusPanel({focus,plans,goals,onOpenCalendar,on
  const today=new Date(),start=new Date(today);start.setDate(today.getDate()-6);
  const recent=activities.filter(p=>p.date>=iso(start)&&p.date<=iso(today));
  const done=recent.filter(p=>p.status==='Completed'),scheduled=recent.filter(p=>p.status==='Planned');
- const distance=done.reduce((n,p)=>n+(p.actuals?.distanceKm??0),0);
+ const distance=done.reduce((n,p)=>n+(typeof p.actuals?.distanceKm==='number'&&Number.isFinite(p.actuals.distanceKm)&&p.actuals.distanceKm>0?p.actuals.distanceKm:0),0);
  const minutes=done.reduce((n,p)=>n+(p.actuals?.actualDurationMinutes??p.durationMinutes??0),0);
  const format=(n:number)=>Number(n.toFixed(1)).toLocaleString();
  const performance=endurancePerformance(done,units);
+ const distanceCount=done.filter(p=>typeof p.actuals?.distanceKm==='number'&&Number.isFinite(p.actuals.distanceKm)&&p.actuals.distanceKm>0).length;
  return <div className="arc-endurance"><header className="arc-page-header"><div><span className="eyebrow">FOCUS / {name.toUpperCase()}</span><h1>{name}</h1><p>Plan sessions, record what happened, and see your recent work in one place.</p></div></header>
  <section className="arc-focus-hero builder-card"><div className="arc-focus-icon"><Icon size={24}/></div><div><span className="eyebrow">YOUR CURRENT ARC</span><h2>{name} overview</h2><p>Completed sessions and recorded metrics from the last 7 days. Distance is shown only when logged; missing distance is not estimated.</p></div><button className="primary" onClick={onOpenCalendar}><Clock3 size={16}/>Plan in Calendar</button></section>
  <section className="progress-snapshot arc-endurance-metrics" aria-label={name+' 7-day summary'}>
  <article><span>COMPLETED SESSIONS</span><strong>{done.length}</strong><small>{scheduled.length} upcoming or unfinished in the last 7 days</small></article>
- <article><span>RECORDED DISTANCE</span><strong>{format(distance)} km</strong><small>{done.filter(p=>p.actuals?.distanceKm!==undefined).length} sessions with distance logged</small></article>
+ <article><span>RECORDED DISTANCE</span><strong>{distanceLabel(distance,units.distance)}</strong><small>{distanceCount} {distanceCount===1?'session':'sessions'} with distance logged</small></article>
  <article><span>TRAINING TIME</span><strong>{format(minutes)} min</strong><small>Actual duration when recorded, otherwise planned duration</small></article>
  </section>
- <section className="builder-card arc-endurance-performance" aria-label={name+' measured performance'}><div className="overview-heading"><div><span className="eyebrow">PERFORMANCE</span><h2>{running?'Average running pace':'Average cycling speed'}</h2></div></div><strong>{running?performance.paceLabel:performance.speedLabel}</strong><p>Calculated from {performance.sessions} completed sessions with both recorded distance and actual duration. Sessions missing either measurement are excluded.</p></section>
+ <section className="builder-card arc-endurance-performance" aria-label={name+' measured performance'}><div className="overview-heading"><div><span className="eyebrow">PERFORMANCE</span><h2>{running?'Average running pace':'Average cycling speed'}</h2></div></div><strong>{running?performance.paceLabel:performance.speedLabel}</strong><p>Calculated from {performance.sessions} completed {performance.sessions===1?'session':'sessions'} with both recorded distance and actual duration. Sessions missing either measurement are excluded.</p></section>
  <EnduranceTrendPanel name={name} plans={activities} units={units}/>
- <div className="progress-grid"><section className="builder-card arc-endurance-recent"><div className="overview-heading"><div><span className="eyebrow">ACTIVITY</span><h2>Recent sessions</h2></div><Route size={18}/></div>{recent.length?recent.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8).map(p=><article key={p.id}><span><b>{p.title}</b><small>{p.date} · {p.status}{p.status==='Completed'&&p.actuals?.distanceKm!==undefined?' · '+format(p.actuals.distanceKm)+' km':''}</small></span></article>):<p>No recent {name.toLowerCase()} sessions yet. Plan one in Calendar to begin.</p>}</section>
+ <div className="progress-grid"><section className="builder-card arc-endurance-recent"><div className="overview-heading"><div><span className="eyebrow">ACTIVITY</span><h2>Recent sessions</h2></div><Route size={18}/></div>{recent.length?recent.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8).map(p=><article key={p.id}><span><b>{p.title}</b><small>{p.date} · {p.status}{p.status==='Completed'&&p.actuals?.distanceKm!==undefined?' · '+distanceLabel(p.actuals.distanceKm,units.distance):''}</small></span></article>):<p>No {name.toLowerCase()} sessions in the past 7 days. Plan one in Calendar, or choose a longer range in Historical trends to review earlier activity.</p>}</section>
  <section className="builder-card arc-endurance-goals"><div className="overview-heading"><div><span className="eyebrow">DIRECTION</span><h2>Connected goals</h2></div><button onClick={onOpenGoals}>Goals <ArrowRight size={14}/></button></div>{relatedGoals.length?relatedGoals.map(g=><article key={g.id}><Target size={15}/><b>{g.name}</b></article>):<p>No active {name.toLowerCase()} goals yet. Add a goal to connect your sessions to a direction.</p>}</section></div></div>;
 }
