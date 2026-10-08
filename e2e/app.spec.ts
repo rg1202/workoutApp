@@ -1385,3 +1385,65 @@ test('backup schema version mismatch fails before any restore writes',async({pag
  expect(result.writes).toBe(0);
  expect(result.error).toContain('migration required');
 });
+
+test('backup round trip retains core activity data',async({page})=>{
+ const result=await page.evaluate(async()=>{
+  const {createArcBackup}=await import('/src/arc/dataBackup.ts');
+  const {restoreBackup}=await import('/src/arc/backupRestore.ts');
+  const values:Record<string,string>={
+   'workoutapp.goals.v2':JSON.stringify([{id:'goal-1',name:'Run a race',type:'Event',status:'Active'}]),
+   'workoutapp.planned-activities.v1':JSON.stringify([{id:'plan-1',date:'2026-10-10',title:'Run',status:'Planned'}]),
+   'workoutapp.history.v2':JSON.stringify([{id:'session-1',name:'Workout',sets:[]}]),
+   'arc.units.v1':JSON.stringify({preset:'US'})
+  };
+  for(const [key,value] of Object.entries(values))localStorage.setItem(key,value);
+  const backup=createArcBackup();
+  for(const key of Object.keys(values))localStorage.removeItem(key);
+  restoreBackup(backup);
+  return Object.entries(values).every(([key,value])=>localStorage.getItem(key)===value);
+ });
+ expect(result).toBe(true);
+});
+
+test('invalid backup record leaves existing goals unchanged',async({page})=>{
+ const result=await page.evaluate(async()=>{
+  const {restoreBackup}=await import('/src/arc/backupRestore.ts');
+  localStorage.setItem('workoutapp.goals.v2','[]');
+  let failed=false;
+  try{restoreBackup({format:'arc-local-backup',version:1,exportedAt:new Date().toISOString(),data:{'workoutapp.goals.v2':'[{"id":"x"}]'}});}catch{failed=true;}
+  return {failed,goals:localStorage.getItem('workoutapp.goals.v2')};
+ });
+ expect(result).toEqual({failed:true,goals:'[]'});
+});
+
+test('restore reports incomplete rollback when writes are silently ignored',async({page})=>{
+ const result=await page.evaluate(async()=>{
+  const {restoreBackup}=await import('/src/arc/backupRestore.ts');
+  const values=new Map([['arc.units.v1','{"preset":"US"}']]);
+  let calls=0;
+  const store={
+   get length(){return values.size;},
+   key(i:number){return [...values.keys()][i]??null;},
+   getItem(k:string){return values.get(k)??null;},
+   setItem(k:string,v:string){calls++;if(calls===1){values.set(k,v);return;} if(v==='{"preset":"US"}')return;values.set(k,v);},
+   removeItem(k:string){values.delete(k);}
+  } as Storage;
+  // Force failure on the second key, after the first has been changed.
+  const backup={format:'arc-local-backup' as const,version:1 as const,exportedAt:new Date().toISOString(),data:{'arc.units.v1':'{"preset":"Metric"}','workoutapp.goals.v2':'[]'}};
+  store.setItem=(k:string,v:string)=>{calls++;if(k==='workoutapp.goals.v2')throw new Error('Quota');if(v==='{"preset":"US"}')return;values.set(k,v);};
+  let message='';
+  try{restoreBackup(backup,store);}catch(e){message=String(e);}
+  return {message,units:values.get('arc.units.v1')};
+ });
+ expect(result.message).toContain('rollback was incomplete');
+ expect(result.units).toBe('{"preset":"Metric"}');
+});
+
+test('future goal storage schema is rejected before restore',async({page})=>{
+ const result=await page.evaluate(async()=>{
+  const {parseBackup}=await import('/src/arc/backupRestore.ts');
+  try{parseBackup(JSON.stringify({format:'arc-local-backup',version:1,exportedAt:new Date().toISOString(),data:{'workoutapp.goals.v99':'[]'}}));return 'accepted';}
+  catch(e){return String(e);}
+ });
+ expect(result).toContain('migration required');
+});
