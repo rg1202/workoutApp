@@ -685,3 +685,45 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
     animation-duration: 0.01ms;
   }
 }
+
+/* M3.3: keep the complete navigation reachable on narrow screens. */
+@media (max-width:760px) {
+  .unified-shell>aside {
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    gap:12px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    overscroll-behavior-x:contain;
+    max-height:84px;
+    border-top:1px solid #27343e;
+  }
+  .unified-shell .arc-primary-nav {
+    display:flex;
+    flex:0 0 auto;
+    gap:4px;
+  }
+  .unified-shell .arc-primary-nav button {
+    min-width:58px;
+    min-height:48px;
+  }
+  .unified-shell .arc-nav-section {
+    display:flex;
+    align-items:center;
+    flex:0 0 auto;
+    gap:4px;
+  }
+  .unified-shell .arc-nav-section>span {
+    display:none;
+  }
+  .unified-shell .arc-focus-nav-row {
+    flex:0 0 auto;
+  }
+  .unified-shell .arc-nav-section button {
+    min-height:44px;
+  }
+  .unified-shell>main {
+    padding-bottom:112px;
+  }
+}
