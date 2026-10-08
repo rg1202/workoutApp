@@ -667,3 +667,5 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .arc-trend-bars small{position:absolute;top:100%;font-size:.58rem;color:#8e9ca7}
 .arc-endurance-trends>p{font-size:.75rem;color:#8e9ca7;margin:26px 0 0}
 @media(max-width:700px){.arc-trend-summary{grid-template-columns:1fr}.arc-trend-bars small{font-size:.5rem}}
+
+.arc-endurance-trends .arc-trend-insight{margin:12px 0 4px;color:inherit;font-size:.88rem;line-height:1.5}
