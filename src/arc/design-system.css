@@ -207,3 +207,20 @@
  .unified-shell main .today-v2 .today-next-actions{flex-wrap:wrap}
  .unified-shell main .today-v2 .today-timeline .overview-heading{flex-wrap:wrap}
 }
+
+/* UI-1.6 Context belongs before the daily agenda, not at the bottom. */
+.unified-shell main .today-v2>.today-context{
+ margin:0;min-width:0;background:var(--arc-surface);
+ border:1px solid var(--arc-border);border-radius:var(--arc-radius);
+ padding:20px 26px;
+}
+.unified-shell main .today-v2>.today-context h2{margin:6px 0 12px;font-size:1.3rem}
+.unified-shell main .today-v2>.today-context .eyebrow{color:#80a9c3}
+.unified-shell main .today-v2>.today-context--empty{padding:17px 24px}
+.unified-shell main .today-v2>.today-context--empty h2{font-size:1.1rem;margin:5px 0 7px}
+.unified-shell main .today-v2>.today-context--empty p{
+ margin:0;color:var(--arc-muted);font-size:.85rem;line-height:1.5;
+}
+@media(max-width:600px){
+ .unified-shell main .today-v2>.today-context{padding:17px}
+}
