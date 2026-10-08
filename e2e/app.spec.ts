@@ -690,27 +690,27 @@ test('Focus catalog explains a new focus and preserves sidebar selection',async(
  await page.getByRole('button',{name:/Swimming.*Preview focus/i}).click();
  await expect(page.getByText('Swimming blends efficient technique')).toBeVisible();
  await page.getByRole('button',{name:'Add Swimming'}).click();
- await expect(page.locator('aside').getByRole('button',{name:'Swimming'})).toBeVisible();
+ await expect(page.locator('aside').getByRole('button',{name:'Swimming',exact:true})).toBeVisible();
  await page.reload();
- await expect(page.locator('aside').getByRole('button',{name:'Swimming'})).toBeVisible();
- await page.locator('aside').getByRole('button',{name:'Swimming'}).click();
+ await expect(page.locator('aside').getByRole('button',{name:'Swimming',exact:true})).toBeVisible();
+ await page.locator('aside').getByRole('button',{name:'Swimming',exact:true}).click();
  await expect(page.getByText('Dedicated tracking and programming for this focus are not available yet.')).toBeVisible();
 });
 
-test('optional Focus can be hidden and restored without deleting records',async({page})=>{
+test('optional Focus can be removed and re-added without deleting records',async({page})=>{
  await page.getByRole('button',{name:'Add / Manage'}).click();
  await page.getByRole('button',{name:/Swimming.*Preview focus/i}).click();
  await page.getByRole('button',{name:'Add Swimming'}).click();
- await page.getByRole('button',{name:'Remove from sidebar'}).click();
- await expect(page.getByText(/does not delete goals, activities or history/i)).toBeVisible();
- await page.getByRole('button',{name:'Confirm remove'}).click();
- await expect(page.locator('aside').getByRole('button',{name:'Swimming'})).toHaveCount(0);
+ await page.getByRole('button',{name:'Remove focus',exact:true}).click();
+ await expect(page.getByText(/goals, activities and history will not be deleted/i)).toBeVisible();
+ await page.getByRole('group',{name:'Confirm remove focus'}).getByRole('button',{name:'Remove focus'}).click();
+ await expect(page.locator('aside').getByRole('button',{name:'Swimming',exact:true})).toHaveCount(0);
  await page.reload();
- await expect(page.locator('aside').getByRole('button',{name:'Swimming'})).toHaveCount(0);
+ await expect(page.locator('aside').getByRole('button',{name:'Swimming',exact:true})).toHaveCount(0);
  await page.getByRole('button',{name:'Add / Manage'}).click();
  await page.getByRole('button',{name:/Swimming.*Preview focus/i}).click();
  await page.getByRole('button',{name:'Add Swimming'}).click();
- await expect(page.locator('aside').getByRole('button',{name:'Swimming'})).toBeVisible();
+ await expect(page.locator('aside').getByRole('button',{name:'Swimming',exact:true})).toBeVisible();
 });
 
 
@@ -854,15 +854,15 @@ test('defocusing retains a focus without deleting data and refocusing restores i
  await page.reload();
  await page.getByRole('button',{name:'Add / Manage'}).click();
  await page.getByRole('button',{name:/Running.*Focused/i}).click();
- await page.getByRole('button',{name:'Defocus Running'}).click();
+ await page.locator('.arc-focus-catalog-detail').getByRole('button',{name:'Defocus Running',exact:true}).click();
  await expect(page.locator('aside').getByRole('button',{name:'Running',exact:true})).toBeVisible();
  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('arc.hidden-focuses.v1')||'[]'))).toContain('running');
  await page.reload();
  await expect(page.locator('aside').getByRole('button',{name:'Running',exact:true})).toBeVisible();
  await page.getByRole('button',{name:'Add / Manage'}).click();
  await page.getByRole('button',{name:/Running.*Defocused/i}).click();
- await page.getByRole('button',{name:'Focus Running'}).click();
- await expect(page.locator('aside').getByRole('button',{name:'Running'})).toBeVisible();
+ await page.locator('.arc-focus-catalog-detail').getByRole('button',{name:'Focus Running',exact:true}).click();
+ await expect(page.locator('aside').getByRole('button',{name:'Running',exact:true})).toBeVisible();
  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.goals.v2')||'[]').some((g:any)=>g.id==='defocus-running-goal'))).toBe(true);
 });
 
@@ -873,7 +873,7 @@ test('sidebar eye defocuses Running and catalog eye restores it',async({page})=>
  await expect(page.locator('aside').getByRole('button',{name:'Running',exact:true})).toBeVisible();
  await page.getByRole('button',{name:'Add / Manage'}).click();
  await page.getByRole('button',{name:/Running.*Defocused/i}).click();
- await page.getByRole('button',{name:'Focus Running'}).click();
+ await page.locator('.arc-focus-catalog-detail').getByRole('button',{name:'Focus Running',exact:true}).click();
  await expect(page.locator('aside').getByRole('button',{name:'Running',exact:true})).toBeVisible();
 });
 
