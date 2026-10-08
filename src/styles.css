@@ -636,3 +636,15 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .arc-today-top .arc-weather-hours article{padding:7px;flex-basis:75px}
 .arc-today-top .arc-weather-hours{padding-bottom:3px}
 @media(max-width:900px){.arc-today-top{grid-template-columns:minmax(0,1fr)}}
+
+/* Today masthead proportion and date legibility */
+.arc-today-top{grid-template-columns:minmax(300px,320px) minmax(0,1fr);gap:18px}
+.arc-today-top>header .today-header-time{display:flex;flex-wrap:nowrap;align-items:baseline;gap:10px;white-space:nowrap;font-size:.85rem}
+.arc-today-top>header .today-header-time span{white-space:nowrap}
+.arc-today-top .arc-today-avatar{align-items:flex-start;padding:16px 0 0 28px;gap:8px}
+.arc-today-top .arc-avatar-portrait{width:150px;height:150px}
+.arc-today-top .arc-avatar-controls{justify-content:flex-start}
+.arc-today-top .arc-today-weather{align-self:start}
+.arc-today-top .arc-weather-hours{max-width:100%;overflow-x:auto}
+.arc-today-top .arc-weather-hours article{flex:0 0 76px}
+@media(max-width:900px){.arc-today-top{grid-template-columns:minmax(0,1fr)}.arc-today-top .arc-today-avatar{padding-left:0}}
