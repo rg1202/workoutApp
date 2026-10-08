@@ -1141,3 +1141,36 @@ test('Arc rejects unsupported backups without overwriting browser data',async({p
  await page.locator('input[aria-label="Restore Arc backup file"]').setInputFiles({name:'bad.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
  expect(await page.evaluate(()=>localStorage.getItem('workoutapp.goals.v2'))).toBe('[]');
 });
+
+
+test('Arc rejects malformed goal records without replacing current data',async({page})=>{
+ await page.evaluate(()=>localStorage.setItem('workoutapp.goals.v2','[]'));
+ page.on('dialog',dialog=>dialog.accept());
+ const backup={format:'arc-local-backup',version:1,exportedAt:'2026-10-07T12:00:00.000Z',data:{'workoutapp.goals.v2':JSON.stringify([{id:'incomplete',name:'Missing status'}])}};
+ await page.locator('input[aria-label="Restore Arc backup file"]').setInputFiles({name:'malformed-goal.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
+ expect(await page.evaluate(()=>localStorage.getItem('workoutapp.goals.v2'))).toBe('[]');
+});
+
+test('Arc restores original records when storage fails during restore',async({page})=>{
+ const result=await page.evaluate(async()=>{
+  const {restoreBackup}=await import('/src/arc/backupRestore.ts');
+  const values=new Map([['arc.units.v1','{"preset":"US"}'],['workoutapp.goals.v2','[]']]);
+  let failOnce=true;
+  const storage={
+   get length(){return values.size;},
+   key(i:number){return [...values.keys()][i]??null;},
+   getItem(k:string){return values.get(k)??null;},
+   setItem(k:string,v:string){if(k==='workoutapp.goals.v2'&&failOnce){failOnce=false;throw new Error('Quota exceeded')}values.set(k,v);},
+   removeItem(k:string){values.delete(k);},
+   clear(){values.clear()}
+  } as Storage;
+  let error='';
+  try{
+   restoreBackup({format:'arc-local-backup',version:1,exportedAt:new Date().toISOString(),data:{'arc.units.v1':'{"preset":"Metric"}','workoutapp.goals.v2':'[]'}},storage);
+  }catch(e){error=e instanceof Error?e.message:String(e)}
+  return {error,units:values.get('arc.units.v1'),goals:values.get('workoutapp.goals.v2')};
+ });
+ expect(result.error).toContain('original data restored');
+ expect(result.units).toBe('{"preset":"US"}');
+ expect(result.goals).toBe('[]');
+});
