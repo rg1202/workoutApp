@@ -712,3 +712,35 @@ test('optional Focus can be hidden and restored without deleting records',async(
  await page.getByRole('button',{name:'Add Swimming'}).click();
  await expect(page.locator('aside').getByRole('button',{name:'Swimming'})).toBeVisible();
 });
+
+
+test('BJJ goal lifecycle connects Calendar Today completion and reload',async({page})=>{
+ const date=await page.evaluate(()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')});
+ await page.evaluate(()=>{
+  localStorage.setItem('workoutapp.goals.v2',JSON.stringify([{
+   id:'bjj-lifecycle-goal',name:'BJJ Consistency',type:'BJJ',status:'Active',
+   goalTypeV2:'Consistency',priority:'Primary',focus:'bjj',
+   supportingTargets:[{name:'BJJ practice',activityType:'BJJ',frequencyPerWeek:2,durationMinutes:60}]
+  }]));
+ });
+ await page.reload();
+ await nav(page,'Goals').click();
+ await expect(page.getByText('BJJ Consistency').first()).toBeVisible();
+ await nav(page,'Calendar').click();
+ await page.getByRole('button',{name:'Add activity on '+new Date(date+'T12:00:00').toLocaleDateString()}).first().click();
+ await expect(page.locator('.plan-form')).toBeVisible();
+ await page.getByPlaceholder(/Gi BJJ/i).fill('BJJ Lifecycle Practice');
+ await page.locator('.plan-form select').selectOption('BJJ');
+ await page.locator('.plan-form').getByText('BJJ Consistency').click();
+ await page.getByRole('button',{name:/Add to calendar/i}).click();
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.title==='BJJ Lifecycle Practice')?.goalIds)).toEqual(['bjj-lifecycle-goal']);
+ await nav(page,'Today').click();
+ await expect(page.locator('.today-goal-intelligence').getByText('BJJ Lifecycle Practice')).toBeVisible();
+ await nav(page,'Calendar').click();
+ await page.getByText('○ BJJ Lifecycle Practice').first().click();
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.title==='BJJ Lifecycle Practice')?.status)).toBe('Completed');
+ await page.reload();
+ await nav(page,'Calendar').click();
+ await expect(page.getByText('✓ BJJ Lifecycle Practice').first()).toBeVisible();
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').filter((p:any)=>p.title==='BJJ Lifecycle Practice').length)).toBe(1);
+});
