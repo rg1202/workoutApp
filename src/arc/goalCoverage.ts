@@ -1,3 +1,4 @@
+import {uniqueActivities} from './uniqueActivities';
 import type {Goal} from '../goals';
 import type {PlannedActivity,PlannedActivityType} from '../plans';
 export type CoverageRow={type:PlannedActivityType;target:number;completed:number;scheduled:number;missing:number};
@@ -5,7 +6,7 @@ export function weeklyCoverage(goal:Goal,plans:PlannedActivity[],date:string):Co
  const now=new Date(date+'T12:00:00'),start=new Date(now);start.setDate(now.getDate()-now.getDay());
  const end=new Date(start);end.setDate(start.getDate()+6);
  const iso=(d:Date)=>d.toLocaleDateString('en-CA');
- const linked=plans.filter(p=>p.goalIds?.includes(goal.id)||(p.sourceType==='Goal'&&p.sourceId===goal.id));
+ const linked=uniqueActivities(plans).filter(p=>p.goalIds?.includes(goal.id)||(p.sourceType==='Goal'&&p.sourceId===goal.id));
  const week=linked.filter(p=>p.date>=iso(start)&&p.date<=iso(end));
  const types=Array.from(new Set((goal.supportingTargets??[]).map(t=>t.activityType)));
  return types.map(type=>{
