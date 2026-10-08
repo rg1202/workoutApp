@@ -73,3 +73,11 @@ Baseline release SHA: `7c58b58c2c0dd6a2a96c4820dc00680f685a97ba` (reconfirm depl
 - Security headers: owner supplied deployed response screenshot showing CSP, nosniff, frame-denial, no-referrer and permissions policy. `Access-Control-Allow-Origin: *` also appeared; its source/necessity should be reviewed before public launch.
 - Pilot model: **invitation-only**, target 5–10 people. Protocol in `docs/release/V2_INVITATION_ONLY_PILOT.md`.
 - **Outstanding:** confirm no exposed secrets/integrations in built artifact; review/finalize pilot privacy notice (including hosting logs, weather/geocoding requests, retention and effective date); confirm participant consent/onboarding and owner sign-off. No invitations authorized yet.
+
+## October 8 — backup export blocker resolved (owner verification)
+
+- Two Playwright backup-export tests initially failed because the sidebar backup button was outside the viewport and could not be clicked.
+- Desktop sidebar overflow fix committed as `91a4d8c`; it preserves the button interaction rather than bypassing it in tests.
+- Owner reports **both targeted tests and the full release suite passed** after pulling the fix. Exact full-suite counts were not supplied in this confirmation; do not invent them.
+- Automated release check gate: **PASS (owner-reported)**. Manual shorter-desktop viewport verification remains recommended.
+- Remaining before pilot invitation: production artifact/secrets review beyond the existing narrow scripted check, privacy notice finalization, tester consent/onboarding, and explicit go/no-go signoff.
