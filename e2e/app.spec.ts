@@ -1073,3 +1073,27 @@ test('Running pace and Cycling speed use measured actuals and selected units',as
  const cycling=page.getByRole('region',{name:'Cycling measured performance'});
  await expect(cycling).toContainText('20.0 km/h');
 });
+
+
+test('Endurance trend windows compare completed recorded sessions with preceding periods',async({page})=>{
+ const today=await page.evaluate(()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')});
+ await page.evaluate(date=>{
+  const earlier=new Date(date+'T12:00:00');earlier.setDate(earlier.getDate()-10);
+  const prior=[earlier.getFullYear(),String(earlier.getMonth()+1).padStart(2,'0'),String(earlier.getDate()).padStart(2,'0')].join('-');
+  localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([
+   {id:'trend-current',date,title:'Morning Run',type:'Cardio',status:'Completed',actuals:{distanceKm:5,actualDurationMinutes:30}},
+   {id:'trend-prior',date:prior,title:'Evening Run',type:'Cardio',status:'Completed',actuals:{distanceKm:10,actualDurationMinutes:60}},
+   {id:'trend-planned',date,title:'Planned Run',type:'Cardio',status:'Planned',actuals:{distanceKm:99,actualDurationMinutes:99}}
+  ]));
+ },today);
+ await page.reload();
+ await nav(page,'Running').click();
+ const trends=page.getByRole('region',{name:'Running historical trends'});
+ await expect(trends).toContainText('Historical trends');
+ await expect(trends).toContainText('Previous 30 days: 0');
+ await trends.getByRole('button',{name:'7D'}).click();
+ await expect(trends).toContainText('Previous 7 days: 1');
+ await expect(trends).toContainText('Previous 7 days: 10');
+ await trends.getByRole('button',{name:'90D'}).click();
+ await expect(trends).toContainText('Previous 90 days: 0');
+});
