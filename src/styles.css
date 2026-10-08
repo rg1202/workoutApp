@@ -485,3 +485,6 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .cal-day .cal-plan-complete{opacity:1}
 .cal-day .cal-plan-complete .cal-plan-main b{text-decoration:none;color:var(--arc-text)}
 @media(max-width:520px){.cal-day .cal-event.cal-planned{grid-template-columns:minmax(0,1fr) auto auto;padding:10px;gap:5px}.cal-day .cal-event.cal-planned .cal-edit{padding:5px 7px;font-size:11px}}
+
+/* Today — shared actual-session editor entry */
+.today-edit-session{border:1px solid var(--arc-border);border-radius:8px;background:var(--arc-surface-2);color:var(--arc-cyan);font-size:11px;padding:6px 9px;white-space:nowrap;cursor:pointer}.today-edit-session:hover{border-color:var(--arc-cyan)}@media(max-width:600px){.today-activity-main{flex-wrap:wrap}.today-edit-session{margin-left:auto}}
