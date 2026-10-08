@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "test": "playwright test",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "check:release": "npm run check:lockfile && npm run build && npm run test:e2e -- --workers=4",
+    "check:lockfile": "node -e \"const fs=require('node:fs');if(!fs.existsSync('package-lock.json')){console.error('Release blocked: package-lock.json is missing. Run npm install and commit the lockfile.');process.exit(1)}\""
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
