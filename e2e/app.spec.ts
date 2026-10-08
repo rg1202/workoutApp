@@ -663,3 +663,22 @@ test('new Calendar activity can support an active goal immediately',async({page}
  await nav(page,'Today').click();
  await expect(page.locator('.today-goal-intelligence').getByText('Competition Drilling')).toBeVisible();
 });
+
+
+test('goal tracker registry selects only the relevant measurement and persists history',async({page})=>{
+ await page.evaluate(()=>{
+  localStorage.setItem('workoutapp.goals.v2',JSON.stringify([{id:'waist-goal',name:'Waist Goal',type:'Body',status:'Active',metric:'Waist',start:38,current:38,target:34,unit:'in'}]));
+  localStorage.setItem('workoutapp.body-metrics.v1',JSON.stringify([{id:'waist-old',date:'2026-10-01',waist:37}]));
+ });
+ await page.reload();
+ await nav(page,'Today').click();
+ await expect(page.getByRole('button',{name:/Update waist/i})).toBeVisible();
+ await expect(page.locator('#bm-weight')).toHaveCount(0);
+ await page.getByRole('button',{name:/Update waist/i}).click();
+ const input=page.locator('#goal-measure-waist-goal');
+ await expect(input).toHaveValue('37');
+ await input.fill('36.5');
+ await page.getByRole('button',{name:'Save',exact:true}).click();
+ await expect(page.getByRole('button',{name:/Update waist/i})).toHaveAttribute('aria-expanded','false');
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.body-metrics.v1')||'[]').some((x:any)=>x.waist===36.5))).toBe(true);
+});
