@@ -10,7 +10,7 @@ export type GoalSignal={
 };
 const day=(date:string)=>new Date(date+'T12:00:00').getTime();
 export function goalSignal(goal:Goal,plans:PlannedActivity[],today:string):GoalSignal{
- const linked=plans.filter(p=>p.sourceType==='Goal'&&p.sourceId===goal.id);
+ const linked=plans.filter(p=>(p.goalIds?.includes(goal.id)||p.sourceType==='Goal'&&p.sourceId===goal.id));
  const now=day(today),start=now-6*86400000,end=now+7*86400000;
  const recent=linked.filter(p=>day(p.date)>=start&&day(p.date)<=now);
  const upcoming=linked.filter(p=>day(p.date)>now&&day(p.date)<=end&&p.status==='Planned');
