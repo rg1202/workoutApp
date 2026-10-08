@@ -1052,3 +1052,24 @@ test('Endurance focus honors linked goal over ambiguous session title',async({pa
  await expect(page.locator('.arc-endurance-recent')).not.toContainText('Morning Cardio');
  await expect(page.locator('.arc-endurance-recent')).not.toContainText('Cardio Workout');
 });
+
+
+test('Running pace and Cycling speed use measured actuals and selected units',async({page})=>{
+ const today=await page.evaluate(()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')});
+ await page.evaluate(date=>{
+  localStorage.setItem('arc.units.v1',JSON.stringify({preset:'Metric',distance:'km',speed:'km/h',pace:'min/km',weight:'kg',elevation:'m',temperature:'°C'}));
+  localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([
+   {id:'pace-run',date,title:'Tempo Run',type:'Cardio',status:'Completed',actuals:{distanceKm:10,actualDurationMinutes:50}},
+   {id:'speed-ride',date,title:'Road Bike Ride',type:'Cardio',status:'Completed',actuals:{distanceKm:20,actualDurationMinutes:60}},
+   {id:'missing-run',date,title:'Easy Run',type:'Cardio',status:'Completed',durationMinutes:40,actuals:{distanceKm:8}}
+  ]));
+ },today);
+ await page.reload();
+ await nav(page,'Running').click();
+ const running=page.getByRole('region',{name:'Running measured performance'});
+ await expect(running).toContainText('5:00 min/km');
+ await expect(running).toContainText('1 completed sessions');
+ await nav(page,'Cycling').click();
+ const cycling=page.getByRole('region',{name:'Cycling measured performance'});
+ await expect(cycling).toContainText('20.0 km/h');
+});
