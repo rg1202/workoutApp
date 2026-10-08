@@ -14,7 +14,8 @@
     "check:release": "npm run check:lockfile && npm run build && npm run check:artifact && npm run test:e2e -- --workers=4 && npm run test:production",
     "check:lockfile": "node scripts/check-release-lockfile.mjs",
     "test:production": "playwright test -c playwright.production.config.ts",
-    "check:artifact": "node scripts/check-production-artifact.mjs"
+    "check:artifact": "node scripts/check-production-artifact.mjs",
+    "check:staging": "npm run build && npm run check:artifact && node scripts/check-staging-output.mjs"
   },
   "dependencies": {
     "lucide-react": "1.52.0",
