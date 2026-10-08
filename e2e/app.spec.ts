@@ -32,7 +32,7 @@ test('created goal remains in Goals while Today stays day-focused',async({page})
  await expect(page.getByText('E2E Tournament')).toBeVisible();
  await nav(page,'Today').click();
  await expect(page.getByRole('heading',{name:'Today',exact:true})).toBeVisible();
- await expect(page.getByText('E2E Tournament')).toHaveCount(0);
+ await expect(page.locator('.today-goal-intelligence').getByText('E2E Tournament')).toBeVisible();
 });
 
 test('planned activity survives navigation and appears on dashboard',async({page})=>{
@@ -140,7 +140,7 @@ test('creating a weight goal uses Analytics weight and syncs Dashboard progress'
  await expect(page.getByText(/198/).first()).toBeVisible();
  await expect(page.getByText(/^0%/)).toBeVisible();
  await nav(page,'Today').click();
- await expect(page.getByText('Competition Cut')).toHaveCount(0);
+ await expect(page.locator('.today-goal-intelligence').getByText('Competition Cut')).toBeVisible();
  await nav(page,'Progress').click();
  await page.locator('#bm-weight').fill('196');
  await page.getByRole('button',{name:/Save measurements/i}).click();
@@ -175,7 +175,7 @@ test('shared state changes propagate once without persistence churn',async({page
  const storedGoal=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.goals.v2')||'[]').find((g:any)=>g.name==='Weight Goal'));
  expect(storedGoal).toMatchObject({type:'Body',goalTypeV2:'Body Composition',start:197,current:197,target:190,unit:'lb'});
  await nav(page,'Today').click();
- await expect(page.getByText('Weight Goal')).toHaveCount(0);
+ await expect(page.locator('.today-goal-intelligence').getByText('Weight Goal')).toBeVisible();
  const snapshot=await page.evaluate(()=>({goals:localStorage.getItem('workoutapp.goals.v2'),body:localStorage.getItem('workoutapp.body-metrics.v1')}));
  await page.waitForTimeout(300);
  const stable=await page.evaluate(()=>({goals:localStorage.getItem('workoutapp.goals.v2'),body:localStorage.getItem('workoutapp.body-metrics.v1')}));
@@ -293,8 +293,7 @@ test('drags a planned activity to another Calendar day',async({page})=>{
  await page.reload();await nav(page,'Calendar').click();
  const card=page.getByText('Drag BJJ').first(),target=page.locator('[data-date="'+to+'"]').first();
  await card.dragTo(target);
- const plans=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]'));
- expect(plans.find((p:any)=>p.id==='drag-plan').date).toBe(to);
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.id==='drag-plan')?.date)).toBe(to);
 });
 
 test('drags one program workout without changing recurring weekday',async({page})=>{
