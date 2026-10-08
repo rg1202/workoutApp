@@ -4,6 +4,7 @@ import type{PlannedActivity}from'../plans';
 import{uniqueActivities}from'./uniqueActivities';
 import{enduranceFocusForActivity}from'./enduranceClassification';
 import{endurancePerformance}from'./endurancePerformance';
+import EnduranceTrendPanel from './EnduranceTrendPanel';
 import type{UnitPreferences}from'./units';
 
 type EnduranceFocus='running'|'cycling';
@@ -27,6 +28,7 @@ export default function EnduranceFocusPanel({focus,plans,goals,onOpenCalendar,on
  <article><span>TRAINING TIME</span><strong>{format(minutes)} min</strong><small>Actual duration when recorded, otherwise planned duration</small></article>
  </section>
  <section className="builder-card arc-endurance-performance" aria-label={name+' measured performance'}><div className="overview-heading"><div><span className="eyebrow">PERFORMANCE</span><h2>{running?'Average running pace':'Average cycling speed'}</h2></div></div><strong>{running?performance.paceLabel:performance.speedLabel}</strong><p>Calculated from {performance.sessions} completed sessions with both recorded distance and actual duration. Sessions missing either measurement are excluded.</p></section>
+ <EnduranceTrendPanel name={name} plans={activities} units={units}/>
  <div className="progress-grid"><section className="builder-card arc-endurance-recent"><div className="overview-heading"><div><span className="eyebrow">ACTIVITY</span><h2>Recent sessions</h2></div><Route size={18}/></div>{recent.length?recent.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8).map(p=><article key={p.id}><span><b>{p.title}</b><small>{p.date} · {p.status}{p.status==='Completed'&&p.actuals?.distanceKm!==undefined?' · '+format(p.actuals.distanceKm)+' km':''}</small></span></article>):<p>No recent {name.toLowerCase()} sessions yet. Plan one in Calendar to begin.</p>}</section>
  <section className="builder-card arc-endurance-goals"><div className="overview-heading"><div><span className="eyebrow">DIRECTION</span><h2>Connected goals</h2></div><button onClick={onOpenGoals}>Goals <ArrowRight size={14}/></button></div>{relatedGoals.length?relatedGoals.map(g=><article key={g.id}><Target size={15}/><b>{g.name}</b></article>):<p>No active {name.toLowerCase()} goals yet. Add a goal to connect your sessions to a direction.</p>}</section></div></div>;
 }
