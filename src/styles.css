@@ -562,3 +562,11 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .arc-focus-visibility{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--arc-border);background:transparent;color:inherit;border-radius:9px;padding:9px 12px;cursor:pointer}
 .arc-focus-visibility:hover{border-color:var(--arc-accent)}
 @media(hover:none){.arc-nav-section .arc-focus-nav-row .arc-focus-eye{opacity:1}}
+
+
+/* Defocused focuses remain in the list as part of the user's Arc. */
+.arc-focus-nav-row.arc-focus-defocused{opacity:.48}
+.arc-focus-nav-row.arc-focus-defocused>button:first-child span{text-decoration:line-through;text-decoration-thickness:1px}
+.arc-focus-nav-row.arc-focus-defocused:hover,.arc-focus-nav-row.arc-focus-defocused:focus-within{opacity:.82}
+.arc-nav-section .arc-focus-nav-row.arc-focus-defocused .arc-focus-eye{opacity:1}
+.arc-focus-remove{display:inline-flex;align-items:center;gap:7px;border:1px solid #704747;background:transparent;color:#e0a5a5;border-radius:9px;padding:9px 12px;cursor:pointer}
