@@ -689,7 +689,7 @@ test('goal tracker registry selects only the relevant measurement and persists h
 
 test('Focus catalog explains a new focus and preserves sidebar selection',async({page})=>{
  await page.getByRole('button',{name:'Add / Manage'}).click();
- await expect(page.getByRole('heading',{name:'Manage your focuses'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Manage your Focus'})).toBeVisible();
  await page.getByRole('button',{name:/Swimming.*Preview focus/i}).click();
  await expect(page.getByText('Swimming blends efficient technique')).toBeVisible();
  await page.getByRole('button',{name:'Add Swimming'}).click();
