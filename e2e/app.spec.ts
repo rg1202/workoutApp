@@ -762,3 +762,28 @@ test('BJJ lifecycle preserves goal progress when a completed session is reloaded
  await expect(page.getByText('✓ Gi class').first()).toBeVisible();
  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').filter((p:any)=>p.id==='bjj-progress-session').length)).toBe(1);
 });
+
+
+test('Running goal connects Calendar Today completion and persists metrics',async({page})=>{
+ const date=await page.evaluate(()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')});
+ await page.evaluate(()=>{
+  localStorage.setItem('workoutapp.goals.v2',JSON.stringify([{id:'running-lifecycle-goal',name:'Run Three Times',type:'Cardio',activity:'Running',status:'Active',goalTypeV2:'Consistency',priority:'Primary',focus:'running',supportingTargets:[{name:'Easy run',activityType:'Cardio',frequencyPerWeek:3,durationMinutes:30}]}]));
+ });
+ await page.reload();
+ await nav(page,'Calendar').click();
+ await page.getByRole('button',{name:'Add activity on '+new Date(date+'T12:00:00').toLocaleDateString()}).first().click();
+ await page.getByPlaceholder(/Gi BJJ/i).fill('Easy Run Lifecycle');
+ await page.locator('.plan-form select').selectOption('Cardio');
+ await page.locator('.plan-form').getByText('Run Three Times').click();
+ await page.getByRole('button',{name:/Add to calendar/i}).click();
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.title==='Easy Run Lifecycle')?.goalIds)).toEqual(['running-lifecycle-goal']);
+ await nav(page,'Today').click();
+ await expect(page.locator('.today-goal-intelligence').getByText('Easy Run Lifecycle')).toBeVisible();
+ await nav(page,'Calendar').click();
+ await page.getByText('○ Easy Run Lifecycle').first().click();
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.title==='Easy Run Lifecycle')?.status)).toBe('Completed');
+ await page.reload();
+ await nav(page,'Calendar').click();
+ await expect(page.getByText('✓ Easy Run Lifecycle').first()).toBeVisible();
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').filter((p:any)=>p.title==='Easy Run Lifecycle').length)).toBe(1);
+});
