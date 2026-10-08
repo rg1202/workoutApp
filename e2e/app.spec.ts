@@ -1107,12 +1107,19 @@ test('Arc backup exports local goals and excludes unrelated storage',async({page
   localStorage.setItem('unrelated.secret','do-not-export');
  });
  const backupAlerts:string[]=[];
+ const browserErrors:string[]=[];
  page.on('dialog',async dialog=>{backupAlerts.push(dialog.message());await dialog.dismiss()});
- const downloadPromise=page.waitForEvent('download',{timeout:5000}).catch(()=>null);
- await page.getByRole('button',{name:'Download Arc backup'}).click();
+ page.on('pageerror',error=>browserErrors.push(error.message));
+ const downloadPromise=page.waitForEvent('download',{timeout:6000}).catch(()=>null);
+ const button=page.getByRole('button',{name:'Download Arc backup'});
+ await expect(button).toBeVisible();
+ let clickError='';
+ try{await button.click({timeout:7000,noWaitAfter:true})}
+ catch(error){clickError=String(error)}
  const download=await downloadPromise;
- expect(backupAlerts,'Backup export displayed an alert instead of downloading').toEqual([]);
- expect(download,'Backup export produced no download event').not.toBeNull();
+ expect({clickError,backupAlerts,browserErrors,downloadObserved:!!download},'Backup export diagnostics').toEqual({
+  clickError:'',backupAlerts:[],browserErrors:[],downloadObserved:true
+ });
  if(!download)throw new Error('Backup export produced no download event');
  expect(download.suggestedFilename()).toMatch(/^arc-backup-\d{4}-\d{2}-\d{2}\.json$/);
  const stream=await download.createReadStream();
@@ -1206,12 +1213,19 @@ test('Arc excludes credential-like keys from exported backups',async({page})=>{
   localStorage.setItem('arc.units.v1','{"preset":"US"}');
  });
  const backupAlerts:string[]=[];
+ const browserErrors:string[]=[];
  page.on('dialog',async dialog=>{backupAlerts.push(dialog.message());await dialog.dismiss()});
- const downloadPromise=page.waitForEvent('download',{timeout:5000}).catch(()=>null);
- await page.getByRole('button',{name:'Download Arc backup'}).click();
+ page.on('pageerror',error=>browserErrors.push(error.message));
+ const downloadPromise=page.waitForEvent('download',{timeout:6000}).catch(()=>null);
+ const button=page.getByRole('button',{name:'Download Arc backup'});
+ await expect(button).toBeVisible();
+ let clickError='';
+ try{await button.click({timeout:7000,noWaitAfter:true})}
+ catch(error){clickError=String(error)}
  const download=await downloadPromise;
- expect(backupAlerts,'Backup export displayed an alert instead of downloading').toEqual([]);
- expect(download,'Backup export produced no download event').not.toBeNull();
+ expect({clickError,backupAlerts,browserErrors,downloadObserved:!!download},'Backup export diagnostics').toEqual({
+  clickError:'',backupAlerts:[],browserErrors:[],downloadObserved:true
+ });
  if(!download)throw new Error('Backup export produced no download event');
  const stream=await download.createReadStream();
  const chunks:Buffer[]=[];
