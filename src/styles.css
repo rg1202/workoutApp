@@ -864,3 +864,60 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
  .unified-shell .arc-brand .arc-brand-philosophy{display:none}
  .unified-shell .arc-weather-location button{width:auto}
 }
+
+/* Arc Focus management: align page hierarchy and controls with Arc design tokens. */
+.unified-shell main .arc-focus-catalog{max-width:1280px;color:var(--arc-text)}
+.unified-shell main .arc-focus-catalog>.arc-page-header{
+ display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:20px;row-gap:5px;
+ align-items:center;margin:0 0 22px;
+}
+.unified-shell main .arc-focus-catalog>.arc-page-header .arc-focus-back{
+ grid-column:1;grid-row:1/4;align-self:center;margin:0;padding:10px 13px;
+ border:1px solid var(--arc-border);border-radius:9px;
+ background:var(--arc-surface-2);color:var(--arc-text);font-size:.84rem;font-weight:700;
+}
+.unified-shell main .arc-focus-catalog>.arc-page-header .eyebrow{
+ grid-column:2;grid-row:1;color:var(--arc-cyan);
+}
+.unified-shell main .arc-focus-catalog>.arc-page-header h1{
+ grid-column:2;grid-row:2;margin:0;font-size:clamp(1.8rem,3vw,2.5rem);
+ line-height:1.15;letter-spacing:-.04em;color:var(--arc-text);
+}
+.unified-shell main .arc-focus-catalog>.arc-page-header p{
+ grid-column:2;grid-row:3;margin:2px 0 0;max-width:68ch;
+ color:var(--arc-muted);font-size:.88rem;line-height:1.55;
+}
+.unified-shell main .arc-focus-catalog-layout{margin-top:0;grid-template-columns:minmax(245px,320px) minmax(0,1fr);gap:16px;align-items:stretch}
+.unified-shell main .arc-focus-catalog-list,
+.unified-shell main .arc-focus-catalog-detail{
+ background:var(--arc-surface);border:1px solid var(--arc-border);
+ border-radius:14px;box-shadow:none;
+}
+.unified-shell main .arc-focus-catalog-list{padding:14px}
+.unified-shell main .arc-focus-search{
+ min-height:46px;background:var(--arc-surface-2);
+ border:1px solid var(--arc-border);color:var(--arc-muted);
+}
+.unified-shell main .arc-focus-search:focus-within{outline:3px solid #a7f36b;outline-offset:2px}
+.unified-shell main .arc-focus-catalog-buttons{max-height:min(60vh,640px);scrollbar-width:thin;scrollbar-color:#456274 #14212c}
+.unified-shell main .arc-focus-catalog-buttons button{min-height:60px;color:var(--arc-text);font-size:.87rem}
+.unified-shell main .arc-focus-catalog-buttons button strong{font-weight:700}
+.unified-shell main .arc-focus-catalog-buttons button.selected{
+ background:var(--arc-surface-2);border-color:var(--arc-cyan);
+}
+.unified-shell main .arc-focus-catalog-buttons button:focus-visible,
+.unified-shell main .arc-focus-back:focus-visible{outline:3px solid #a7f36b;outline-offset:2px}
+.unified-shell main .arc-focus-catalog-detail{min-height:420px;padding:clamp(20px,3vw,32px)}
+.unified-shell main .arc-focus-empty{margin:clamp(24px,5vw,54px) 0 0}
+.unified-shell main .arc-focus-empty h2{font-size:clamp(1.3rem,2.3vw,1.75rem);color:var(--arc-text)}
+.unified-shell main .arc-focus-empty p{font-size:.91rem}
+@media(max-width:760px){
+ .unified-shell main .arc-focus-catalog>.arc-page-header{grid-template-columns:1fr;gap:7px}
+ .unified-shell main .arc-focus-catalog>.arc-page-header .arc-focus-back{grid-column:1;grid-row:1;justify-self:start;margin-bottom:8px}
+ .unified-shell main .arc-focus-catalog>.arc-page-header .eyebrow{grid-column:1;grid-row:2}
+ .unified-shell main .arc-focus-catalog>.arc-page-header h1{grid-column:1;grid-row:3}
+ .unified-shell main .arc-focus-catalog>.arc-page-header p{grid-column:1;grid-row:4}
+ .unified-shell main .arc-focus-catalog-layout{grid-template-columns:minmax(0,1fr)}
+ .unified-shell main .arc-focus-catalog-buttons{max-height:300px;grid-template-columns:1fr 1fr}
+}
+@media(max-width:460px){.unified-shell main .arc-focus-catalog-buttons{grid-template-columns:1fr}}
