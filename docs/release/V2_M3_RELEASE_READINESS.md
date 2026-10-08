@@ -94,3 +94,13 @@ These are initial findings and priorities, not a completed security or UX audit.
 6. Backup UX explains that local-only data may be lost if browser/site storage is cleared.
 
 **Implementation status:** Requirements only; no export/import functionality is claimed as implemented.
+
+## M3.4 checkpoint — October 2026
+
+- Owner reports **94/94 Playwright tests passing** on `product/v2` after corrupted-record overwrite protection.
+- Browser storage now reports unreadable JSON and failed writes; normal `saveJSON` writes reject overwriting malformed JSON and verify persistence.
+- The recovery UI identifies affected storage keys and offers local backup export.
+- Backup restoration validates supported records, verifies resulting writes, and attempts rollback on failure.
+- **Outstanding:** demonstrate export/restore round-trip including malformed source data, verify that failed rollback is communicated safely, review direct localStorage writes outside `saveJSON`, and design schema migration/version handling.
+- **Risk:** backup export copies raw eligible key values, including unreadable records; those backups may not be restorable until repaired. Exporting a backup does not repair data.
+- **Release gate:** M3.4 remains in progress; M3.5 and public launch are not approved.
