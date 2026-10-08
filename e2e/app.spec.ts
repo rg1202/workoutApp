@@ -1021,7 +1021,7 @@ test('Running and Cycling focus overviews use completed activity actuals without
  await expect(page.locator('.arc-endurance-recent')).not.toContainText('Evening Ride');
  await nav(page,'Cycling').click();
  const cycling=page.getByRole('region',{name:'Cycling 7-day summary'});
- await expect(cycling).toContainText('20 km');
+ await expect(cycling).toContainText('20.0 km');
  await expect(cycling).toContainText('52 min');
  await expect(page.locator('.arc-endurance-recent')).toContainText('Evening Ride');
  await expect(page.locator('.arc-endurance-recent')).not.toContainText('Morning Run');
@@ -1043,7 +1043,7 @@ test('Endurance focus honors linked goal over ambiguous session title',async({pa
  },today);
  await page.reload();
  await nav(page,'Running').click();
- await expect(page.getByRole('region',{name:'Running 7-day summary'})).toContainText('7 km');
+ await expect(page.getByRole('region',{name:'Running 7-day summary'})).toContainText('4.3 mi');
  await expect(page.locator('.arc-endurance-recent')).toContainText('Morning Cardio');
  await expect(page.locator('.arc-endurance-recent')).not.toContainText('Evening Cardio');
  await expect(page.locator('.arc-endurance-recent')).not.toContainText('Cardio Workout');
@@ -1069,7 +1069,7 @@ test('Running pace and Cycling speed use measured actuals and selected units',as
  await nav(page,'Running').click();
  const running=page.getByRole('region',{name:'Running measured performance'});
  await expect(running).toContainText('5:00 min/km');
- await expect(running).toContainText('1 completed sessions');
+ await expect(running).toContainText('1 completed session');
  await nav(page,'Cycling').click();
  const cycling=page.getByRole('region',{name:'Cycling measured performance'});
  await expect(cycling).toContainText('20.0 km/h');
