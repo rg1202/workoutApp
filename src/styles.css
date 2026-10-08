@@ -727,3 +727,69 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
     padding-bottom:112px;
   }
 }
+
+/* M3.3: small-screen layouts for Arc's core planning and progress surfaces. */
+@media (max-width:760px) {
+  .unified-shell>main,
+  .unified-shell>main>div,
+  .goals-v2-intro,
+  .goal-wizard,
+  .goal-wizard-body,
+  .goal-grid,
+  .progress-v2,
+  .progress-grid,
+  .progress-snapshot,
+  .cal-toolbar,
+  .cal-summary {
+    min-width:0;
+    max-width:100%;
+  }
+  .goals-v2-intro,
+  .goal-form-grid,
+  .goal-grid,
+  .progress-grid,
+  .progress-snapshot {
+    grid-template-columns:minmax(0,1fr);
+  }
+  .goal-wizard-top,
+  .goal-wizard-actions,
+  .cal-toolbar,
+  .progress-v2>header {
+    flex-wrap:wrap;
+  }
+  .goal-stepper {
+    overflow-x:auto;
+    max-width:100%;
+  }
+  .goal-stepper>button {
+    flex-shrink:0;
+  }
+  .cal-week,
+  .cal-month {
+    overflow-x:auto;
+    max-width:100%;
+  }
+  .cal-week>section {
+    min-width:0;
+  }
+  .cal-nav {
+    flex-wrap:wrap;
+  }
+}
+.arc-progress-empty {
+  display:grid;
+  justify-items:start;
+  gap:10px;
+}
+.arc-progress-empty button {
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:40px;
+  border:1px solid #405648;
+  background:#17271e;
+  color:#c5f0b1;
+  border-radius:9px;
+  padding:8px 12px;
+  cursor:pointer;
+}
