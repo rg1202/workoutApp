@@ -25,6 +25,6 @@ export function downloadArcBackup(storage:Storage=localStorage){
  anchor.href=url;
  anchor.download='arc-backup-'+backup.exportedAt.slice(0,10)+'.json';
  document.body.appendChild(anchor);
- try{anchor.click()}finally{anchor.remove();URL.revokeObjectURL(url)}
+ try{anchor.click()}finally{anchor.remove();setTimeout(()=>URL.revokeObjectURL(url),60_000)}
  return Object.keys(backup.data).length;
 }
