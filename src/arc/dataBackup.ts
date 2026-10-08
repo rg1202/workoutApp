@@ -1,11 +1,14 @@
-/** Browser-only Arc backup. Never includes credentials or integration server tokens. */
+/** Browser-only Arc backup. Excludes credential-like storage keys; exported activity data remains sensitive. */
 export type ArcBackup={format:'arc-local-backup';version:1;exportedAt:string;data:Record<string,string>};
-const allowed=(key:string)=>key.startsWith('arc.')||key.startsWith('workoutapp.');
+/** Shared export/restore boundary. Future authentication storage must never be backed up. */
+export const isBackupKey=(key:string)=>
+ (key.startsWith('arc.')||key.startsWith('workoutapp.')) &&
+ !/(?:^|[.\-_])(token|tokens|secret|password|passwd|credential|credentials|auth|oauth|apikey|api-key|session-token|refresh-token|access-token|private-key)(?:[.\-_]|$)/i.test(key);
 export function createArcBackup(storage:Storage=localStorage):ArcBackup{
  const data:Record<string,string>={};
  for(let i=0;i<storage.length;i++){
   const key=storage.key(i);
-  if(!key||!allowed(key))continue;
+  if(!key||!isBackupKey(key))continue;
   const raw=storage.getItem(key);
   if(raw!==null)data[key]=raw;
  }
