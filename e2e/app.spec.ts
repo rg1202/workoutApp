@@ -1243,3 +1243,19 @@ test('Arc rejects malformed health and preference records before restore',async(
   expect(await page.evaluate(()=>localStorage.getItem('workoutapp.goals.v2'))).toBe('[]');
  }
 });
+
+test('first-time Goals view explains the next action',async({page})=>{
+ await nav(page,'Goals').click();
+ await expect(page.getByRole('heading',{name:'Start your Arc with a goal.'})).toBeVisible();
+ await page.getByRole('button',{name:'Create your first goal'}).click();
+ await expect(page.getByLabel('Goal name')).toBeVisible();
+});
+
+test('restore backup is reachable and operable by keyboard',async({page})=>{
+ const button=page.getByRole('button',{name:'Restore backup'});
+ await expect(button).toBeVisible();
+ await button.focus();
+ await expect(button).toBeFocused();
+ await page.keyboard.press('Enter');
+ await expect(page.locator('input[aria-label="Restore Arc backup file"]')).toHaveCount(1);
+});
