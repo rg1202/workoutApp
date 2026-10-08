@@ -1,4 +1,4 @@
-import type { ArcBackup } from './dataBackup';
+import { isBackupKey, type ArcBackup } from './dataBackup';
 
 export function parseBackup(source: string): ArcBackup {
   const value: unknown = JSON.parse(source);
@@ -8,12 +8,27 @@ export function parseBackup(source: string): ArcBackup {
   if (typeof obj.exportedAt !== 'string' || !Number.isFinite(Date.parse(obj.exportedAt))) throw new Error('Invalid backup date');
   if (!obj.data || typeof obj.data !== 'object' || Array.isArray(obj.data)) throw new Error('Invalid backup entries');
   for (const [key, entry] of Object.entries(obj.data)) {
-    if (!(key.startsWith('arc.') || key.startsWith('workoutapp.')) || typeof entry !== 'string') throw new Error('Invalid backup entry');
+    if (!isBackupKey(key) || typeof entry !== 'string') throw new Error('Invalid backup entry');
     if (key === 'workoutapp.sidebar-collapsed.v1') {
       if (entry !== '0' && entry !== '1') throw new Error('Invalid sidebar setting');
       continue;
     }
     const decoded: unknown = JSON.parse(entry);
+    if (key === 'workoutapp.history.v2') {
+      if (!Array.isArray(decoded) || !decoded.every(session =>
+        session !== null && typeof session === 'object' && !Array.isArray(session) &&
+        typeof session.id === 'string' && typeof session.name === 'string' &&
+        Array.isArray(session.sets)
+      )) throw new Error('Invalid session history in backup');
+    }
+    if (key === 'workoutapp.planned-activities.v1') {
+      if (!Array.isArray(decoded) || !decoded.every(plan =>
+        plan !== null && typeof plan === 'object' && !Array.isArray(plan) &&
+        typeof plan.id === 'string' && typeof plan.date === 'string' &&
+        typeof plan.title === 'string' &&
+        ['Planned', 'Completed', 'Skipped'].includes(plan.status)
+      )) throw new Error('Invalid planned activities in backup');
+    }
     if (key === 'workoutapp.goals.v2') {
       if (!Array.isArray(decoded) || !decoded.every(goal =>
         goal !== null && typeof goal === 'object' && !Array.isArray(goal) &&
@@ -32,7 +47,7 @@ export function restoreBackup(backup: ArcBackup, storage: Storage = localStorage
   const previous = new Map<string, string>();
   for (let i = 0; i < storage.length; i++) {
     const key = storage.key(i);
-    if (key && (key.startsWith('arc.') || key.startsWith('workoutapp.'))) {
+    if (key && isBackupKey(key)) {
       const value = storage.getItem(key);
       if (value !== null) previous.set(key, value);
     }
@@ -68,7 +83,7 @@ export function previewBackup(backup: ArcBackup, storage: Storage = localStorage
   const currentKeys: string[] = [];
   for (let i = 0; i < storage.length; i++) {
     const key = storage.key(i);
-    if (key && (key.startsWith('arc.') || key.startsWith('workoutapp.'))) currentKeys.push(key);
+    if (key && isBackupKey(key)) currentKeys.push(key);
   }
   const removed = currentKeys.filter(key => !Object.prototype.hasOwnProperty.call(verified.data, key)).length;
   const count = (key: string) => {
