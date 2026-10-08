@@ -14,6 +14,32 @@ export function parseBackup(source: string): ArcBackup {
       continue;
     }
     const decoded: unknown = JSON.parse(entry);
+    const object = (item: unknown): item is Record<string, unknown> =>
+      item !== null && typeof item === 'object' && !Array.isArray(item);
+    const records = (predicate: (item: Record<string, unknown>) => boolean) =>
+      Array.isArray(decoded) && decoded.every(item => object(item) && predicate(item));
+    if (key === 'workoutapp.checkins.v1' &&
+      !records(item => typeof item.date === 'string')) {
+      throw new Error('Invalid check-ins in backup');
+    }
+    if (key === 'workoutapp.body-metrics.v1' &&
+      !records(item => typeof item.id === 'string' && typeof item.date === 'string')) {
+      throw new Error('Invalid body metrics in backup');
+    }
+    if (key === 'workoutapp.injuries.v1' &&
+      !records(item => typeof item.id === 'string' && typeof item.name === 'string' &&
+        ['Active', 'Improving', 'Resolved'].includes(String(item.status)))) {
+      throw new Error('Invalid injury records in backup');
+    }
+    if (key === 'arc.state-history.v1' &&
+      !records(item => typeof item.id === 'string' && typeof item.date === 'string' &&
+        typeof item.recordedAt === 'string' && object(item.ratings))) {
+      throw new Error('Invalid state history in backup');
+    }
+    if (key === 'arc.units.v1' &&
+      (!object(decoded) || !['US', 'Metric'].includes(String(decoded.preset)))) {
+      throw new Error('Invalid unit preferences in backup');
+    }
     if (key === 'workoutapp.history.v2') {
       if (!Array.isArray(decoded) || !decoded.every(session =>
         session !== null && typeof session === 'object' && !Array.isArray(session) &&
