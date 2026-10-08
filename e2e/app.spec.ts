@@ -1226,3 +1226,20 @@ test('Arc rejects malformed activity history and calendar backups',async({page})
   expect(await page.evaluate(()=>localStorage.getItem('workoutapp.history.v2'))).toBe('[]');
  }
 });
+
+test('Arc rejects malformed health and preference records before restore',async({page})=>{
+ await page.evaluate(()=>localStorage.setItem('workoutapp.goals.v2','[]'));
+ page.on('dialog',dialog=>dialog.accept());
+ const malformed=[
+  ['workoutapp.checkins.v1',[{energy:3}]],
+  ['workoutapp.body-metrics.v1',[{id:'m1'}]],
+  ['workoutapp.injuries.v1',[{id:'i1',name:'Knee',status:'Unknown'}]],
+  ['arc.state-history.v1',[{id:'s1',date:'2026-10-08',ratings:{}}]],
+  ['arc.units.v1',{preset:'Invalid'}]
+ ] as const;
+ for(const [key,value] of malformed){
+  const backup={format:'arc-local-backup',version:1,exportedAt:'2026-10-08T12:00:00.000Z',data:{[key]:JSON.stringify(value)}};
+  await page.locator('input[aria-label="Restore Arc backup file"]').setInputFiles({name:'invalid-'+key+'.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
+  expect(await page.evaluate(()=>localStorage.getItem('workoutapp.goals.v2'))).toBe('[]');
+ }
+});
