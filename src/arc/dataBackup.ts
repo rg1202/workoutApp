@@ -12,6 +12,9 @@ export function createArcBackup(storage:Storage=localStorage):ArcBackup{
   const raw=storage.getItem(key);
   if(raw!==null)data[key]=raw;
  }
+ for(const [key,value] of Object.entries(data)){
+  if(storage.getItem(key)!==value)throw new Error('Arc data changed during backup; retry export.');
+ }
  return {format:'arc-local-backup',version:1,exportedAt:new Date().toISOString(),data};
 }
 export function downloadArcBackup(storage:Storage=localStorage){
