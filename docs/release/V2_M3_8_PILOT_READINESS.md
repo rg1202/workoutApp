@@ -81,3 +81,12 @@ Baseline release SHA: `7c58b58c2c0dd6a2a96c4820dc00680f685a97ba` (reconfirm depl
 - Owner reports **both targeted tests and the full release suite passed** after pulling the fix. Exact full-suite counts were not supplied in this confirmation; do not invent them.
 - Automated release check gate: **PASS (owner-reported)**. Manual shorter-desktop viewport verification remains recommended.
 - Remaining before pilot invitation: production artifact/secrets review beyond the existing narrow scripted check, privacy notice finalization, tester consent/onboarding, and explicit go/no-go signoff.
+
+## October 8 — expanded artifact scan (owner output)
+
+- Owner pulled commit `9ba7472` and ran `npm run check:staging`.
+- Vite/TypeScript production build: **PASS** (1955 modules transformed).
+- Expanded `check:artifact`: **PASS**, output `Production artifact check passed (heuristic scan; not a guarantee of no secrets).`
+- Build warnings: Lucide module-level `use client` directive and oversized JS chunk (approximately 844 kB uncompressed); nonblocking but track performance.
+- Pasted console output ends before the standalone `check-staging-output.mjs` result. **Do not mark full check:staging verified until process exit/status is confirmed.**
+- Repository review: production integrations panel hides local Strava server flow when `import.meta.env.DEV` is false. Verify deployed behavior as part of pilot signoff.
