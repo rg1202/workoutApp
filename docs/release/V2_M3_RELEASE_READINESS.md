@@ -133,3 +133,12 @@ These are initial findings and priorities, not a completed security or UX audit.
 - [ ] Small pilot and blocker triage completed.
 
 **No public release approval is implied by these changes.**
+
+## M3.6 preparation checkpoint
+
+- Owner reports **101 development and 1 production-preview Playwright tests passing** on the prior batch.
+- Added a second production smoke test for browser storage persistence across reload; **not yet owner-verified**.
+- Added `npm run check:artifact` to check built output for Arc branding, JavaScript assets, and accidental server secret references. This is a narrow heuristic, **not a security audit**.
+- Added `docs/release/V2_PILOT_PROTOCOL.md` with test tasks, privacy constraints and issue severity.
+- Dependency pinning and a committed `package-lock.json` are still **blocking**. No staging URL, deployment, pilot or sign-off is verified.
+- Do not mark M3.6 complete or release publicly until the go/no-go checklist is satisfied.
