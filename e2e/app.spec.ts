@@ -1125,8 +1125,12 @@ test('Arc backup exports local goals and excludes unrelated storage',async({page
 test('Arc restores a validated backup after confirmation',async({page})=>{
  const backup={format:'arc-local-backup',version:1,exportedAt:'2026-10-07T12:00:00.000Z',data:{'workoutapp.goals.v2':JSON.stringify([{id:'restored-goal',name:'Restore test goal'}])}};
  page.on('dialog',dialog=>dialog.accept());
- await page.locator('input[aria-label="Restore Arc backup file"]').setInputFiles({name:'arc-backup.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
- await page.waitForLoadState('load');
+ await Promise.all([
+  page.waitForEvent('load'),
+  page.locator('input[aria-label="Restore Arc backup file"]').setInputFiles({name:'arc-backup.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))})
+ ]);
+ const stored=await page.evaluate(()=>localStorage.getItem('workoutapp.goals.v2'));
+ expect(stored).toContain('Restore test goal');
  await nav(page,'Goals').click();
  await expect(page.getByText('Restore test goal')).toBeVisible();
 });
