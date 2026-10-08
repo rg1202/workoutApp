@@ -75,3 +75,22 @@ Verified by inspecting the current `product/v2` files:
 5. **P1 local baseline:** Confirm clean working tree and successful `npm run build`; Playwright pass reported.
 
 These are initial findings and priorities, not a completed security or UX audit.
+
+## M3.1 data persistence inspection — verified
+
+- `src/storage.ts` provides `loadJSON` and `saveJSON` wrappers over browser `localStorage`. `loadJSON` silently returns fallback on parse/storage errors; `saveJSON` has no quota/error handling.
+- Storage keys inspected: active session v3, history v2, programs v3, check-ins v1, body metrics v1, custom exercises v1, favorites v1, injuries v1, goals v2, planned activities v1, integrations v1, external activities v1, recovery v1, and unit preferences v1.
+- No cloud persistence or backup was established by the inspected modules. This audit **does not yet confirm whether another UI provides export/import**; inspect the remaining application before making that claim.
+- Sensitive categories can include injury, body metric, check-in, and recovery data. Treat browser exports as sensitive and avoid automatic third-party analytics collection of their values.
+- `index.html` retained a legacy `WorkoutApp` tab title; corrected in commit `49a52430fba552e9d0d3b540d725d53829b4c5bb`.
+
+### Proposed M3.2 data-safety acceptance tests
+
+1. A user can download a complete versioned backup without transmitting it to a server.
+2. A backup can be validated and restored without silently overwriting existing data; restoration requires explicit confirmation.
+3. Malformed, unexpected, or future-version backup files fail safely.
+4. Export/import round-trips goals, calendar activities, completed records, settings, and all supported legacy data.
+5. Storage quota and parse failures produce actionable user feedback, not silent loss.
+6. Backup UX explains that local-only data may be lost if browser/site storage is cleared.
+
+**Implementation status:** Requirements only; no export/import functionality is claimed as implemented.
