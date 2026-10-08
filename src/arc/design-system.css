@@ -308,3 +308,61 @@
 .unified-shell main .goal-plan-actions>.arc-ui-button:focus-visible{
  outline:3px solid var(--arc-focus-outline);outline-offset:3px;
 }
+
+/* UI-2.2 Goals wizard: visual rhythm and restrained selection states. */
+.unified-shell main .goal-wizard{
+ background:var(--arc-surface);border:1px solid var(--arc-border);
+ border-radius:var(--arc-radius);box-shadow:none;
+}
+.unified-shell main .goal-wizard-top{gap:16px}
+.unified-shell main .goal-stepper{
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:8px;padding:0 0 18px;margin:18px 0 22px;
+ border-bottom:1px solid var(--arc-border);
+}
+.unified-shell main .goal-stepper button{
+ min-width:0;display:flex;align-items:center;justify-content:flex-start;gap:9px;
+ border:1px solid var(--arc-border);border-radius:var(--arc-action-radius);
+ background:var(--arc-control);color:var(--arc-muted);
+ padding:10px 12px;min-height:46px;font:inherit;font-size:.82rem;
+ box-shadow:none;cursor:pointer;
+}
+.unified-shell main .goal-stepper button i{
+ display:grid;place-items:center;flex:0 0 25px;width:25px;height:25px;
+ border-radius:50%;border:1px solid var(--arc-action-border);
+ background:transparent;color:var(--arc-muted);font-style:normal;
+}
+.unified-shell main .goal-stepper button.active{
+ background:#10313b;border-color:var(--arc-action-primary-border);color:var(--arc-text);
+}
+.unified-shell main .goal-stepper button.active i{
+ background:var(--arc-action-primary-bg);border-color:var(--arc-cyan);color:var(--arc-text);
+}
+.unified-shell main .goal-stepper button.done{color:var(--arc-action-text)}
+.unified-shell main .goal-stepper button.done i{
+ background:#123b39;border-color:#247a70;color:var(--arc-mint);
+}
+.unified-shell main .goal-stepper button:focus-visible,
+.unified-shell main .goal-type-v2 button:focus-visible{
+ outline:3px solid var(--arc-focus-outline);outline-offset:3px;
+}
+.unified-shell main .goal-type-v2{gap:10px}
+.unified-shell main .goal-type-v2 button{
+ min-width:0;background:var(--arc-control);border:1px solid var(--arc-border);
+ border-radius:var(--arc-action-radius);box-shadow:none;
+}
+.unified-shell main .goal-type-v2 button.selected{
+ background:#10313b;border-color:var(--arc-action-primary-border);
+ box-shadow:inset 0 0 0 1px var(--arc-action-primary-border);
+}
+.unified-shell main .goal-type-v2 button.selected b{color:var(--arc-text)}
+.unified-shell main .goal-support-list article,
+.unified-shell main .goal-review{background:var(--arc-surface-2);border-color:var(--arc-border)}
+@media(max-width:760px){
+ .unified-shell main .goal-stepper{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .unified-shell main .goal-type-v2{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:420px){
+ .unified-shell main .goal-stepper button{padding:8px;gap:6px;font-size:.76rem}
+ .unified-shell main .goal-stepper button i{width:22px;height:22px;flex-basis:22px}
+}
