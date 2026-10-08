@@ -682,3 +682,17 @@ test('goal tracker registry selects only the relevant measurement and persists h
  await expect(page.getByRole('button',{name:/Update waist/i})).toHaveAttribute('aria-expanded','false');
  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.body-metrics.v1')||'[]').some((x:any)=>x.waist===36.5))).toBe(true);
 });
+
+
+test('Focus catalog explains a new focus and preserves sidebar selection',async({page})=>{
+ await page.getByRole('button',{name:'Add focus'}).click();
+ await expect(page.getByRole('heading',{name:'Add a focus'})).toBeVisible();
+ await page.getByRole('button',{name:/Swimming.*Preview focus/i}).click();
+ await expect(page.getByText('Swimming blends efficient technique')).toBeVisible();
+ await page.getByRole('button',{name:'Add Swimming'}).click();
+ await expect(page.locator('aside').getByRole('button',{name:'Swimming'})).toBeVisible();
+ await page.reload();
+ await expect(page.locator('aside').getByRole('button',{name:'Swimming'})).toBeVisible();
+ await page.locator('aside').getByRole('button',{name:'Swimming'}).click();
+ await expect(page.getByText('Dedicated tracking and programming for this focus are not available yet.')).toBeVisible();
+});
