@@ -112,7 +112,7 @@ test('latest body weight drives weight-loss goal progress',async({page})=>{
  expect(initialWidths[1]/initialWidths[0]).toBeLessThan(.55);
  await nav(page,'Today').click();
  await page.locator('#bm-weight').fill('192');
- await page.getByRole('button',{name:/Save measurements/i}).click();
+ await page.getByRole('button',{name:/Save lb/i}).click();
  await nav(page,'Goals').click();
  await expect(page.getByText('192', {exact:false}).first()).toBeVisible();
  await expect(page.getByText(/^80%/)).toBeVisible();
@@ -143,7 +143,7 @@ test('creating a weight goal uses Analytics weight and syncs Dashboard progress'
  await expect(page.locator('.today-goal-intelligence').getByText('Competition Cut')).toBeVisible();
  await nav(page,'Today').click();
  await page.locator('#bm-weight').fill('196');
- await page.getByRole('button',{name:/Save measurements/i}).click();
+ await page.getByRole('button',{name:/Save lb/i}).click();
  await nav(page,'Goals').click();
  await expect(page.getByText(/196/).first()).toBeVisible();
  await expect(page.getByText(/^50%/)).toBeVisible();
@@ -171,7 +171,7 @@ test('shared state changes propagate once without persistence churn',async({page
  await page.getByRole('button',{name:/Continue/i}).click();await page.getByRole('button',{name:/Continue/i}).click();await page.getByRole('button',{name:/Create goal/i}).click();await page.getByRole('button',{name:/Not now/i}).click();
  await nav(page,'Today').click();
  await page.locator('#bm-weight').fill('197');
- await page.getByRole('button',{name:/Save measurements/i}).click();
+ await page.getByRole('button',{name:/Save lb/i}).click();
  const storedGoal=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.goals.v2')||'[]').find((g:any)=>g.name==='Weight Goal'));
  expect(storedGoal).toMatchObject({type:'Body',goalTypeV2:'Body Composition',start:197,current:197,target:190,unit:'lb'});
  await nav(page,'Today').click();
