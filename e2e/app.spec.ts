@@ -1331,3 +1331,22 @@ test('saveJSON refuses to overwrite corrupted records',async({page})=>{
  expect(result.value).toBe('{broken');
  await expect(page.getByRole('alert')).toBeVisible();
 });
+
+test('failed storage write preserves existing data and reports failure',async({page})=>{
+ const result=await page.evaluate(async()=>{
+  const storage=await import('/src/storage.ts');
+  const key='arc.storage-failure-test.v1';
+  localStorage.setItem(key,'{"before":true}');
+  const original=Storage.prototype.setItem;
+  Storage.prototype.setItem=function(k:string,v:string){
+   if(k===key)throw new Error('QuotaExceededError');
+   return original.call(this,k,v);
+  };
+  let rejected=false;
+  try{storage.saveJSON(key,{after:true});}catch{rejected=true;}
+  finally{Storage.prototype.setItem=original;}
+  return {rejected,value:localStorage.getItem(key)};
+ });
+ expect(result).toEqual({rejected:true,value:'{"before":true}'});
+ await expect(page.getByRole('alert')).toBeVisible();
+});
