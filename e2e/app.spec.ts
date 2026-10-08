@@ -1114,7 +1114,7 @@ test('Arc backup exports local goals and excludes unrelated storage',async({page
  const button=page.getByRole('button',{name:'Download Arc backup'});
  await expect(button).toBeVisible();
  let clickError='';
- try{await button.click({timeout:7000,noWaitAfter:true})}
+ try{await button.evaluate(element=>element.scrollIntoView({block:'center',inline:'center'}));await button.click({timeout:7000,noWaitAfter:true})}
  catch(error){clickError=String(error)}
  const download=await downloadPromise;
  expect({clickError,backupAlerts,browserErrors,downloadObserved:!!download},'Backup export diagnostics').toEqual({
@@ -1220,7 +1220,7 @@ test('Arc excludes credential-like keys from exported backups',async({page})=>{
  const button=page.getByRole('button',{name:'Download Arc backup'});
  await expect(button).toBeVisible();
  let clickError='';
- try{await button.click({timeout:7000,noWaitAfter:true})}
+ try{await button.evaluate(element=>element.scrollIntoView({block:'center',inline:'center'}));await button.click({timeout:7000,noWaitAfter:true})}
  catch(error){clickError=String(error)}
  const download=await downloadPromise;
  expect({clickError,backupAlerts,browserErrors,downloadObserved:!!download},'Backup export diagnostics').toEqual({
