@@ -90,3 +90,10 @@ Baseline release SHA: `7c58b58c2c0dd6a2a96c4820dc00680f685a97ba` (reconfirm depl
 - Build warnings: Lucide module-level `use client` directive and oversized JS chunk (approximately 844 kB uncompressed); nonblocking but track performance.
 - Pasted console output ends before the standalone `check-staging-output.mjs` result. **Do not mark full check:staging verified until process exit/status is confirmed.**
 - Repository review: production integrations panel hides local Strava server flow when `import.meta.env.DEV` is false. Verify deployed behavior as part of pilot signoff.
+
+## October 8 — staging check final confirmation
+
+- Owner confirms PowerShell `$LASTEXITCODE` returned **0** immediately after `npm run check:staging`.
+- Full staging script **PASS (owner-reported)**: TypeScript/Vite build, expanded production artifact heuristic scan, and `check-staging-output.mjs` header/distribution validation.
+- This verifies locally built artifacts and configuration, not the exact deployed Cloudflare SHA or third-party processing disclosures.
+- Remaining: privacy/analytics disclosure verification, deployed SHA and live behavior check, explicit pilot go/no-go.
