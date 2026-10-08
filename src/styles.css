@@ -605,3 +605,24 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .arc-today-top .arc-weather-hours article{flex-basis:78px;padding:8px}
 .arc-today-top .arc-weather-hours article>span{font-size:1.1rem}
 @media(max-width:900px){.arc-today-top{grid-template-columns:1fr}.arc-today-top>header{padding-top:0}}
+
+
+/* Today command center: compact plan summary in the masthead left column */
+.arc-today-left{display:flex;flex-direction:column;gap:18px;min-width:0}
+.arc-today-left>header{padding-top:18px}
+.arc-today-top .arc-today-left>header{padding-top:18px}
+.arc-today-glance{padding:15px;border:1px solid var(--arc-border);border-radius:12px;background:rgba(255,255,255,.025);min-width:0}
+.arc-glance-heading h2{font-size:1rem;margin:5px 0 12px}
+.arc-glance-count{display:flex;align-items:baseline;gap:9px}
+.arc-glance-count strong{font-size:1.8rem;line-height:1.15;letter-spacing:-.04em}
+.arc-glance-count strong span{color:var(--arc-muted,#8d9ba6);font-size:1.05rem;font-weight:500}
+.arc-glance-count small,.arc-glance-next small,.arc-glance-remaining{font-size:.74rem;color:var(--arc-muted,#8d9ba6)}
+.arc-glance-progress{height:6px;border-radius:999px;overflow:hidden;background:rgba(120,150,170,.18);margin:12px 0}
+.arc-glance-progress>span{display:block;height:100%;background:var(--arc-accent);border-radius:999px;transition:width .2s}
+.arc-glance-next{display:flex;flex-direction:column;gap:4px;margin:13px 0}
+.arc-glance-next b{font-size:.9rem;overflow-wrap:anywhere}
+.arc-glance-message{font-size:.8rem;color:var(--arc-muted,#8d9ba6);margin:12px 0}
+.arc-glance-action{display:inline-flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid var(--arc-border);border-radius:8px;background:transparent;color:inherit;cursor:pointer;font-size:.8rem}
+.arc-glance-action:hover{border-color:var(--arc-accent)}
+.arc-glance-remaining{display:flex;align-items:center;gap:5px;margin-top:11px}
+@media(max-width:900px){.arc-today-left{gap:12px}.arc-today-top .arc-today-left>header{padding-top:0}}
