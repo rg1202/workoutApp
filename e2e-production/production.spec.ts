@@ -5,6 +5,8 @@ test('production build serves Arc and blocks development-only Strava connection'
  await page.goto('/');
  await expect(page).toHaveTitle(/Arc/);
  await expect(page.locator('body')).toContainText('Arc');
+ await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
+ await page.getByRole('button',{name:'Continue to Arc'}).click();
  await expect(page.getByRole('button',{name:/integrations/i}).first()).toBeAttached();
  await page.getByRole('button',{name:/integrations/i}).first().evaluate((element:HTMLElement)=>element.click());
  await expect(page.getByText('External account connections are unavailable in this release.')).toBeVisible();
