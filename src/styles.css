@@ -1093,3 +1093,11 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .goal-plan-modal .goal-plan-summary{max-height:min(38vh,300px);overflow:auto}
 .goal-plan-modal .goal-plan-actions{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
 @media(max-width:520px){.goal-plan-modal .goal-plan-status{gap:7px}.goal-plan-modal .goal-plan-status>div{padding:11px}.goal-plan-modal .goal-plan-actions .arc-ui-button{flex:1}}
+
+/* Arc Calendar planning horizon controls */
+.goal-plan-modal .goal-plan-horizon{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin:18px 0 10px}
+.goal-plan-modal .goal-plan-horizon>div{display:flex;gap:7px;flex-wrap:wrap}
+.goal-plan-modal .goal-plan-horizon button{appearance:none;border:1px solid rgba(125,160,190,.25);border-radius:9px;background:rgba(125,160,190,.05);color:inherit;padding:9px 13px;cursor:pointer;font:inherit;font-size:12px;font-weight:650}
+.goal-plan-modal .goal-plan-horizon button[aria-pressed=true]{border-color:var(--arc-mint,#5ce5bf);background:rgba(92,229,191,.12);color:var(--arc-mint,#5ce5bf)}
+.goal-plan-modal .goal-plan-horizon button:hover{border-color:var(--arc-mint,#5ce5bf)}
+.goal-plan-modal .goal-plan-horizon button:focus-visible{outline:2px solid var(--arc-mint,#5ce5bf);outline-offset:2px}
