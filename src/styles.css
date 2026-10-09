@@ -1013,3 +1013,24 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .goal-review-calendar p{margin-top:4px;font-size:13px}
 .goal-review-notes span{font-weight:400;opacity:.65}
 @media(max-width:600px){.goal-review-activity,.goal-review-measure{flex-direction:column;align-items:flex-start}.goal-review-hero{padding:16px}}
+
+/* Compact review confirmation */
+.goal-review-compact{width:100%;max-width:780px;margin-inline:auto}
+.goal-review-compact-card{border:1px solid rgba(125,160,190,.22);border-radius:14px;background:rgba(125,160,190,.045);padding:0 20px}
+.goal-review-compact-heading,.goal-review-compact-row{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:18px 0}
+.goal-review-compact-row{border-top:1px solid rgba(125,160,190,.15);padding:14px 0}
+.goal-review-compact-heading h2{font-size:22px;line-height:1.2;margin:7px 0 5px}
+.goal-review-compact-heading p,.goal-review-compact-row p{margin:5px 0 0}
+.goal-review-compact-heading p,.goal-review-compact-row small{color:var(--arc-text-muted,#93a6b9)}
+.goal-review-compact-row strong{font-size:16px}
+.goal-review-compact-row small{display:block;font-size:12px;margin-top:3px}
+.goal-review-compact .goal-review-edit{flex-shrink:0;margin:0;align-self:center}
+.goal-review-compact-activities{display:grid;gap:7px}
+.goal-review-compact-activities p{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.goal-review-compact-activities small{display:inline;margin:0}
+.goal-review-compact-footer{display:flex;align-items:flex-start;gap:10px;margin:12px 0;padding:11px 14px;border-radius:10px;background:rgba(40,184,199,.055);font-size:12px;color:var(--arc-text-muted,#93a6b9)}
+.goal-review-compact-footer svg{flex-shrink:0}
+.goal-review-compact-notes{padding:10px 0}
+.goal-review-compact-notes summary{cursor:pointer;font-size:13px;color:var(--arc-text-muted,#93a6b9)}
+.goal-review-compact-notes textarea{margin-top:12px;width:100%}
+@media(max-width:600px){.goal-review-compact-card{padding:0 14px}.goal-review-compact-heading h2{font-size:19px}}
