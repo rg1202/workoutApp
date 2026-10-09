@@ -1057,3 +1057,20 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .goal-card-execution-summary button[aria-expanded=true] svg{transform:rotate(90deg)}
 .goal-card-expanded{padding-top:4px}
 .goal-card-expanded .goal-intelligence{margin-top:0}
+
+/* Goal card V2: responsive density and consistent actions */
+.goal-grid{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr))!important;gap:14px!important;align-items:start}
+.goal-grid>.goal-card{height:auto!important;min-height:0!important;display:flex;flex-direction:column;gap:0}
+.goal-card .goal-priority.primary{background:rgba(46,194,179,.10)!important;border:1px solid rgba(46,194,179,.25)!important;color:var(--arc-mint,#5ce5bf)!important;box-shadow:none!important}
+.goal-card .goal-priority{font-size:9px!important;line-height:1.2}
+.goal-card .goal-actions{display:flex!important;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:14px!important;padding-top:12px!important}
+.goal-card .goal-actions .arc-ui-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:36px;padding:8px 12px!important;font-size:12px!important;line-height:1.2;white-space:nowrap;border-radius:9px}
+.goal-card .goal-actions .arc-ui-button--primary.goal-plan-button{margin-left:auto;background:var(--arc-mint,#5ce5bf)!important;color:#06130f!important;border:1px solid transparent!important;font-weight:700}
+.goal-card .goal-actions .arc-ui-button--quiet{background:transparent!important;border:1px solid rgba(125,160,190,.16)!important;color:var(--arc-text-muted,#93a6b9)!important}
+.goal-card .goal-actions .arc-ui-button--quiet:hover{border-color:rgba(125,160,190,.4)!important;color:inherit!important}
+.goal-card .goal-card-execution-summary{margin-top:10px}
+.goal-card .goal-support-preview{margin-top:12px}
+.goal-header-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:flex-end}
+.arc-goals-page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;min-width:0}
+.arc-goals-page-header>div:first-child{min-width:0;flex:1 1 280px}
+@media(max-width:640px){.goal-grid{grid-template-columns:minmax(0,1fr)!important}.goal-header-actions{width:100%;justify-content:flex-start}.goal-card .goal-actions .arc-ui-button{flex:1}}
