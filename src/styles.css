@@ -986,3 +986,30 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .goal-support-cards article label input,.goal-support-cards article label select{width:100%;min-width:0}
 .goal-support-head h3 small{font-weight:400;opacity:.65}
 @media(max-width:760px){.goal-support-preset-grid{grid-template-columns:1fr}.goal-support-cards article{grid-template-columns:repeat(2,minmax(0,1fr))}.goal-support-cards article label:first-child{grid-column:1/-1}}
+
+/* Arc V2 Goal Review */
+.goal-review-body{max-width:780px;width:100%;margin-inline:auto}
+.goal-review-intro{margin-bottom:18px}
+.goal-review-intro h3{margin:5px 0 4px;font-size:22px}
+.goal-review-intro p,.goal-review-hero p,.goal-review-calendar p{margin:0;opacity:.7}
+.goal-review-hero{padding:22px;border:1px solid rgba(125,160,190,.24);border-radius:16px;background:rgba(125,160,190,.07)}
+.goal-review-hero-top,.goal-review-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.goal-review-priority{font-size:12px;opacity:.7}
+.goal-review-hero h2{margin:12px 0 7px;font-size:25px;line-height:1.2}
+.goal-review-edit{display:inline-flex;align-items:center;gap:6px;margin-top:12px;border:0;background:transparent;color:inherit;opacity:.78;cursor:pointer;font:inherit;font-size:12px;padding:4px 0}
+.goal-review-edit:hover{opacity:1;text-decoration:underline}
+.goal-review-section{margin-top:22px}
+.goal-review-section-head h3{margin:4px 0 10px;font-size:16px}
+.goal-review-section-head .goal-review-edit{margin:0}
+.goal-review-measure{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:15px 17px;border:1px solid rgba(125,160,190,.18);border-radius:12px}
+.goal-review-measure>div{display:flex;flex-direction:column;gap:5px}
+.goal-review-measure strong{font-size:20px}
+.goal-review-measure small,.goal-review-muted{opacity:.7}
+.goal-review-activities{display:grid;gap:8px}
+.goal-review-activity{display:flex;justify-content:space-between;gap:12px;padding:12px 15px;border:1px solid rgba(125,160,190,.18);border-radius:10px}
+.goal-review-activity small{opacity:.7}
+.goal-review-calendar{display:flex;gap:13px;margin:24px 0;padding:16px;border:1px solid rgba(40,184,199,.22);background:rgba(40,184,199,.06);border-radius:12px}
+.goal-review-calendar svg{flex-shrink:0}
+.goal-review-calendar p{margin-top:4px;font-size:13px}
+.goal-review-notes span{font-weight:400;opacity:.65}
+@media(max-width:600px){.goal-review-activity,.goal-review-measure{flex-direction:column;align-items:flex-start}.goal-review-hero{padding:16px}}
