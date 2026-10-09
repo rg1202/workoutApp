@@ -1047,3 +1047,13 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .goal-wizard .goal-wizard-actions .arc-ui-button{min-height:40px}
 .goal-wizard input:focus-visible,.goal-wizard select:focus-visible,.goal-wizard textarea:focus-visible,.goal-wizard button:focus-visible{outline:2px solid #28b8c7;outline-offset:2px}
 @media(max-width:600px){.goal-wizard .goal-stepper--compact{gap:5px}.goal-wizard .goal-stepper--compact button{padding:7px 5px;justify-content:center;flex-direction:column;gap:4px;font-size:10px}.goal-wizard .goal-wizard-actions{flex-wrap:wrap}.goal-wizard-step-count{width:100%}}
+
+/* Goal cards: primary progress first, execution details on demand */
+.goal-card-execution-summary{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 0;border-top:1px solid rgba(125,160,190,.17);font-size:12px}
+.goal-card-execution-summary>span:first-child{color:var(--arc-text-muted,#93a6b9);margin-right:auto}
+.goal-card-execution-summary .goal-intelligence-status{font-size:11px}
+.goal-card-execution-summary button{display:inline-flex;align-items:center;gap:5px;border:0;background:transparent;color:inherit;cursor:pointer;font:inherit;font-size:12px;opacity:.8;padding:5px}
+.goal-card-execution-summary button:hover{opacity:1}
+.goal-card-execution-summary button[aria-expanded=true] svg{transform:rotate(90deg)}
+.goal-card-expanded{padding-top:4px}
+.goal-card-expanded .goal-intelligence{margin-top:0}
