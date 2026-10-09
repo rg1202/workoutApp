@@ -1074,3 +1074,12 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .arc-goals-page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;min-width:0}
 .arc-goals-page-header>div:first-child{min-width:0;flex:1 1 280px}
 @media(max-width:640px){.goal-grid{grid-template-columns:minmax(0,1fr)!important}.goal-header-actions{width:100%;justify-content:flex-start}.goal-card .goal-actions .arc-ui-button{flex:1}}
+
+/* Separate weekly execution from outcome progress */
+.goal-card .goal-card-execution-summary{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.goal-card-weekly{display:flex;flex-direction:column;gap:4px;flex:1 1 150px;min-width:0}
+.goal-card-weekly .eyebrow{font-size:9px;letter-spacing:.09em;opacity:.72}
+.goal-card-weekly strong{font-size:13px;line-height:1.35;font-weight:650}
+.goal-card-weekly small{font-size:11px;line-height:1.4;color:var(--arc-text-muted,#93a6b9)}
+.goal-card-execution-summary>.goal-intelligence-status{margin-left:auto}
+.goal-card-execution-summary>button{flex-shrink:0}
