@@ -1106,3 +1106,24 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .cal-event.cal-goal-linked{border-left:3px solid var(--arc-mint,#5ce5bf)}
 .cal-event .cal-goal-source{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--arc-mint,#5ce5bf);font-size:10px;font-weight:650;letter-spacing:.01em}
 .cal-event.cal-goal-linked .cal-plan-main{min-width:0}
+
+/* Today weather — canonical Arc surface and compact hourly strip */
+.arc-today-top .arc-today-weather{background:var(--arc-surface-1,#111b22);border:1px solid var(--arc-border,#263540);border-radius:14px;box-shadow:none;padding:17px 19px;overflow:hidden}
+.arc-today-top .arc-weather-heading{align-items:center;gap:12px}
+.arc-today-top .arc-weather-heading h2{font-size:15px;font-weight:700;letter-spacing:-.02em;margin:3px 0}
+.arc-today-top .arc-weather-heading p{font-size:11px;line-height:1.4;color:var(--arc-muted,#8d9ba6)}
+.arc-today-top .arc-weather-actions{gap:6px;flex-shrink:0}
+.arc-today-top .arc-weather-actions button,.arc-today-top .arc-weather-location button{min-height:32px;padding:6px 10px;border:1px solid var(--arc-border,#263540);border-radius:8px;background:transparent;font-size:11px;font-weight:600;transition:background .15s,border-color .15s}
+.arc-today-top .arc-weather-actions button:hover,.arc-today-top .arc-weather-location button:hover{background:rgba(125,160,190,.09);border-color:rgba(125,160,190,.45)}
+.arc-today-top .arc-weather-current{gap:13px;margin:12px 0 14px}
+.arc-today-top .arc-weather-current>strong{font-size:34px;line-height:1;font-weight:700;letter-spacing:-.055em;font-variant-numeric:tabular-nums}
+.arc-today-top .arc-weather-current>span{gap:4px}
+.arc-today-top .arc-weather-current small{font-size:11px;color:var(--arc-muted,#8d9ba6)}
+.arc-today-top .arc-weather-location{gap:8px;margin:11px 0}
+.arc-today-top .arc-weather-location input{min-width:120px;min-height:34px;border-radius:8px;font-size:12px;background:rgba(125,160,190,.045)}
+.arc-today-top .arc-weather-hours{gap:7px;padding:12px 0 4px;border-top:1px solid var(--arc-border,#263540);scrollbar-width:thin;scrollbar-color:rgba(125,160,190,.3) transparent}
+.arc-today-top .arc-weather-hours article{flex:0 0 78px;min-width:0;gap:6px;padding:9px 8px;background:rgba(125,160,190,.045);border:1px solid rgba(125,160,190,.13);border-radius:9px;text-align:center}
+.arc-today-top .arc-weather-hours article>b{font-size:11px;font-weight:650}
+.arc-today-top .arc-weather-hours article>span{font-size:17px;line-height:1.2;font-weight:650;font-variant-numeric:tabular-nums}
+.arc-today-top .arc-weather-hours article small{font-size:10px}
+@media(max-width:600px){.arc-today-top .arc-today-weather{padding:14px}.arc-today-top .arc-weather-heading{align-items:flex-start}.arc-today-top .arc-weather-current>strong{font-size:30px}}
