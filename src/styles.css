@@ -972,3 +972,17 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .goal-measure-summary strong{font-size:22px}
 .goal-measure-summary small{opacity:.7}
 @media(max-width:600px){.goal-measure-fields{grid-template-columns:1fr}.goal-measure-choice{grid-template-columns:1fr}}
+
+/* Arc V2 Support step */
+.goal-support-body{max-width:960px;margin-inline:auto;width:100%}
+.goal-support-presets{margin:22px 0 28px}
+.goal-support-preset-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+.goal-support-preset{display:flex;align-items:center;gap:12px;text-align:left;padding:14px;border:1px solid rgba(125,160,190,.25);border-radius:12px;background:rgba(125,160,190,.06);color:inherit;cursor:pointer;font:inherit}
+.goal-support-preset:hover,.goal-support-preset:focus-visible{border-color:#28b8c7;background:rgba(40,184,199,.1)}
+.goal-support-preset span{display:flex;flex-direction:column;gap:4px}
+.goal-support-preset small{opacity:.7;font-size:12px}
+.goal-support-cards article{display:grid;grid-template-columns:minmax(150px,2fr) minmax(110px,1.2fr) minmax(85px,.7fr) minmax(85px,.7fr) auto;align-items:end;gap:10px}
+.goal-support-cards article label{min-width:0}
+.goal-support-cards article label input,.goal-support-cards article label select{width:100%;min-width:0}
+.goal-support-head h3 small{font-weight:400;opacity:.65}
+@media(max-width:760px){.goal-support-preset-grid{grid-template-columns:1fr}.goal-support-cards article{grid-template-columns:repeat(2,minmax(0,1fr))}.goal-support-cards article label:first-child{grid-column:1/-1}}
