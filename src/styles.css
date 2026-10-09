@@ -1034,3 +1034,16 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .goal-review-compact-notes summary{cursor:pointer;font-size:13px;color:var(--arc-text-muted,#93a6b9)}
 .goal-review-compact-notes textarea{margin-top:12px;width:100%}
 @media(max-width:600px){.goal-review-compact-card{padding:0 14px}.goal-review-compact-heading h2{font-size:19px}}
+
+/* Unified goal wizard rhythm */
+.goal-wizard{--goal-wizard-gap:18px}
+.goal-wizard .goal-stepper--compact{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:14px 0 18px}
+.goal-wizard .goal-stepper--compact button{min-width:0;min-height:40px;padding:8px 12px;border-radius:10px;display:flex;align-items:center;justify-content:flex-start;gap:8px}
+.goal-wizard .goal-stepper--compact button i{flex-shrink:0}
+.goal-wizard .goal-stepper--compact button span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.goal-wizard .goal-wizard-body{margin-inline:auto;width:100%}
+.goal-wizard .goal-wizard-actions{display:flex;align-items:center;gap:10px}
+.goal-wizard-step-count{font-size:12px;color:var(--arc-text-muted,#93a6b9);margin-right:auto}
+.goal-wizard .goal-wizard-actions .arc-ui-button{min-height:40px}
+.goal-wizard input:focus-visible,.goal-wizard select:focus-visible,.goal-wizard textarea:focus-visible,.goal-wizard button:focus-visible{outline:2px solid #28b8c7;outline-offset:2px}
+@media(max-width:600px){.goal-wizard .goal-stepper--compact{gap:5px}.goal-wizard .goal-stepper--compact button{padding:7px 5px;justify-content:center;flex-direction:column;gap:4px;font-size:10px}.goal-wizard .goal-wizard-actions{flex-wrap:wrap}.goal-wizard-step-count{width:100%}}
