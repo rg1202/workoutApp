@@ -956,3 +956,19 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
  .unified-shell main .arc-focus-catalog-buttons{max-height:none;display:flex;flex-direction:column;overflow:visible}
  .unified-shell main .arc-focus-catalog-layout{gap:14px}
 }
+
+/* Arc V2 compact goal measurement */
+.goal-measure-body{max-width:760px;margin-inline:auto;width:100%}
+.goal-measure-choice{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px 0 24px}
+.goal-measure-choice button{min-height:46px;border:1px solid var(--arc-border, #30445b);border-radius:12px;background:transparent;color:inherit;font:inherit;cursor:pointer}
+.goal-measure-choice button.selected{border-color:#28b8c7;background:rgba(40,184,199,.12)}
+.goal-measure-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:14px 0}
+.goal-measure-fields label{min-width:0}
+.goal-measure-fields small{opacity:.65;font-weight:400}
+.goal-measure-body input[type=number]{appearance:textfield;-moz-appearance:textfield}
+.goal-measure-body input[type=number]::-webkit-inner-spin-button,.goal-measure-body input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.goal-measure-summary{display:flex;flex-direction:column;gap:4px;padding:16px 18px;margin-top:18px;border-radius:12px;background:rgba(125,160,190,.08);border:1px solid rgba(125,160,190,.15)}
+.goal-measure-summary span{font-size:11px;letter-spacing:.12em;opacity:.7}
+.goal-measure-summary strong{font-size:22px}
+.goal-measure-summary small{opacity:.7}
+@media(max-width:600px){.goal-measure-fields{grid-template-columns:1fr}.goal-measure-choice{grid-template-columns:1fr}}
