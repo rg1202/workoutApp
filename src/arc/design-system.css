@@ -415,3 +415,43 @@
 .unified-shell main .cal-event.cal-planned:has(.cal-goal-list) .cal-plan-main{
  min-width:0;flex:1 1 auto;overflow:visible;
 }
+
+/* M2 Calendar: compact, content-sized activity planning form. */
+.unified-shell main .plan-form{
+ display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+ align-items:start;align-content:start;grid-auto-rows:max-content;
+ gap:12px;padding:16px;margin-bottom:16px;
+ background:var(--arc-surface);border-color:var(--arc-border);
+}
+.unified-shell main .plan-form>label{min-width:0;align-self:start}
+.unified-shell main .plan-form>.arc-goal-link-field{
+ grid-column:1/-1;min-width:0;margin:0;padding:12px 14px;
+ border:1px solid var(--arc-border);border-radius:var(--arc-action-radius);
+ background:var(--arc-surface-2);
+ display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;
+}
+.unified-shell main .plan-form>.arc-goal-link-field legend{
+ padding:0 5px;color:var(--arc-text);font-weight:700;
+}
+.unified-shell main .plan-form>.arc-goal-link-field>.arc-activity-hint{
+ flex-basis:100%;margin:0;color:var(--arc-muted);font-size:12px;
+}
+.unified-shell main .plan-form>.arc-goal-link-field>.arc-goal-link-option{
+ display:inline-flex;align-items:center;gap:7px;width:auto;min-width:0;
+ margin:0;padding:4px 0;font-size:12px;line-height:1.4;
+ text-transform:none;letter-spacing:normal;color:var(--arc-action-text);
+}
+.unified-shell main .plan-form>.arc-goal-link-field>.arc-goal-link-option input{
+ width:16px;height:16px;min-height:16px;margin:0;flex:none;accent-color:var(--arc-cyan);
+}
+.unified-shell main .plan-form>.arc-goal-link-field>.arc-goal-link-option span{
+ white-space:normal;overflow-wrap:anywhere;
+}
+.unified-shell main .plan-form>button.arc-ui-button{grid-column:1/-1;justify-self:start;min-width:170px}
+@media(max-width:900px){
+ .unified-shell main .plan-form{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:520px){
+ .unified-shell main .plan-form{grid-template-columns:minmax(0,1fr)}
+ .unified-shell main .plan-form>button.arc-ui-button{justify-self:stretch}
+}
