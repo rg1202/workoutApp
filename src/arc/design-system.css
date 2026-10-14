@@ -518,3 +518,18 @@
 .unified-shell main .cal-event.cal-planned>.cal-remove{
  position:relative;inset:auto;transform:none;align-self:flex-end;
 }
+
+/* M2 Calendar acceptance: keyboard users can distinguish Edit, completion and Remove. */
+.unified-shell main .cal-event.cal-planned>.cal-plan-main:focus-visible,
+.unified-shell main .cal-event.cal-planned>.cal-delete:focus-visible{
+ outline:3px solid var(--arc-focus-outline);outline-offset:2px;
+ border-radius:var(--arc-action-radius);
+}
+.unified-shell main .cal-event.cal-planned>.cal-plan-main:hover{
+ background:var(--arc-control-hover);
+ border-radius:6px;
+}
+.unified-shell main .cal-event.cal-planned>.cal-completion-toggle:has(input:focus-visible){
+ border-radius:6px;
+ background:var(--arc-control-hover);
+}
