@@ -1,6 +1,6 @@
 # Arc V2 — Stabilization Baseline & Mobile Quality Gate
 Date: 2026-10-14
-Status: **Audit started; cleanup and mobile acceptance pending**
+Status: **Local baseline verified by owner; cleanup and mobile acceptance pending**
 Working branch: `chore/v2-stabilization` (forked from `product/v2`)
 Scope: **No new V3/V4 features; protect existing user data and V2 behavior.**
 
@@ -70,3 +70,22 @@ If `git status --short` shows uncommitted changes, **do not switch branches unti
 ## Next execution step
 
 Inspect the single `main`-only commit and the stylesheet import/cascade order. Then introduce mobile viewport smoke tests on this branch, using the owner's real-device observations to prioritize UI fixes. Do not declare RC1 until P0/P1 mobile and release gates are cleared.
+
+## Owner baseline evidence — October 14, 2026
+
+Owner ran the baseline commands on Windows PowerShell from `workoutapp`:
+
+- `git status --short`: empty (clean working tree at initial check).
+- `git fetch origin`: retrieved `product/v2` weather update and the stabilization branch.
+- `git switch chore/v2-stabilization` and `git pull --ff-only origin chore/v2-stabilization`: succeeded; branch up to date.
+- `npm ci`: succeeded, 28 packages added, 29 audited, **0 vulnerabilities** reported.
+- `npm run build`: **passed** (TypeScript + Vite 8.3.3, 1,958 modules transformed). Build produced a CSS asset of 226.13 KB (38.91 KB gzip) and JS asset of 865.41 KB (237.84 KB gzip). Vite warned about >500 KB chunks and Lucide React module-level `use client` directives. Neither warning blocked the build.
+- `npx playwright test`: **104/104 passed**, 18.4 seconds, Chromium.
+
+**Verified:** STAB-01 initial local install/build/regression checkpoint. **Still pending:** `npm run check:release`, mobile device acceptance, deployed SHA and staging verification, independent privacy/security gates. No claim of production approval.
+
+### Immediate next work
+
+1. Add mobile-specific Playwright coverage at narrow viewports, including navigation, overflow, form controls, and the core loop.
+2. Inventory CSS overrides and determine safe consolidation boundaries; avoid sweeping restyling before screenshots.
+3. Verify the main-only commit and hosting branch/commit configuration before any branch reconciliation.
