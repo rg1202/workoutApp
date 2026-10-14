@@ -465,3 +465,17 @@
 @media(max-width:520px){
  .unified-shell main .plan-form>button.arc-ui-button{justify-self:stretch}
 }
+
+/* Calendar preference: week start aligns with canonical compact controls. */
+.unified-shell main .cal-week-start{
+ display:inline-flex;align-items:center;gap:8px;
+ color:var(--arc-muted);font-size:12px;font-weight:600;white-space:nowrap;
+}
+.unified-shell main .cal-week-start select{
+ min-height:36px;padding:6px 28px 6px 10px;
+ border:1px solid var(--arc-action-border);border-radius:var(--arc-action-radius);
+ background:var(--arc-control);color:var(--arc-action-text);font:inherit;cursor:pointer;
+}
+.unified-shell main .cal-week-start select:focus-visible{
+ outline:3px solid var(--arc-focus-outline);outline-offset:2px;
+}
