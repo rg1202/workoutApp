@@ -10,6 +10,10 @@ const calendarDay=async(page:Page,offset=0)=>{
  const direction=offset<0?'Previous calendar period':'Next calendar period';
  for(let i=0;i<Math.abs(offset);i++)await page.getByRole('button',{name:direction}).click();
 };
+const completeCalendarActivity=async(page:Page,title:string)=>{
+ const card=page.locator('.cal-event.cal-planned').filter({has:page.locator('.cal-plan-main').getByText(title,{exact:false})}).filter({visible:true}).first();
+ await card.locator('.cal-completion-toggle input').uncheck({force:true});
+};
 const calendarActivity= (page:Page,title:string)=>page.locator('.cal-day .cal-event.cal-planned').filter({has:page.locator('.cal-plan-main').getByText(title,{exact:false})}).first();
 
 
@@ -301,8 +305,8 @@ test('smart generator adds recurring BJJ block to Calendar',async({page})=>{
  expect(new Set(plans.map((p:any)=>new Date(p.date+'T12:00:00').getDay()))).toEqual(new Set([2,4]));
  expect(plans.every((p:any)=>p.type==='BJJ'&&p.title==='Gi BJJ'&&p.durationMinutes===90)).toBeTruthy();
  await nav(page,'Calendar').click();
- await calendarDay(page);
- await expect(calendarActivity(page,'Gi BJJ')).toBeVisible();
+ await page.locator('.cal-switch').getByRole('button',{name:'Month',exact:true}).click();
+ await expect(page.locator('.cal-month .cal-plan-main').filter({hasText:'Gi BJJ'}).first()).toBeVisible();
 });
 
 
@@ -754,7 +758,7 @@ test('BJJ goal lifecycle connects Calendar Today completion and reload',async({p
  await nav(page,'Today').click();
  await expect(page.locator('.today-goal-intelligence').getByText('BJJ Lifecycle Practice')).toBeVisible();
  await nav(page,'Calendar').click();
- await page.getByText('○ BJJ Lifecycle Practice').first().click();
+ await completeCalendarActivity(page,'BJJ Lifecycle Practice');
  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.title==='BJJ Lifecycle Practice')?.status)).toBe('Completed');
  await page.reload();
  await nav(page,'Calendar').click();
@@ -772,7 +776,7 @@ test('BJJ lifecycle preserves goal progress when a completed session is reloaded
  await page.reload();
  await nav(page,'Calendar').click();
  await expect(page.getByText('○ Gi class').first()).toBeVisible();
- await page.getByText('○ Gi class').first().click();
+ await completeCalendarActivity(page,'Gi class');
  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.id==='bjj-progress-session')?.status)).toBe('Completed');
  await page.reload();
  await nav(page,'Calendar').click();
@@ -797,7 +801,7 @@ test('Running goal connects Calendar Today completion and persists metrics',asyn
  await nav(page,'Today').click();
  await expect(page.locator('.today-goal-intelligence').getByText('Easy Run Lifecycle')).toBeVisible();
  await nav(page,'Calendar').click();
- await page.getByText('○ Easy Run Lifecycle').first().click();
+ await completeCalendarActivity(page,'Easy Run Lifecycle');
  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.title==='Easy Run Lifecycle')?.status)).toBe('Completed');
  await page.reload();
  await nav(page,'Calendar').click();
@@ -824,7 +828,7 @@ test('Cycling goal connects Calendar Today completion and reload',async({page})=
  await nav(page,'Today').click();
  await expect(page.locator('.today-goal-intelligence').getByText('Cycling Lifecycle Ride')).toBeVisible();
  await nav(page,'Calendar').click();
- await page.getByText('○ Cycling Lifecycle Ride').first().click();
+ await completeCalendarActivity(page,'Cycling Lifecycle Ride');
  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').find((p:any)=>p.title==='Cycling Lifecycle Ride')?.status)).toBe('Completed');
  await page.reload();
  await nav(page,'Calendar').click();
@@ -852,7 +856,7 @@ test('editing and skipping a goal-linked activity preserves identity and actuals
   const a=JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]');
   return a.length===1&&a[0].id==='integrity-session'&&a[0].title==='Tempo Run'&&a[0].status==='Completed'&&a[0].actuals?.distanceKm===6.2&&a[0].actuals?.actualDurationMinutes===36&&a[0].goalIds?.includes('integrity-goal');
  })).toBe(true);
- await page.getByRole('button',{name:'Edit Tempo Run'}).first().click();
+ await page.locator('.cal-event.cal-planned .cal-plan-main').filter({hasText:'Tempo Run'}).first().click();
  await page.getByRole('dialog',{name:'Edit activity'}).getByLabel('Status').selectOption('Skipped');
  await page.getByRole('dialog',{name:'Edit activity'}).getByRole('button',{name:'Save activity'}).click();
  await expect.poll(()=>page.evaluate(()=>{
@@ -964,7 +968,7 @@ test('Progress lifecycle reflects completion and skipping after reload without i
  await expect(page.locator('.progress-snapshot')).toContainText('1 of 2 planned sessions completed');
  await expect(page.locator('.progress-recent')).toContainText('Lifecycle Run');
  await nav(page,'Calendar').click();
- await page.getByRole('button',{name:'Edit Lifecycle Ride'}).first().click();
+ await page.locator('.cal-event.cal-planned .cal-plan-main').filter({hasText:'Lifecycle Ride'}).first().click();
  await page.getByRole('dialog',{name:'Edit activity'}).getByLabel('Status').selectOption('Skipped');
  await page.getByRole('dialog',{name:'Edit activity'}).getByRole('button',{name:'Save activity'}).click();
  await nav(page,'Progress').click();
