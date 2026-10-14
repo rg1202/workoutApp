@@ -366,3 +366,35 @@
  .unified-shell main .goal-stepper button{padding:8px;gap:6px;font-size:.76rem}
  .unified-shell main .goal-stepper button i{width:22px;height:22px;flex-basis:22px}
 }
+
+/* M2 Calendar: editing and completion are separate, accessible actions. */
+.unified-shell main .cal-completion-toggle{
+ display:inline-flex;align-items:center;justify-content:center;gap:6px;
+ padding:5px 7px;cursor:pointer;white-space:nowrap;color:var(--arc-action-text);
+ font-size:11px;font-weight:700;
+}
+.unified-shell main .cal-completion-toggle input{
+ position:absolute;width:1px;height:1px;opacity:0;
+}
+.unified-shell main .cal-completion-track{
+ position:relative;display:inline-block;flex:none;width:31px;height:18px;
+ border:1px solid var(--arc-action-border);border-radius:999px;background:var(--arc-control);
+ transition:background .15s ease,border-color .15s ease;
+}
+.unified-shell main .cal-completion-track::after{
+ content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;
+ border-radius:50%;background:var(--arc-muted);transition:transform .15s ease,background .15s ease;
+}
+.unified-shell main .cal-completion-toggle input:checked+.cal-completion-track{
+ background:var(--arc-action-primary-bg);border-color:var(--arc-action-primary-border);
+}
+.unified-shell main .cal-completion-toggle input:checked+.cal-completion-track::after{
+ transform:translateX(13px);background:var(--arc-mint);
+}
+.unified-shell main .cal-completion-toggle input:focus-visible+.cal-completion-track{
+ outline:3px solid var(--arc-focus-outline);outline-offset:3px;
+}
+@media(prefers-reduced-motion:reduce){
+ .unified-shell main .cal-completion-track,
+ .unified-shell main .cal-completion-track::after{transition:none}
+}
