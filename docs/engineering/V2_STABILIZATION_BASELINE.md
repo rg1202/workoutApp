@@ -89,3 +89,13 @@ Owner ran the baseline commands on Windows PowerShell from `workoutapp`:
 1. Add mobile-specific Playwright coverage at narrow viewports, including navigation, overflow, form controls, and the core loop.
 2. Inventory CSS overrides and determine safe consolidation boundaries; avoid sweeping restyling before screenshots.
 3. Verify the main-only commit and hosting branch/commit configuration before any branch reconciliation.
+
+## Owner release-check evidence — October 14, 2026
+
+Owner subsequently ran `npm run check:release` and reported:
+
+- Main Playwright suite: **104/104 passed** (22.7s).
+- Production Playwright suite: **2/2 passed** (1.8s).
+- Production smoke assertions: built Arc loads, development-only Strava connection is blocked, and reload preserves local browser storage.
+
+**Release-check result: PASS (owner-reported).** This closes the initial build/test verification checkpoint, **not** mobile acceptance, Cloudflare deployment verification, backup recovery across browser profiles, or privacy/security approval. Record the deployed commit SHA and real-device results before RC1.
