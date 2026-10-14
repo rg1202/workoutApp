@@ -841,7 +841,7 @@ test('editing and skipping a goal-linked activity preserves identity and actuals
  },today);
  await page.reload();
  await nav(page,'Calendar').click();
- await page.getByRole('button',{name:'Edit Easy Run'}).first().click();
+ await page.locator('.cal-event.cal-planned .cal-plan-main').filter({hasText:'Easy Run'}).first().click();
  const dialog=page.getByRole('dialog',{name:'Edit activity'});
  await dialog.getByLabel('Title').fill('Tempo Run');
  await dialog.getByLabel('Actual minutes').fill('36');
@@ -955,7 +955,7 @@ test('Progress lifecycle reflects completion and skipping after reload without i
  await nav(page,'Progress').click();
  await expect(page.locator('.progress-snapshot')).toContainText('0 of 2 planned sessions completed');
  await nav(page,'Calendar').click();
- await page.getByRole('button',{name:'Edit Lifecycle Run'}).first().click();
+ await page.locator('.cal-event.cal-planned .cal-plan-main').filter({hasText:'Lifecycle Run'}).first().click();
  const dialog=page.getByRole('dialog',{name:'Edit activity'});
  await dialog.getByLabel('Status').selectOption('Completed');
  await dialog.getByLabel('Actual minutes').fill('34');
@@ -994,7 +994,7 @@ test('goal-linked activity reconciles across Goals Calendar Today and Progress a
  await nav(page,'Progress').click();
  await expect(page.locator('.progress-snapshot')).toContainText('0 of 1 planned sessions completed');
  await nav(page,'Calendar').click();
- await page.getByRole('button',{name:'Edit Cross View Easy Run'}).first().click();
+ await page.locator('.cal-event.cal-planned .cal-plan-main').filter({hasText:'Cross View Easy Run'}).first().click();
  const dialog=page.getByRole('dialog',{name:'Edit activity'});
  await dialog.getByLabel('Title').fill('Cross View Tempo Run');
  await dialog.getByLabel('Status').selectOption('Completed');
