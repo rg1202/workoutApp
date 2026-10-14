@@ -99,3 +99,18 @@ Owner subsequently ran `npm run check:release` and reported:
 - Production smoke assertions: built Arc loads, development-only Strava connection is blocked, and reload preserves local browser storage.
 
 **Release-check result: PASS (owner-reported).** This closes the initial build/test verification checkpoint, **not** mobile acceptance, Cloudflare deployment verification, backup recovery across browser profiles, or privacy/security approval. Record the deployed commit SHA and real-device results before RC1.
+
+## Product-management sequencing correction — October 14, 2026
+
+**Decision:** Do not lead with mobile-specific remediation. First finish the V2 product's canonical design and frictionless core experience. Maintain responsive design as a constraint throughout, but schedule dedicated real-device mobile acceptance after desktop/tablet product coherence and feature integrity.
+
+Milestone order:
+
+1. **M1 Engineering baseline — owner-verified PASS:** clean install/build, 104 regression tests, 2 production tests. Release security/privacy gates remain separate.
+2. **M2 Canonical design system — NEXT:** reconcile token sources, buttons, typography, cards, controls, dialogs, navigation and scroll patterns; reduce cascade duplication; define shared component contracts; visual acceptance screen by screen.
+3. **M3 Frictionless UX:** first-run, Goals → Calendar → Today → Activity → Progress; remove redundant UI, reduce clicks, clarify labels and feedback, support recovery/empty/error states.
+4. **M4 Feature integrity:** BJJ, Running, Cycling; goal associations; activity identity; persistence, recovery and analytics consistency.
+5. **M5 Mobile/responsive acceptance:** device and viewport tests, touch ergonomics, keyboard behavior, scroll/overflow, navigation; fix P0/P1.
+6. **M6 Release candidate and controlled pilot:** security/privacy, deployment SHA, access protection, rollback, real-world acceptance.
+
+**Execution rule:** Avoid broad visual rewrites. Audit current canonical design documentation and actual CSS/controls first, then create small reversible implementation batches with visual and regression verification. Do not confuse a green test suite with a complete product.
