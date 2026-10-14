@@ -455,3 +455,13 @@
  .unified-shell main .plan-form{grid-template-columns:minmax(0,1fr)}
  .unified-shell main .plan-form>button.arc-ui-button{justify-self:stretch}
 }
+
+/* M2 Calendar: compact inline form actions without full-width button rows. */
+.unified-shell main .plan-form>button.arc-ui-button{
+ grid-column:auto;justify-self:start;align-self:center;min-width:0;
+}
+.unified-shell main .plan-form>button.arc-ui-button--primary{min-width:170px}
+.unified-shell main .plan-form>button.cal-plan-cancel{margin-left:0}
+@media(max-width:520px){
+ .unified-shell main .plan-form>button.arc-ui-button{justify-self:stretch}
+}
