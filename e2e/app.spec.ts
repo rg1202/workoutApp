@@ -3,6 +3,16 @@ import{test,expect,Page}from'@playwright/test';
 const nav=(page:Page,name:string)=>
  page.locator('aside').getByRole('button',{name,exact:true}).first();
 
+// Calendar opens in Week view. Navigate explicitly before asserting an activity.
+const calendarDay=async(page:Page,offset=0)=>{
+ await page.locator('.cal-switch').getByRole('button',{name:'Day',exact:true}).click();
+ await page.locator('.cal-nav').getByRole('button',{name:'Today',exact:true}).click();
+ const direction=offset<0?'Previous calendar period':'Next calendar period';
+ for(let i=0;i<Math.abs(offset);i++)await page.getByRole('button',{name:direction}).click();
+};
+const calendarActivity= (page:Page,title:string)=>page.locator('.cal-day .cal-event.cal-planned').filter({has:page.locator('.cal-plan-main').getByText(title,{exact:false})}).first();
+
+
 test.beforeEach(async({page})=>{
  await page.goto('/');
  await page.evaluate(()=>localStorage.clear());
@@ -42,7 +52,8 @@ test('planned activity survives navigation and appears on dashboard',async({page
  await page.getByRole('button',{name:/Plan activity/i}).click();
  await page.getByPlaceholder(/Gi BJJ/i).fill('E2E Training');
  await page.getByRole('button',{name:/Add to calendar/i}).click();
- await expect(page.getByText('E2E Training')).toBeVisible();
+ await calendarDay(page);
+ await expect(calendarActivity(page,'E2E Training')).toBeVisible();
  await nav(page,'Today').click();
  await expect(page.locator('.today-activity-list').getByText('E2E Training',{exact:true})).toBeVisible();
 });
@@ -66,7 +77,8 @@ test('active program schedules into Calendar and Today',async({page})=>{
  },{date,weekday});
  await page.reload();
  await nav(page,'Calendar').click();
- await expect(page.getByText('E2E Lower').first()).toBeVisible();
+ await calendarDay(page);
+ await expect(calendarActivity(page,'E2E Lower')).toBeVisible();
  await nav(page,'Today').click();
  await page.getByRole('button',{name:/Start workout/i}).click();
  await expect(page.locator('main h1').first()).toHaveText('E2E Lower');
@@ -90,7 +102,8 @@ test('finishing Today workout syncs History Calendar and Analytics',async({page}
  await nav(page,'History').click();
  await expect(page.getByText('E2E Flow Workout')).toBeVisible();
  await nav(page,'Calendar').click();
- await expect(page.getByText('E2E Flow Workout').first()).toBeVisible();
+ await calendarDay(page);
+ await expect(calendarActivity(page,'E2E Flow Workout')).toBeVisible();
  await expect(page.getByText(/✓ E2E Flow Workout/)).toBeVisible();
  await nav(page,'Progress').click();
  await page.getByRole('button',{name:/Detailed analytics/i}).click();
@@ -288,7 +301,8 @@ test('smart generator adds recurring BJJ block to Calendar',async({page})=>{
  expect(new Set(plans.map((p:any)=>new Date(p.date+'T12:00:00').getDay()))).toEqual(new Set([2,4]));
  expect(plans.every((p:any)=>p.type==='BJJ'&&p.title==='Gi BJJ'&&p.durationMinutes===90)).toBeTruthy();
  await nav(page,'Calendar').click();
- await expect(page.getByText('Gi BJJ').first()).toBeVisible();
+ await calendarDay(page);
+ await expect(calendarActivity(page,'Gi BJJ')).toBeVisible();
 });
 
 
