@@ -31,3 +31,17 @@ test('Mobile prescription input fits viewport',async({page})=>{
  await input.fill('12');
  await expect(input).toHaveValue('12');
 });
+
+for(const width of [390,768]){
+ test('Core pages do not overflow horizontally at '+width+'px',async({page})=>{
+  await page.setViewportSize({width,height:844});
+  await page.goto('/');
+  await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
+  await page.getByRole('button',{name:'Continue to Arc'}).click();
+  for(const name of ['Today','Goals','Calendar','Progress']){
+   await page.getByRole('button',{name,exact:true}).first().click();
+   const overflow=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,document:document.documentElement.scrollWidth}));
+   expect(overflow.document, name+' overflow at '+width+'px').toBeLessThanOrEqual(overflow.viewport+2);
+  }
+ });
+}
