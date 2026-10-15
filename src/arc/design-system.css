@@ -947,3 +947,12 @@
 .unified-shell .arc-session-actuals{display:flex;flex-wrap:wrap;gap:10px}
 .unified-shell .arc-session-actuals label{display:grid;gap:4px;font-size:.8rem}
 .unified-shell .arc-session-actuals input{width:76px;max-width:100%;padding:7px;border-radius:7px}
+
+/* Completed prescription history in Progress */
+.arc-progress-executed{min-width:0}
+.arc-recorded-session{padding:12px 0;border-top:1px solid var(--arc-border);display:grid;gap:9px}
+.arc-recorded-session>div{display:grid;gap:4px}
+.arc-recorded-session small{opacity:.75}
+.arc-recorded-session summary{cursor:pointer;font-weight:600}
+.arc-recorded-session ol{padding-left:22px;display:grid;gap:8px}
+.arc-recorded-session li span{display:block;font-size:.86rem;opacity:.8}
