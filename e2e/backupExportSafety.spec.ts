@@ -36,3 +36,15 @@ test('Arc backup refuses to report success when stored data changes during expor
  });
  expect(result).toMatch(/changed during backup/);
 });
+
+test('Arc backup fails safely when an enumerated storage record becomes unreadable',async({page})=>{
+ await page.goto('/');
+ await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
+ await page.getByRole('button',{name:'Continue to Arc'}).click();
+ const message=await page.evaluate(async()=>{
+  const {createArcBackup}=await import('/src/arc/dataBackup.ts');
+  const storage={length:1,key:()=> 'arc.missing.v1',getItem:()=>null} as unknown as Storage;
+  try{createArcBackup(storage);return 'unexpected-success'}catch(error){return (error as Error).message}
+ });
+ expect(message).toMatch(/became unavailable during backup/);
+});
