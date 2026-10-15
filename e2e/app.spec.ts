@@ -45,7 +45,7 @@ test('created goal remains in Goals while Today stays day-focused',async({page})
  await page.getByRole('button',{name:/Continue/i}).click();
  await page.getByRole('button',{name:/Create goal/i}).click();
  if(await page.getByRole('button',{name:/Not now/i}).count())await page.getByRole('button',{name:/Not now/i}).click();
- await expect(page.getByText('E2E Tournament')).toBeVisible();
+ await expect(page.getByRole('heading',{name:'E2E Tournament',exact:true})).toBeVisible();
  await nav(page,'Today').click();
  await expect(page.getByRole('heading',{name:'Today',exact:true})).toBeVisible();
  await expect(page.locator('.today-goal-intelligence').getByText('E2E Tournament')).toBeVisible();
@@ -1168,7 +1168,7 @@ test('Arc restores a validated backup after confirmation',async({page})=>{
  await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
  await page.getByRole('button',{name:'Continue to Arc'}).click();
  await nav(page,'Goals').click();
- await expect(page.getByText('Restore test goal')).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Restore test goal',exact:true})).toBeVisible();
 });
 test('Arc rejects unsupported backups without overwriting browser data',async({page})=>{
  await page.evaluate(()=>localStorage.setItem('workoutapp.goals.v2','[]'));
