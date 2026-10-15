@@ -533,3 +533,33 @@
  border-radius:6px;
  background:var(--arc-control-hover);
 }
+
+/* M2 Today: keep compact weather utilities distinct from primary actions. */
+.unified-shell .arc-ui-today .arc-weather-actions,
+.unified-shell .arc-ui-today .arc-weather-location{
+ min-width:0;flex-wrap:wrap;
+}
+.unified-shell .arc-ui-today .arc-weather-actions button,
+.unified-shell .arc-ui-today .arc-weather-location button{
+ min-height:36px;padding:7px 11px;
+ font-size:.75rem;font-weight:650;line-height:1.2;
+}
+.unified-shell .arc-ui-today .arc-today-weather{
+ min-width:0;box-shadow:none;
+}
+.unified-shell main .today-v2 .today-next,
+.unified-shell main .today-v2 .today-goal-intelligence{
+ min-width:0;
+}
+@media(max-width:600px){
+ .unified-shell .arc-ui-today .arc-weather-actions,
+ .unified-shell .arc-ui-today .arc-weather-location{max-width:100%}
+ .unified-shell main .today-v2 .today-next-actions,
+ .unified-shell main .today-v2 .today-open-actions{
+  display:flex;flex-wrap:wrap;gap:8px;
+ }
+ .unified-shell main .today-v2 .today-next-actions>.arc-ui-button,
+ .unified-shell main .today-v2 .today-open-actions>.arc-ui-button{
+  max-width:100%;white-space:normal;text-align:center;
+ }
+}
