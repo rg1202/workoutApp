@@ -46,5 +46,5 @@ test('Completed prescribed session survives reload and appears in Progress histo
  const history=page.locator('.arc-recorded-session').filter({hasText:'BJJ Mobility'});
  await expect(history).toHaveCount(1);
  await history.getByText('View recorded movements').click();
- await expect(history.getByText('12 reps')).toBeVisible();
+ await expect(history.getByText('12 reps').first()).toBeVisible();
 });
