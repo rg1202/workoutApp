@@ -839,3 +839,7 @@
  display:block;margin-top:5px;color:var(--arc-muted);
  font-size:.75rem;line-height:1.4;white-space:normal;
 }
+
+/* M3: return navigation for Detailed Analytics. */
+.unified-shell main .arc-analytics-return{display:flex;align-items:center;margin-bottom:14px}
+.unified-shell main .arc-analytics-return .arc-ui-button{display:inline-flex;align-items:center;gap:6px}
