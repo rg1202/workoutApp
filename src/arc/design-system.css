@@ -743,3 +743,14 @@
 .unified-shell main .progress-v2 .progress-goals>article>.progress-track{
  flex:1 0 100%;min-width:0;
 }
+
+/* M2: connected goal actions in Running and Cycling. */
+.unified-shell main .arc-endurance-goals article{
+ display:flex;align-items:center;flex-wrap:wrap;gap:10px;min-width:0;
+}
+.unified-shell main .arc-endurance-goals article>b{
+ flex:1 1 140px;min-width:0;overflow-wrap:anywhere;
+}
+.unified-shell main .arc-endurance-goals .arc-endurance-goal-edit{
+ min-height:32px;padding:5px 9px;font-size:.75rem;flex:0 0 auto;
+}
