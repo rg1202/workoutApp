@@ -852,3 +852,23 @@
 .unified-shell main .arc-med-history li{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;padding:9px 0;border-top:1px solid var(--arc-border)}
 .unified-shell main .arc-med-history li span{display:grid;gap:4px}
 .unified-shell main .arc-med-history li small{color:var(--arc-muted);font-size:.75rem}
+
+/* Medication adherence analytics: compact, responsive, distinct from activity progress. */
+.unified-shell main .arc-med-analytics{margin-top:18px;padding-top:18px;border-top:1px solid var(--arc-border)}
+.unified-shell main .arc-med-analytics-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.unified-shell main .arc-med-analytics-head h3{margin:3px 0 0;font-size:1rem}
+.unified-shell main .arc-med-analytics-period{display:flex;gap:5px}
+.unified-shell main .arc-med-analytics-period .selected{border-color:var(--arc-accent);color:var(--arc-text)}
+.unified-shell main .arc-med-analytics-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:14px 0}
+.unified-shell main .arc-med-analytics-summary>div{background:var(--arc-surface-2);border:1px solid var(--arc-border);border-radius:9px;padding:12px;display:grid;gap:5px}
+.unified-shell main .arc-med-analytics-summary small,.unified-shell main .arc-med-analytics-by-med small{color:var(--arc-muted)}
+.unified-shell main .arc-med-analytics-summary strong{font-size:1.4rem}
+.unified-shell main .arc-med-analytics-chart{height:96px;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);align-items:end;gap:3px;padding:8px 0;border-bottom:1px solid var(--arc-border)}
+.unified-shell main .arc-med-analytics-chart>div{height:100%;display:flex;align-items:flex-end;background:var(--arc-surface-2);border-radius:3px;overflow:hidden}
+.unified-shell main .arc-med-analytics-chart>div>span{display:block;width:100%;background:var(--arc-mint);border-radius:3px 3px 0 0}
+.unified-shell main .arc-med-analytics-chart>div>span.no-schedule{background:transparent}
+.unified-shell main .arc-med-analytics-legend{display:flex;justify-content:space-between;color:var(--arc-muted);font-size:.75rem;margin:5px 0 14px}
+.unified-shell main .arc-med-analytics-by-med>div{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--arc-border)}
+.unified-shell main .arc-med-analytics-by-med span{display:grid;gap:3px}
+.unified-shell main .arc-med-analytics-note{font-size:.75rem;color:var(--arc-muted);line-height:1.5;margin:12px 0 0}
+@media(max-width:560px){.unified-shell main .arc-med-analytics-summary{grid-template-columns:1fr}.unified-shell main .arc-med-analytics-summary>div{padding:9px}}
