@@ -918,3 +918,13 @@
 .unified-shell main .arc-today-prescription li{line-height:1.5}
 .unified-shell main .arc-today-prescription li p{margin:3px 0 0}
 @media(max-width:520px){.unified-shell main .arc-prescription-numbers{grid-template-columns:1fr 1fr}}
+
+/* M4.3: existing program-to-goal assignment in Goals. */
+.unified-shell main .arc-goal-program-links{display:grid;gap:12px}
+.unified-shell main .arc-goal-program-controls{display:flex;gap:10px;align-items:end;flex-wrap:wrap}
+.unified-shell main .arc-goal-program-controls label{display:grid;gap:5px;flex:1 1 190px;min-width:0}
+.unified-shell main .arc-goal-program-controls select{width:100%;min-width:0;padding:9px;border:1px solid var(--arc-border);border-radius:8px;background:var(--arc-surface);color:inherit}
+.unified-shell main .arc-goal-program-row{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:9px 0;border-top:1px solid var(--arc-border)}
+.unified-shell main .arc-goal-program-row>span{display:flex;gap:6px;flex-wrap:wrap}
+.unified-shell main .arc-goal-program-chip{display:inline-flex;gap:7px;align-items:center;padding:5px 8px;border:1px solid var(--arc-border);border-radius:99px}
+.unified-shell main .arc-goal-program-chip button{border:0;background:transparent;color:inherit;cursor:pointer;font-size:1.1em}
