@@ -22,3 +22,20 @@ test('production app reload preserves local browser storage',async({page})=>{
  expect(JSON.parse(value||'null')).toEqual({check:'persisted'});
  await page.evaluate(()=>localStorage.removeItem('arc.release-smoke.v1'));
 });
+
+test('production build retains pilot warning and supports core navigation on phone',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('/');
+ await expect(page.getByText(/no cloud backup, Arc account, or cross-device sync/i)).toBeVisible();
+ await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
+ await page.getByRole('button',{name:'Continue to Arc'}).click();
+ const nav=page.getByRole('navigation',{name:'Primary navigation'});
+ for(const name of ['Goals','Calendar','Today','Progress']){
+  const tab=nav.getByRole('button',{name,exact:true});
+  await tab.click();
+  await expect(tab).toHaveAttribute('aria-current','page');
+  await expect(page.locator('main h1').first()).toBeVisible();
+ }
+ const width=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,content:document.documentElement.scrollWidth}));
+ expect(width.content).toBeLessThanOrEqual(width.viewport+2);
+});
