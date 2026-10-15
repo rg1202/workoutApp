@@ -809,3 +809,9 @@
  transform:translateX(11px);
 }
 .unified-shell main .cal-toolbar .cal-med-visibility strong{font-size:.68rem}
+
+/* M3: immediately reversible Today completion feedback. */
+.unified-shell main .arc-today-completion-feedback{display:flex;align-items:center;flex-wrap:wrap;gap:10px;padding:10px 13px;margin:0 0 14px;border:1px solid var(--arc-action-primary-border);border-radius:var(--arc-action-radius);background:var(--arc-surface-2);color:var(--arc-text)}
+.unified-shell main .arc-today-completion-feedback>span{display:inline-flex;align-items:center;gap:8px;flex:1 1 190px;min-width:0;overflow-wrap:anywhere}
+.unified-shell main .arc-today-completion-feedback>span svg{flex-shrink:0;color:var(--arc-mint)}
+.unified-shell main .arc-today-completion-feedback .arc-ui-button{min-height:32px;padding:5px 10px;font-size:.75rem}
