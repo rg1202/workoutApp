@@ -23,7 +23,7 @@ export function sessionSuggestions(target:PlannedActivity,history:PlannedActivit
   return changed.length?[{movementId:m.id,name:m.name,sourceActivityId:found.activity.id,sourceDate:found.activity.date,previous:m,proposed,reason:'Last completed '+found.activity.type.toLowerCase()+' session recorded different '+changed.join(', ')+'. Review before applying.'}]:[];
  });
 }
-export function applySessionSuggestions(prescription:SessionPrescription,suggestions:MovementSuggestion[]):SessionPrescription>{
+export function applySessionSuggestions(prescription:SessionPrescription,suggestions:MovementSuggestion[]):SessionPrescription{
  const selected=new Map(suggestions.map(s=>[s.movementId,s.proposed]));
  return {...prescription,movements:prescription.movements.map(m=>selected.has(m.id)?{...m,...selected.get(m.id),id:m.id}:m)};
 }
