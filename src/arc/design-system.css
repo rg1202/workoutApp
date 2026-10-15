@@ -1021,3 +1021,11 @@
 .unified-shell main .plan-form label,.unified-shell main .goal-wizard label{min-width:0;overflow-wrap:anywhere}
 .unified-shell main .goal-wizard-actions button,.unified-shell main .plan-form button{min-height:44px;white-space:normal}
 }
+
+/* M6.2: visible, non-destructive browser data integrity warning. */
+.arc-storage-warning{position:relative;z-index:5;padding:14px clamp(14px,3vw,28px);background:#35291d;border-bottom:2px solid #c9954b;color:#fff1d7;font-size:14px}
+.arc-storage-warning strong{display:block;font-size:16px}
+.arc-storage-warning p{margin:6px 0 10px;max-width:85ch}
+.arc-storage-warning details{margin-bottom:10px}
+.arc-storage-warning summary{cursor:pointer}
+.arc-storage-warning button{min-height:44px;padding:8px 16px;border-radius:9px;border:1px solid #e5b36b;background:#3c3022;color:#fff1d7;cursor:pointer}
