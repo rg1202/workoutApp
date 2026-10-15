@@ -29,3 +29,19 @@ export function downloadArcBackup(storage:Storage=localStorage){
  try{anchor.click()}finally{anchor.remove();setTimeout(()=>URL.revokeObjectURL(url),60_000)}
  return Object.keys(backup.data).length;
 }
+
+/** Read-only inspection; never rewrites questionable browser data. */
+export function inspectArcStorage(storage:Storage=localStorage){
+ const issues:{key:string;reason:string}[]=[];
+ const jsonKeys=new Set(['workoutapp.goals.v2','workoutapp.planned-activities.v1','workoutapp.history.v2','workoutapp.programs.v3','workoutapp.checkins.v1','workoutapp.body-metrics.v1','workoutapp.injuries.v1','arc.state-history.v1','arc.units.v1']);
+ for(let i=0;i<storage.length;i++){
+  const key=storage.key(i);
+  if(!key||!isBackupKey(key)||!jsonKeys.has(key))continue;
+  try{
+   const raw=storage.getItem(key);
+   if(raw===null){issues.push({key,reason:'unreadable'});continue}
+   JSON.parse(raw);
+  }catch{issues.push({key,reason:'invalid JSON or unreadable'})}
+ }
+ return {ok:issues.length===0,issues};
+}
