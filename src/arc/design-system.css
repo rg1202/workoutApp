@@ -754,3 +754,20 @@
 .unified-shell main .arc-endurance-goals .arc-endurance-goal-edit{
  min-height:32px;padding:5px 9px;font-size:.75rem;flex:0 0 auto;
 }
+
+/* Medication management and independent dose check-offs */
+.arc-medications,.arc-med-doses{min-width:0}
+.arc-medications .overview-heading,.arc-med-doses .overview-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.arc-med-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px;margin:16px 0;padding:16px;border:1px solid var(--arc-border);border-radius:12px;background:var(--arc-surface-2)}
+.arc-med-form label{display:flex;flex-direction:column;gap:6px;font-size:.85rem;color:var(--arc-text);min-width:0}
+.arc-med-form .arc-med-check{flex-direction:row;align-items:center;gap:8px}
+.arc-med-form .arc-med-check input{accent-color:var(--arc-cyan)}
+.arc-med-form .arc-med-actions{grid-column:1/-1}
+.arc-med-actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.arc-med-item,.arc-med-dose{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:13px 0;border-top:1px solid var(--arc-border)}
+.arc-med-item>div:first-child,.arc-med-dose>div:first-child{display:flex;flex-direction:column;gap:5px;min-width:0;flex:1 1 200px}
+.arc-med-item b,.arc-med-dose b{overflow-wrap:anywhere;color:var(--arc-text)}
+.arc-med-item small,.arc-med-dose small,.arc-med-doses>small{color:var(--arc-muted)}
+.arc-med-doses{margin-bottom:16px}
+.arc-med-dose>.arc-ui-button{flex:0 0 auto}
+@media(max-width:600px){.arc-med-form{padding:12px}.arc-med-item>.arc-med-actions{width:100%}}
