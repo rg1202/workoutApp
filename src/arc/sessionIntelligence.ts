@@ -1,11 +1,11 @@
 import type{PlannedActivity,SessionMovement,SessionPrescription}from'../plans';
 
 export type MovementSuggestion={movementId:string;name:string;sourceActivityId:string;sourceDate:string;previous:SessionMovement;proposed:SessionMovement;reason:string};
-const normalized=(name:string)=>name.trim().toLocaleLowerCase().replace(/\\s+/g,' ');
+const normalized=(name:string)=>name.trim().toLocaleLowerCase().replace(/\s+/g,' ');
 /** Conservative opt-in suggestions. Never change prescribed work without user approval. */
 export function sessionSuggestions(target:PlannedActivity,history:PlannedActivity[]):MovementSuggestion[]{
  if(!target.prescription||target.status!=='Planned')return[];
- const prior=history.filter(p=>p.id!==target.id&&p.status==='Completed'&&p.execution?.finishedAt&&p.prescription&&p.date<=target.date).sort((a,b)=>b.date.localeCompare(a.date));
+ const prior=history.filter(p=>p.id!==target.id&&p.status==='Completed'&&p.execution?.finishedAt&&p.prescription&&p.date<target.date).sort((a,b)=>b.date.localeCompare(a.date));
  return target.prescription.movements.flatMap(m=>{
   const found=prior.map(p=>({activity:p,movement:p.prescription!.movements.find(x=>normalized(x.name)===normalized(m.name)),result:p.execution!.movements})).find(x=>x.movement&&x.result.some(r=>r.movementId===x.movement!.id&&r.completed));
   if(!found||!found.movement)return[];
