@@ -64,3 +64,16 @@ test('Read-only storage inspection flags malformed goals without changing stored
  expect(result.report.issues).toEqual(expect.arrayContaining([expect.objectContaining({key:'workoutapp.goals.v2'})]));
  expect(result.unchanged).toBe(true);
 });
+
+test('Corrupted browser data displays a non-destructive warning on next load',async({page})=>{
+ await page.goto('/');
+ await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
+ await page.getByRole('button',{name:'Continue to Arc'}).click();
+ await page.evaluate(()=>localStorage.setItem('workoutapp.goals.v2','{broken'));
+ await page.reload();
+ const warning=page.getByRole('alert').filter({hasText:'Arc found a problem reading saved data'});
+ await expect(warning).toBeVisible();
+ await warning.getByText(/Show affected records/).click();
+ await expect(warning.getByText(/workoutapp.goals.v2/)).toBeVisible();
+ expect(await page.evaluate(()=>localStorage.getItem('workoutapp.goals.v2'))).toBe('{broken');
+});
