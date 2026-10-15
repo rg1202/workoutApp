@@ -880,3 +880,11 @@
 .unified-shell main .arc-intelligence-med-alert>div span{font-size:.82rem}
 .unified-shell main .arc-intelligence-med-alert>small{color:var(--arc-muted);font-size:.73rem}
 .unified-shell main .arc-today-med-next .today-next-actions{display:flex;align-items:center}
+
+/* Today's inputs: completed medication records (same logs as Calendar and adherence analytics). */
+.unified-shell main .arc-today-completed-meds{display:grid;gap:9px;padding:12px 0;border-top:1px solid var(--arc-border);border-bottom:1px solid var(--arc-border)}
+.unified-shell main .arc-today-completed-meds-heading{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.unified-shell main .arc-today-completed-meds-heading small,.unified-shell main .arc-today-completed-med small{color:var(--arc-muted);font-size:.75rem}
+.unified-shell main .arc-today-completed-med{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.unified-shell main .arc-today-completed-med>span{display:grid;gap:3px}
+.unified-shell main .arc-today-completed-med>span b{font-size:.84rem}
