@@ -694,3 +694,35 @@
 .unified-shell main .arc-exercise-filters>button:focus-visible{
  outline:3px solid var(--arc-focus-outline);outline-offset:2px;
 }
+
+/* M2 History: readable session rows, clear expand state, and keyboard focus. */
+.unified-shell main .history-session{
+ min-width:0;overflow:hidden;
+ border:1px solid var(--arc-border);
+ border-radius:12px;background:var(--arc-surface);
+}
+.unified-shell main .history-session .arc-history-summary{
+ display:flex;align-items:center;justify-content:space-between;
+ flex-wrap:wrap;gap:14px;width:100%;min-width:0;
+ padding:16px 18px;border:0;border-radius:0;
+ background:transparent;color:var(--arc-text);text-align:left;
+ cursor:pointer;box-shadow:none;
+}
+.unified-shell main .history-session .arc-history-summary>div:first-child{
+ min-width:0;flex:1 1 180px;
+}
+.unified-shell main .history-session .arc-history-summary h2{
+ overflow-wrap:anywhere;
+}
+.unified-shell main .history-session .arc-history-summary .history-kpis{
+ display:flex;align-items:center;flex-wrap:wrap;gap:10px;min-width:0;
+}
+.unified-shell main .history-session .arc-history-summary:hover{
+ background:var(--arc-control-hover);
+}
+.unified-shell main .history-session .arc-history-summary:focus-visible{
+ outline:3px solid var(--arc-focus-outline);outline-offset:-3px;
+}
+.unified-shell main .history-session .arc-history-summary[aria-expanded="true"]{
+ border-bottom:1px solid var(--arc-border);
+}
