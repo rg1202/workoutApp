@@ -48,3 +48,19 @@ test('Arc backup fails safely when an enumerated storage record becomes unreadab
  });
  expect(message).toMatch(/became unavailable during backup/);
 });
+
+test('Read-only storage inspection flags malformed goals without changing stored bytes',async({page})=>{
+ await page.goto('/');
+ await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
+ await page.getByRole('button',{name:'Continue to Arc'}).click();
+ const result=await page.evaluate(async()=>{
+  const {inspectArcStorage}=await import('/src/arc/dataBackup.ts');
+  const original='{malformed';
+  localStorage.setItem('workoutapp.goals.v2',original);
+  const report=inspectArcStorage(localStorage);
+  return {report,unchanged:localStorage.getItem('workoutapp.goals.v2')===original};
+ });
+ expect(result.report.ok).toBe(false);
+ expect(result.report.issues).toEqual(expect.arrayContaining([expect.objectContaining({key:'workoutapp.goals.v2'})]));
+ expect(result.unchanged).toBe(true);
+});
