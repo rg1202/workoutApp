@@ -1005,3 +1005,12 @@
  .unified-shell main .cal-summary>div{min-width:0;max-width:100%;overflow-wrap:anywhere}
  .unified-shell main .cal-summary>div>*{min-width:0;max-width:100%;overflow-wrap:anywhere;white-space:normal}
 }
+
+/* M5.4: phone navigation is a touch-friendly, scrollable bottom rail. */
+@media(max-width:760px){
+ .unified-shell>aside{scrollbar-width:thin;scroll-padding-inline:12px;-webkit-overflow-scrolling:touch;touch-action:pan-x}
+ .unified-shell .arc-primary-nav button,.unified-shell .arc-nav-section button{min-height:48px;min-width:48px;touch-action:manipulation}
+ .unified-shell .arc-primary-nav button[aria-current=page],.unified-shell .arc-nav-section button[aria-current=page]{outline:2px solid var(--arc-accent);outline-offset:-2px}
+ .unified-shell>aside button:focus-visible{outline:3px solid var(--arc-focus-outline);outline-offset:-3px}
+ .unified-shell>main{padding-bottom:max(112px,calc(96px + env(safe-area-inset-bottom,0px)))}
+}
