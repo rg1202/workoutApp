@@ -48,3 +48,26 @@ test('Completed prescribed session survives reload and appears in Progress histo
  await history.getByText('View recorded movements').click();
  await expect(history.getByText('12 reps').first()).toBeVisible();
 });
+
+
+test('Recorded prescription is included in Arc backup without losing execution results',async({page})=>{
+ await page.goto('/');
+ await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
+ await page.getByRole('button',{name:'Continue to Arc'}).click();
+ await page.getByRole('button',{name:'Today',exact:true}).first().click();
+ await page.getByRole('button',{name:'Add example mobility session'}).click();
+ await page.getByLabel('90/90 hip switches actual reps').fill('12');
+ const checks=page.locator('.arc-session-movement input[type=checkbox]');
+ for(let i=0;i<5;i++)await checks.nth(i).check();
+ await page.getByRole('button',{name:'Finish and record session'}).click();
+ const backedUp=await page.evaluate(async()=>{
+  const module=await import('/src/arc/dataBackup.ts');
+  const backup=module.createArcBackup(localStorage);
+  const plans=JSON.parse(backup.data['workoutapp.planned-activities.v1']);
+  return plans.filter((p:{id:string})=>p.id.startsWith('demo:bjj-mobility:'));
+ });
+ expect(backedUp).toHaveLength(1);
+ expect(backedUp[0].status).toBe('Completed');
+ expect(backedUp[0].execution.finishedAt).toBeTruthy();
+ expect(backedUp[0].execution.movements.find((m:{movementId:string})=>m.movementId==='hip-9090').actualReps).toBe(12);
+});
