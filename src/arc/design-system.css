@@ -888,3 +888,21 @@
 .unified-shell main .arc-today-completed-med{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .unified-shell main .arc-today-completed-med>span{display:grid;gap:3px}
 .unified-shell main .arc-today-completed-med>span b{font-size:.84rem}
+
+/* M3 regression: prevent Calendar completion controls from covering the activity editor trigger in narrow week/month cells. */
+.unified-shell main .cal-week .cal-event.cal-planned:has(.cal-goal-list),
+.unified-shell main .cal-month .cal-event.cal-planned:has(.cal-goal-list){
+ display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:6px;row-gap:6px;align-items:start;
+}
+.unified-shell main .cal-week .cal-event.cal-planned:has(.cal-goal-list)>.cal-plan-main,
+.unified-shell main .cal-month .cal-event.cal-planned:has(.cal-goal-list)>.cal-plan-main{
+ grid-column:1/-1;grid-row:1;min-width:0;width:100%;position:relative;z-index:2;
+}
+.unified-shell main .cal-week .cal-event.cal-planned:has(.cal-goal-list)>.cal-completion-toggle,
+.unified-shell main .cal-month .cal-event.cal-planned:has(.cal-goal-list)>.cal-completion-toggle{
+ grid-column:1;grid-row:2;position:relative;z-index:1;justify-self:start;max-width:100%;
+}
+.unified-shell main .cal-week .cal-event.cal-planned:has(.cal-goal-list)>.cal-delete,
+.unified-shell main .cal-month .cal-event.cal-planned:has(.cal-goal-list)>.cal-delete{
+ grid-column:2;grid-row:2;position:relative;z-index:1;justify-self:end;
+}
