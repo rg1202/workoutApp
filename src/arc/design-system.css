@@ -1014,3 +1014,10 @@
  .unified-shell>aside button:focus-visible{outline:3px solid var(--arc-focus-outline);outline-offset:-3px}
  .unified-shell>main{padding-bottom:max(112px,calc(96px + env(safe-area-inset-bottom,0px)))}
 }
+
+/* M5.5 mobile form sizing */
+@media(max-width:600px){
+.unified-shell main input:not([type=checkbox]):not([type=radio]):not([type=range]),.unified-shell main select,.unified-shell main textarea{box-sizing:border-box;max-width:100%;min-width:0;font-size:16px}
+.unified-shell main .plan-form label,.unified-shell main .goal-wizard label{min-width:0;overflow-wrap:anywhere}
+.unified-shell main .goal-wizard-actions button,.unified-shell main .plan-form button{min-height:44px;white-space:normal}
+}
