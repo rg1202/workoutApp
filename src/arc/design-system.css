@@ -906,3 +906,15 @@
 .unified-shell main .cal-month .cal-event.cal-planned:has(.cal-goal-list)>.cal-delete{
  grid-column:2;grid-row:2;position:relative;z-index:1;justify-self:end;
 }
+
+/* M4.2: actionable prescription editor and Today instructions. */
+.unified-shell main .arc-prescription-editor{display:grid;gap:12px;padding:14px;border:1px solid var(--arc-border);border-radius:10px;background:var(--arc-surface-2)}
+.unified-shell main .arc-prescription-editor h3{margin:0}
+.unified-shell main .arc-prescription-actions{display:flex;gap:8px;flex-wrap:wrap}
+.unified-shell main .arc-prescription-movement{display:grid;gap:10px;padding:12px;border:1px solid var(--arc-border);border-radius:8px}
+.unified-shell main .arc-prescription-numbers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.unified-shell main .arc-today-prescription{display:grid;gap:10px}
+.unified-shell main .arc-today-prescription ol{margin:0;padding-left:22px;display:grid;gap:9px}
+.unified-shell main .arc-today-prescription li{line-height:1.5}
+.unified-shell main .arc-today-prescription li p{margin:3px 0 0}
+@media(max-width:520px){.unified-shell main .arc-prescription-numbers{grid-template-columns:1fr 1fr}}
