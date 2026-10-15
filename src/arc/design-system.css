@@ -961,3 +961,5 @@
 .arc-session-suggestions>div{display:grid;gap:5px;padding-top:9px;border-top:1px solid var(--arc-border)}
 .arc-session-suggestions small{opacity:.75}
 .arc-session-suggestions button{justify-self:start}
+
+.arc-goal-program-contribution{margin-top:7px;font-size:.84rem}.arc-goal-program-contribution summary{cursor:pointer}.arc-goal-program-contribution small{display:block;margin:5px 0 0 12px}
