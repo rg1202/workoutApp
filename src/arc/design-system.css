@@ -981,3 +981,12 @@
  .unified-shell main .cal-week>section{min-width:0;overflow-wrap:anywhere}
  .unified-shell main .cal-week .cal-event{min-width:0;max-width:100%}
 }
+
+/* M5.3: Calendar toolbar was forcing a 922px intrinsic width at 768px. */
+@media(min-width:601px) and (max-width:900px){
+ .unified-shell main .cal-toolbar{display:flex;flex-wrap:wrap;min-width:0;max-width:100%;gap:10px;align-items:center}
+ .unified-shell main .cal-toolbar>*{min-width:0;max-width:100%}
+ .unified-shell main .cal-toolbar .cal-nav{flex-wrap:wrap;min-width:0}
+ .unified-shell main .cal-toolbar .cal-switch{margin-left:0;flex-shrink:0}
+ .unified-shell main .cal-week{width:100%;max-width:100%;box-sizing:border-box;overflow-x:auto}
+}
