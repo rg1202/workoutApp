@@ -933,3 +933,7 @@
 .unified-shell main .arc-goal-program-statuses{display:grid;gap:8px}
 .unified-shell main .arc-goal-program-status{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px;border:1px solid var(--arc-border);border-radius:10px}
 .unified-shell main .arc-goal-program-status p{margin:5px 0 0}
+
+/* Contextual navigation for goal-to-program workflow. */
+.unified-shell main .arc-context-return{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 16px}
+.unified-shell main .arc-context-return>span{font-size:.85rem;opacity:.75}
