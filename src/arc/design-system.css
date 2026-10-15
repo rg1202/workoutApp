@@ -937,3 +937,13 @@
 /* Contextual navigation for goal-to-program workflow. */
 .unified-shell main .arc-context-return{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 16px}
 .unified-shell main .arc-context-return>span{font-size:.85rem;opacity:.75}
+
+/* M4.4: in-place Today session execution */
+.unified-shell .arc-session-execution{display:grid;gap:12px;margin-top:16px;padding-top:14px;border-top:1px solid var(--arc-border)}
+.unified-shell .arc-session-execution h4,.unified-shell .arc-session-execution p{margin:0}
+.unified-shell .arc-session-movement{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:12px;border:1px solid var(--arc-border);border-radius:10px}
+.unified-shell .arc-session-movement>label{display:flex;align-items:center;gap:10px}
+.unified-shell .arc-session-movement input[type=checkbox]{width:18px;height:18px;accent-color:var(--arc-accent)}
+.unified-shell .arc-session-actuals{display:flex;flex-wrap:wrap;gap:10px}
+.unified-shell .arc-session-actuals label{display:grid;gap:4px;font-size:.8rem}
+.unified-shell .arc-session-actuals input{width:76px;max-width:100%;padding:7px;border-radius:7px}
