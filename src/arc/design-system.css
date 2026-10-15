@@ -872,3 +872,11 @@
 .unified-shell main .arc-med-analytics-by-med span{display:grid;gap:3px}
 .unified-shell main .arc-med-analytics-note{font-size:.75rem;color:var(--arc-muted);line-height:1.5;margin:12px 0 0}
 @media(max-width:560px){.unified-shell main .arc-med-analytics-summary{grid-template-columns:1fr}.unified-shell main .arc-med-analytics-summary>div{padding:9px}}
+
+/* Today medication doses live only in Up Next or the conditional Training Insight alert. */
+.unified-shell main .arc-intelligence-med-alert{display:grid;gap:8px;margin-top:12px;padding:12px;border:1px solid var(--arc-action-primary-border);border-radius:9px;background:var(--arc-surface-2)}
+.unified-shell main .arc-intelligence-med-alert>strong{font-size:.88rem;color:var(--arc-text)}
+.unified-shell main .arc-intelligence-med-alert>div{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.unified-shell main .arc-intelligence-med-alert>div span{font-size:.82rem}
+.unified-shell main .arc-intelligence-med-alert>small{color:var(--arc-muted);font-size:.73rem}
+.unified-shell main .arc-today-med-next .today-next-actions{display:flex;align-items:center}
