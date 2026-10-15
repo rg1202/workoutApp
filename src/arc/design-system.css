@@ -1029,3 +1029,14 @@
 .arc-storage-warning details{margin-bottom:10px}
 .arc-storage-warning summary{cursor:pointer}
 .arc-storage-warning button{min-height:44px;padding:8px 16px;border-radius:9px;border:1px solid #e5b36b;background:#3c3022;color:#fff1d7;cursor:pointer}
+
+/* Goal calendar planning: recurring multi-day selection. */
+.goal-plan-weekdays{display:grid;gap:12px;margin:16px 0;padding:14px;border:1px solid rgba(143,171,194,.25);border-radius:14px;background:rgba(20,35,49,.55)}
+.goal-plan-weekdays>p{margin:0;color:#a8bac9;font-size:14px}
+.goal-plan-day-row{display:grid;gap:8px}
+.goal-plan-day-row strong{color:#edf5fa;font-size:15px}
+.goal-plan-day-row>div{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.goal-plan-day-row button{min-width:0;min-height:42px;padding:6px 2px;border-radius:9px;border:1px solid #37536a;background:#142231;color:#dbe7ee;font-weight:600;cursor:pointer}
+.goal-plan-day-row button.selected,.goal-plan-day-row button[aria-pressed=true]{border-color:#66e9bd;background:#113b35;color:#8ff7d0}
+.goal-plan-day-row small{color:#9aafbe;line-height:1.4}
+@media(max-width:520px){.goal-plan-weekdays{padding:10px}.goal-plan-day-row button{font-size:12px}}
