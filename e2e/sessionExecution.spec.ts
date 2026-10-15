@@ -6,7 +6,8 @@ test('Today mobility prescription records movement actuals and completion withou
  await page.getByRole('button',{name:'Continue to Arc'}).click();
  await page.getByRole('button',{name:'Today',exact:true}).first().click();
  await page.getByRole('button',{name:'Add example mobility session'}).click();
- await page.getByRole('button',{name:'View details'}).click();
+ const details=page.getByRole('heading',{name:'Record your session'});
+ if(!await details.isVisible())await page.getByRole('button',{name:'View details'}).click();
  await expect(page.getByRole('heading',{name:'Record your session'})).toBeVisible();
  await page.getByLabel('90/90 hip switches actual reps').fill('12');
  await page.locator('.arc-session-movement input[type=checkbox]').first().check();
