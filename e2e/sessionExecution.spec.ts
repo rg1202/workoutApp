@@ -2,8 +2,8 @@ import{test,expect}from'@playwright/test';
 
 test('Today mobility prescription records movement actuals and completion without duplicate activity',async({page})=>{
  await page.goto('/');
- const continueButton=page.getByRole('button',{name:'Continue to Arc'});
- if(await continueButton.isVisible())await continueButton.click();
+ await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
+ await page.getByRole('button',{name:'Continue to Arc'}).click();
  await page.getByRole('button',{name:'Today',exact:true}).first().click();
  await page.getByRole('button',{name:'Add example mobility session'}).click();
  await page.getByRole('button',{name:'View details'}).click();
