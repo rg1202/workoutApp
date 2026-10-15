@@ -974,3 +974,10 @@
 .unified-shell .arc-session-actuals input{width:100%;min-height:44px;box-sizing:border-box}
 .unified-shell .arc-session-execution button{min-height:44px;max-width:100%;white-space:normal}
 }
+
+/* M5.3: contain seven-column Calendar on tablet instead of widening the page. */
+@media (min-width:601px) and (max-width:900px){
+ .unified-shell main .cal-week{max-width:100%;min-width:0;overflow-x:auto;overscroll-behavior-x:contain}
+ .unified-shell main .cal-week>section{min-width:0;overflow-wrap:anywhere}
+ .unified-shell main .cal-week .cal-event{min-width:0;max-width:100%}
+}
