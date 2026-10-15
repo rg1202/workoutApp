@@ -998,3 +998,10 @@
  .unified-shell main .cal-week>section>header{min-width:0;max-width:100%;flex-wrap:wrap}
  .unified-shell main .cal-week .cal-add-activity{max-width:100%}
 }
+
+/* M5.3: Calendar summary metrics must wrap before the tablet edge. */
+@media(min-width:601px) and (max-width:900px){
+ .unified-shell main .cal-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+ .unified-shell main .cal-summary>div{min-width:0;max-width:100%;overflow-wrap:anywhere}
+ .unified-shell main .cal-summary>div>*{min-width:0;max-width:100%;overflow-wrap:anywhere;white-space:normal}
+}
