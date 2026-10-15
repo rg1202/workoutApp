@@ -1040,3 +1040,10 @@
 .goal-plan-day-row button.selected,.goal-plan-day-row button[aria-pressed=true]{border-color:#66e9bd;background:#113b35;color:#8ff7d0}
 .goal-plan-day-row small{color:#9aafbe;line-height:1.4}
 @media(max-width:520px){.goal-plan-weekdays{padding:10px}.goal-plan-day-row button{font-size:12px}}
+
+/* Calendar: batch goal-support scheduling. */
+.cal-place-days button[aria-pressed=true]{border-color:#6ee7c0!important;background:#123d37!important;color:#b3ffe0!important;box-shadow:inset 0 0 0 1px #6ee7c0}
+.cal-place-days button:disabled{opacity:.48;cursor:not-allowed}
+.cal-place-selection{font-size:14px;color:#b4c9d5;margin:14px 0 8px}
+.cal-place-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px}
+.cal-place-actions button{min-height:44px}
