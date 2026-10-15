@@ -629,3 +629,28 @@
 .unified-shell main .arc-analytics-range>button:focus-visible{
  outline:3px solid var(--arc-focus-outline);outline-offset:2px;
 }
+
+/* M2 Programs: status filters share the canonical segmented control treatment. */
+.unified-shell main .arc-program-status-filters{
+ display:flex;flex-wrap:wrap;gap:7px;min-width:0;
+}
+.unified-shell main .arc-program-status-filters>button{
+ display:inline-flex;align-items:center;justify-content:center;
+ min-height:38px;padding:8px 13px;
+ border:1px solid var(--arc-action-border);
+ border-radius:var(--arc-action-radius);
+ background:var(--arc-control);color:var(--arc-action-text);
+ font:inherit;font-size:.8rem;font-weight:700;
+ box-shadow:none;cursor:pointer;
+}
+.unified-shell main .arc-program-status-filters>button:hover{
+ background:var(--arc-control-hover);border-color:var(--arc-cyan);
+}
+.unified-shell main .arc-program-status-filters>button[aria-pressed="true"]{
+ background:var(--arc-action-primary-bg);
+ border-color:var(--arc-action-primary-border);
+ color:var(--arc-action-primary-text);
+}
+.unified-shell main .arc-program-status-filters>button:focus-visible{
+ outline:3px solid var(--arc-focus-outline);outline-offset:2px;
+}
