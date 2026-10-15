@@ -726,3 +726,20 @@
 .unified-shell main .history-session .arc-history-summary[aria-expanded="true"]{
  border-bottom:1px solid var(--arc-border);
 }
+
+/* M2 Progress: goal actions remain visible without crowding the progress bar. */
+.unified-shell main .progress-v2 .progress-goals>article{
+ display:flex;align-items:center;flex-wrap:wrap;column-gap:12px;row-gap:9px;min-width:0;
+}
+.unified-shell main .progress-v2 .progress-goals>article>div:first-child{
+ flex:1 1 180px;min-width:0;
+}
+.unified-shell main .progress-v2 .progress-goals>article>div:first-child b{
+ overflow-wrap:anywhere;
+}
+.unified-shell main .progress-v2 .arc-progress-goal-edit{
+ flex:0 0 auto;min-height:32px;padding:5px 9px;font-size:.75rem;
+}
+.unified-shell main .progress-v2 .progress-goals>article>.progress-track{
+ flex:1 0 100%;min-width:0;
+}
