@@ -843,3 +843,12 @@
 /* M3: return navigation for Detailed Analytics. */
 .unified-shell main .arc-analytics-return{display:flex;align-items:center;margin-bottom:14px}
 .unified-shell main .arc-analytics-return .arc-ui-button{display:inline-flex;align-items:center;gap:6px}
+
+/* M3: compact medication log in You, backed by the same records as Today and Calendar. */
+.unified-shell main .arc-med-history{margin-top:18px;padding-top:16px;border-top:1px solid var(--arc-border)}
+.unified-shell main .arc-med-history h3{margin:0 0 6px;font-size:1rem;color:var(--arc-text)}
+.unified-shell main .arc-med-history p{margin:0 0 12px;color:var(--arc-muted);font-size:.78rem;line-height:1.5}
+.unified-shell main .arc-med-history ul{list-style:none;margin:0;padding:0}
+.unified-shell main .arc-med-history li{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;padding:9px 0;border-top:1px solid var(--arc-border)}
+.unified-shell main .arc-med-history li span{display:grid;gap:4px}
+.unified-shell main .arc-med-history li small{color:var(--arc-muted);font-size:.75rem}
