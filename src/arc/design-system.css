@@ -777,3 +777,12 @@
 .arc-calendar-dose:hover{border-color:var(--arc-cyan);background:var(--arc-control-hover)}
 .arc-calendar-dose:focus-visible{outline:2px solid var(--arc-focus-outline);outline-offset:2px}
 .arc-calendar-dose.is-taken{color:var(--arc-mint);border-color:var(--arc-action-primary-border)}
+
+/* Calendar-only medication visibility switch. */
+.cal-toolbar .cal-med-visibility{display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:6px 10px;border:1px solid var(--arc-action-border);border-radius:var(--arc-action-radius);background:var(--arc-control);color:var(--arc-action-text);font-size:.8rem;white-space:nowrap;cursor:pointer}
+.cal-toolbar .cal-med-visibility input{appearance:none;position:relative;width:32px;height:18px;flex:0 0 32px;margin:0;border-radius:999px;border:1px solid var(--arc-action-border);background:var(--arc-surface-2);cursor:pointer;transition:background .15s}
+.cal-toolbar .cal-med-visibility input:before{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:var(--arc-muted);transition:transform .15s}
+.cal-toolbar .cal-med-visibility input:checked{background:var(--arc-action-primary-bg);border-color:var(--arc-action-primary-border)}
+.cal-toolbar .cal-med-visibility input:checked:before{transform:translateX(14px);background:var(--arc-mint)}
+.cal-toolbar .cal-med-visibility input:focus-visible{outline:3px solid var(--arc-focus-outline);outline-offset:3px}
+.cal-toolbar .cal-med-visibility strong{font-size:.72rem;color:var(--arc-muted)}
