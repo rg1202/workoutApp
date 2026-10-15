@@ -963,3 +963,14 @@
 .arc-session-suggestions button{justify-self:start}
 
 .arc-goal-program-contribution{margin-top:7px;font-size:.84rem}.arc-goal-program-contribution summary{cursor:pointer}.arc-goal-program-contribution small{display:block;margin:5px 0 0 12px}
+
+/* M5 mobile prescribed session controls */
+@media(max-width:600px){
+.unified-shell .arc-session-movement{flex-direction:column;align-items:stretch;min-width:0}
+.unified-shell .arc-session-movement>label{min-height:44px;overflow-wrap:anywhere}
+.unified-shell .arc-session-movement input[type=checkbox]{width:22px;height:22px;flex-shrink:0}
+.unified-shell .arc-session-actuals{display:grid;grid-template-columns:repeat(auto-fit,minmax(85px,1fr));width:100%;min-width:0}
+.unified-shell .arc-session-actuals label{min-width:0}
+.unified-shell .arc-session-actuals input{width:100%;min-height:44px;box-sizing:border-box}
+.unified-shell .arc-session-execution button{min-height:44px;max-width:100%;white-space:normal}
+}
