@@ -10,7 +10,8 @@ export function createArcBackup(storage:Storage=localStorage):ArcBackup{
   const key=storage.key(i);
   if(!key||!isBackupKey(key))continue;
   const raw=storage.getItem(key);
-  if(raw!==null)data[key]=raw;
+  if(raw===null)throw new Error('Arc data became unavailable during backup; retry export.');
+  data[key]=raw;
  }
  for(const [key,value] of Object.entries(data)){
   if(storage.getItem(key)!==value)throw new Error('Arc data changed during backup; retry export.');
