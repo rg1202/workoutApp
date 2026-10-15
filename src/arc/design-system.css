@@ -956,3 +956,8 @@
 .arc-recorded-session summary{cursor:pointer;font-weight:600}
 .arc-recorded-session ol{padding-left:22px;display:grid;gap:8px}
 .arc-recorded-session li span{display:block;font-size:.86rem;opacity:.8}
+
+.arc-session-suggestions{margin:12px 0;padding:14px;border:1px solid var(--arc-border);border-radius:12px;display:grid;gap:10px}
+.arc-session-suggestions>div{display:grid;gap:5px;padding-top:9px;border-top:1px solid var(--arc-border)}
+.arc-session-suggestions small{opacity:.75}
+.arc-session-suggestions button{justify-self:start}
