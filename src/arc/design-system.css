@@ -563,3 +563,28 @@
   max-width:100%;white-space:normal;text-align:center;
  }
 }
+
+/* M2 Today: consistent section headings and readable secondary text. */
+.unified-shell main .today-v2 .overview-heading{
+ min-width:0;gap:12px;
+}
+.unified-shell main .today-v2 .overview-heading h2{
+ color:var(--arc-text);letter-spacing:-.025em;line-height:1.2;
+}
+.unified-shell main .today-v2 .overview-heading p{
+ color:var(--today-muted,#9aafc0);line-height:1.5;
+}
+.unified-shell main .today-v2 .today-goal-item{
+ min-width:0;border-color:var(--today-border,#1c3042);
+ background:var(--arc-surface-2);box-shadow:none;
+}
+.unified-shell main .today-v2 .today-goal-heading,
+.unified-shell main .today-v2 .today-next-actions{
+ min-width:0;
+}
+@media(max-width:600px){
+ .unified-shell main .today-v2 .overview-heading{
+  flex-wrap:wrap;align-items:flex-start;
+ }
+ .unified-shell main .today-v2 .overview-heading>*{min-width:0;max-width:100%}
+}
