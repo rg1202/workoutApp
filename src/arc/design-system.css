@@ -1051,3 +1051,8 @@
 /* Calendar current date: compact Arc accent ring, never an elongated neon pill. */
 .unified-shell .cal-today>header b,.unified-shell .cal-today>.cal-date{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;width:32px;height:32px;min-width:32px;min-height:32px;padding:0;border-radius:50%;background:rgba(88,219,190,.13);border:1px solid #62d9c5;color:#a4f6e2;font-weight:700;line-height:1;box-shadow:none;flex:none}
 .unified-shell .cal-today>header b{vertical-align:middle}
+
+/* Calendar today: clear typographic emphasis, no badge or shape. */
+.unified-shell .cal-today>header b,.unified-shell .cal-today>.cal-date{display:inline;box-sizing:border-box;width:auto;height:auto;min-width:0;min-height:0;padding:0;border:0;border-radius:0;background:transparent;color:#8bf0cf;font-weight:800;font-size:1.08em;line-height:inherit;box-shadow:none}
+.unified-shell .cal-today>header span{color:#8bf0cf;font-weight:700}
+.unified-shell .cal-today{background:rgba(75,190,165,.045)}
