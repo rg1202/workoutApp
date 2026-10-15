@@ -1,3 +1,4 @@
+import {inspectArcStorage} from './dataBackup';
 import {useState} from 'react';
 import type {ReactNode} from 'react';
 
@@ -24,7 +25,7 @@ export default function PilotNoticeGate({children}:{children:ReactNode}){
    setAccepted(true);setReview(false);setDeclined(false);setChecked(false);
   }catch{window.alert('Arc could not save your acknowledgment. Check browser storage and try again.')}
  };
- if(accepted&&!review)return <>{children}<button className="arc-pilot-notice-link" type="button" onClick={()=>setReview(true)}>Pilot privacy notice</button></>;
+ if(accepted&&!review)return <><StorageIntegrityWarning/>{children}<button className="arc-pilot-notice-link" type="button" onClick={()=>setReview(true)}>Pilot privacy notice</button></>;
  return <div className="arc-pilot-gate"><main className="arc-pilot-notice" aria-labelledby="arc-pilot-title">
   <p className="arc-pilot-eyebrow">ARC · INVITATION-ONLY BETA</p>
   <h1 id="arc-pilot-title">Welcome to Arc</h1>
@@ -41,4 +42,18 @@ export default function PilotNoticeGate({children}:{children:ReactNode}){
   <div className="arc-pilot-actions">{accepted?<button type="button" onClick={()=>setReview(false)}>Return to Arc</button>:<><button type="button" disabled={!checked} onClick={save}>Continue to Arc</button><button type="button" className="arc-pilot-secondary" onClick={()=>{setDeclined(true);setChecked(false)}}>Not now</button></>}</div>
   </>}
  </main></div>
+}
+
+/** Advisory only: do not change or repair browser records automatically. */
+function StorageIntegrityWarning(){
+ const [report,setReport]=useState(()=>{
+  try{return inspectArcStorage()}catch{return {ok:false,issues:[{key:'Browser storage',reason:'unavailable'}]}}
+ });
+ if(report.ok)return null;
+ return <div role="alert" className="arc-storage-warning">
+  <strong>Arc found a problem reading saved data</strong>
+  <p>Some local records may be damaged or unavailable. Arc has not repaired or deleted them. Avoid making changes until you have preserved your browser data. Backup restoration is not verified.</p>
+  <details><summary>Show affected records ({report.issues.length})</summary><ul>{report.issues.map(issue=><li key={issue.key}>{issue.key}: {issue.reason}</li>)}</ul></details>
+  <button type="button" onClick={()=>{try{setReport(inspectArcStorage())}catch{setReport({ok:false,issues:[{key:'Browser storage',reason:'unavailable'}]})}}}>Check again</button>
+ </div>
 }
