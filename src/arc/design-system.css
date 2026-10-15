@@ -654,3 +654,43 @@
 .unified-shell main .arc-program-status-filters>button:focus-visible{
  outline:3px solid var(--arc-focus-outline);outline-offset:2px;
 }
+
+/* M2 Exercise Library: responsive, consistent filter controls. */
+.unified-shell main .arc-exercise-filters{
+ display:flex;align-items:stretch;flex-wrap:wrap;gap:9px;min-width:0;
+}
+.unified-shell main .arc-exercise-filters>.search{
+ display:flex;align-items:center;gap:8px;flex:1 1 240px;min-width:180px;
+ min-height:42px;padding:0 11px;
+ border:1px solid var(--arc-action-border);
+ border-radius:var(--arc-action-radius);
+ background:var(--arc-control);color:var(--arc-muted);
+}
+.unified-shell main .arc-exercise-filters>.search input{
+ flex:1;min-width:0;width:100%;border:0;outline:0;
+ background:transparent;color:var(--arc-text);box-shadow:none;
+}
+.unified-shell main .arc-exercise-filters>.search:focus-within{
+ outline:2px solid var(--arc-focus-outline);outline-offset:2px;
+}
+.unified-shell main .arc-exercise-filters>select,
+.unified-shell main .arc-exercise-filters>button{
+ min-height:42px;max-width:100%;padding:8px 12px;
+ border:1px solid var(--arc-action-border);
+ border-radius:var(--arc-action-radius);
+ background:var(--arc-control);color:var(--arc-action-text);
+ font:inherit;font-size:.82rem;box-shadow:none;
+}
+.unified-shell main .arc-exercise-filters>button{cursor:pointer}
+.unified-shell main .arc-exercise-filters>button:hover{
+ background:var(--arc-control-hover);border-color:var(--arc-cyan);
+}
+.unified-shell main .arc-exercise-filters>button[aria-pressed="true"]{
+ background:var(--arc-action-primary-bg);
+ border-color:var(--arc-action-primary-border);
+ color:var(--arc-action-primary-text);
+}
+.unified-shell main .arc-exercise-filters>select:focus-visible,
+.unified-shell main .arc-exercise-filters>button:focus-visible{
+ outline:3px solid var(--arc-focus-outline);outline-offset:2px;
+}
