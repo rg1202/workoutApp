@@ -833,3 +833,9 @@
  grid-column:3;grid-row:1;align-self:center;
  margin:0;
 }
+
+/* M3 Progress: separate measured goal movement from supporting activity execution. */
+.unified-shell main .progress-goals .arc-progress-goal-signal{
+ display:block;margin-top:5px;color:var(--arc-muted);
+ font-size:.75rem;line-height:1.4;white-space:normal;
+}
