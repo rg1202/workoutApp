@@ -591,6 +591,6 @@
 
 /* M2 Today priority: today's actionable plan precedes longer-term goal direction. */
 .unified-shell main .today-v2>.today-next{order:0}
-.unified-shell main .today-v2>.today-goal-intelligence{order:1}
-.unified-shell main .today-v2>.today-context{order:2}
+.unified-shell main .today-v2>.today-context{order:1}
+.unified-shell main .today-v2>.today-goal-intelligence{order:2}
 .unified-shell main .today-v2>.today-v2-grid{order:3}
