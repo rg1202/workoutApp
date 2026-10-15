@@ -41,6 +41,10 @@ for(const width of [390,768]){
   for(const name of ['Today','Goals','Calendar','Progress']){
    await page.getByRole('button',{name,exact:true}).first().click();
    const overflow=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,document:document.documentElement.scrollWidth}));
+   if(overflow.document>overflow.viewport+2){
+    const offenders=await page.evaluate(()=>Array.from(document.querySelectorAll('body *')).map(el=>({tag:el.tagName,classes:typeof el.className==='string'?el.className.slice(0,100):'',width:Math.round(el.getBoundingClientRect().width),right:Math.round(el.getBoundingClientRect().right),scroll:el.scrollWidth})).filter(x=>x.right>document.documentElement.clientWidth+2&&x.width>0).sort((a,b)=>b.right-a.right).slice(0,12));
+    console.log('Horizontal overflow diagnostics',name,width,JSON.stringify(offenders));
+   }
    expect(overflow.document, name+' overflow at '+width+'px').toBeLessThanOrEqual(overflow.viewport+2);
   }
  });
