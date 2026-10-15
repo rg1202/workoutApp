@@ -49,3 +49,20 @@ for(const width of [390,768]){
   }
  });
 }
+
+test('Phone navigation exposes accessible active tabs with touch-sized targets',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('/');
+ await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
+ await page.getByRole('button',{name:'Continue to Arc'}).click();
+ const nav=page.getByRole('navigation',{name:'Primary navigation'});
+ for(const name of ['Goals','Calendar','Today','Progress']){
+  const tab=nav.getByRole('button',{name,exact:true});
+  await tab.click();
+  await expect(tab).toHaveAttribute('aria-current','page');
+  const bounds=await tab.boundingBox();
+  expect(bounds).not.toBeNull();
+  expect(bounds!.height).toBeGreaterThanOrEqual(44);
+  expect(bounds!.width).toBeGreaterThanOrEqual(44);
+ }
+});
