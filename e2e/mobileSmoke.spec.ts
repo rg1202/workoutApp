@@ -66,3 +66,18 @@ test('Phone navigation exposes accessible active tabs with touch-sized targets',
   expect(bounds!.width).toBeGreaterThanOrEqual(44);
  }
 });
+
+test('Mobile Calendar planning form stays within phone viewport',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('/');
+ await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
+ await page.getByRole('button',{name:'Continue to Arc'}).click();
+ await page.getByRole('button',{name:'Calendar',exact:true}).first().click();
+ await page.getByRole('button',{name:/Plan activity/i}).first().click();
+ const form=page.locator('.plan-form');
+ await expect(form).toBeVisible();
+ const metrics=await form.evaluate(el=>({width:el.getBoundingClientRect().width,right:el.getBoundingClientRect().right,viewport:document.documentElement.clientWidth}));
+ expect(metrics.right).toBeLessThanOrEqual(metrics.viewport+2);
+ const inputs=await form.locator('input:not([type=checkbox]),select,textarea').all();
+ for(const input of inputs){const box=await input.boundingBox();if(box){expect(box.x).toBeGreaterThanOrEqual(0);expect(box.x+box.width).toBeLessThanOrEqual(392)}}
+});
