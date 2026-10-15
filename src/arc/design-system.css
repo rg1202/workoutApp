@@ -815,3 +815,21 @@
 .unified-shell main .arc-today-completion-feedback>span{display:inline-flex;align-items:center;gap:8px;flex:1 1 190px;min-width:0;overflow-wrap:anywhere}
 .unified-shell main .arc-today-completion-feedback>span svg{flex-shrink:0;color:var(--arc-mint)}
 .unified-shell main .arc-today-completion-feedback .arc-ui-button{min-height:32px;padding:5px 10px;font-size:.75rem}
+
+/* Keep Calendar activity actions on the same row, even when goal labels wrap. */
+.unified-shell main .cal-event.cal-planned:has(.cal-goal-list){
+ display:grid;
+ grid-template-columns:minmax(0,1fr) auto auto;
+ align-items:center;
+ column-gap:4px;
+}
+.unified-shell main .cal-event.cal-planned:has(.cal-goal-list)>.cal-plan-main{
+ grid-column:1;grid-row:1;align-self:start;
+}
+.unified-shell main .cal-event.cal-planned:has(.cal-goal-list)>.cal-completion-toggle{
+ grid-column:2;grid-row:1;align-self:center;
+}
+.unified-shell main .cal-event.cal-planned:has(.cal-goal-list)>.cal-delete{
+ grid-column:3;grid-row:1;align-self:center;
+ margin:0;
+}
