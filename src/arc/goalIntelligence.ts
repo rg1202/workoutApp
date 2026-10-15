@@ -26,17 +26,19 @@ export function goalSignal(goal:Goal,plans:PlannedActivity[],today:string):GoalS
  weekEnd.setDate(weekEnd.getDate()+6);
  const iso=(d:Date)=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
  const week=linked.filter(p=>p.date>=iso(weekStart)&&p.date<=iso(weekEnd));
+ // A BJJ consistency target measures attended BJJ sessions, not mobility support.
+ const targetWeek=goal.type==='BJJ'?week.filter(p=>p.type==='BJJ'):week;
  const weeklyTarget=(goal.supportingTargets??[]).reduce((sum,t)=>sum+Math.max(0,t.frequencyPerWeek||0),0);
- const weeklyCompleted=week.filter(p=>p.status==='Completed').length;
- const weeklyPlanned=week.filter(p=>p.status==='Planned').length;
- const remainingThisWeek=week.filter(p=>p.status==='Planned'&&p.date>=today).length;
+ const weeklyCompleted=targetWeek.filter(p=>p.status==='Completed').length;
+ const weeklyPlanned=targetWeek.filter(p=>p.status==='Planned').length;
+ const remainingThisWeek=targetWeek.filter(p=>p.status==='Planned'&&p.date>=today).length;
  const actualMinutes=completed.reduce((sum,p)=>sum+(p.actuals?.actualDurationMinutes??0),0);
  const missingMinutes=completed.filter(p=>p.actuals?.actualDurationMinutes===undefined).length;
  const completionRate=completed.length+skipped.length?Math.round(100*completed.length/(completed.length+skipped.length)):null;
  let direction:GoalSignal['direction']='Not enough evidence';
  let explanation='Not enough completed or skipped sessions to assess execution.';
  if(!linked.length){direction='No schedule';explanation='No Calendar activities linked to this goal yet.'}
- else if(weeklyTarget>0&&weeklyCompleted>=weeklyTarget){direction='On pace';explanation='Completed this week’s supporting-session target.'}
+ else if(weeklyTarget>0&&weeklyCompleted>=weeklyTarget){direction='On pace';explanation='Completed this week’s session target.'}
  else if(weeklyTarget>0&&weeklyCompleted+remainingThisWeek<weeklyTarget){direction='Needs attention';explanation='Completed and upcoming sessions are below the weekly target.'}
  else if(weeklyTarget>0){direction='On pace';explanation='The remaining scheduled sessions can meet the weekly target.'}
  else if(skipped.length>0){direction='Needs attention';explanation='Some scheduled supporting sessions were skipped.'}
