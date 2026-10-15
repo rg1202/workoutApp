@@ -928,3 +928,8 @@
 .unified-shell main .arc-goal-program-row>span{display:flex;gap:6px;flex-wrap:wrap}
 .unified-shell main .arc-goal-program-chip{display:inline-flex;gap:7px;align-items:center;padding:5px 8px;border:1px solid var(--arc-border);border-radius:99px}
 .unified-shell main .arc-goal-program-chip button{border:0;background:transparent;color:inherit;cursor:pointer;font-size:1.1em}
+
+/* M4.3: per-goal supporting program assignment status. */
+.unified-shell main .arc-goal-program-statuses{display:grid;gap:8px}
+.unified-shell main .arc-goal-program-status{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px;border:1px solid var(--arc-border);border-radius:10px}
+.unified-shell main .arc-goal-program-status p{margin:5px 0 0}
