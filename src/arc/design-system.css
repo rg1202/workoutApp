@@ -771,3 +771,9 @@
 .arc-med-doses{margin-bottom:16px}
 .arc-med-dose>.arc-ui-button{flex:0 0 auto}
 @media(max-width:600px){.arc-med-form{padding:12px}.arc-med-item>.arc-med-actions{width:100%}}
+
+.arc-calendar-medications{display:flex;flex-direction:column;gap:4px;min-width:0;margin:5px 0}
+.arc-calendar-dose{display:block;width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;padding:5px 7px;border:1px solid var(--arc-action-border);border-radius:7px;background:var(--arc-control);color:var(--arc-action-text);font:inherit;font-size:.7rem;cursor:pointer}
+.arc-calendar-dose:hover{border-color:var(--arc-cyan);background:var(--arc-control-hover)}
+.arc-calendar-dose:focus-visible{outline:2px solid var(--arc-focus-outline);outline-offset:2px}
+.arc-calendar-dose.is-taken{color:var(--arc-mint);border-color:var(--arc-action-primary-border)}
