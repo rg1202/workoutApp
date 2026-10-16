@@ -1078,3 +1078,10 @@
 .cal-exercise-results button{display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;border:0;border-radius:8px;background:transparent;color:#e8f3f9;padding:10px;cursor:pointer}
 .cal-exercise-results button:hover,.cal-exercise-results button:focus-visible{background:#1d3b47;outline:1px solid #66d7c2}
 .cal-exercise-results small{color:#aac0cb}
+
+/* Activity-specific BJJ and endurance planning */
+.cal-specific-session{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px;border:1px solid #315c62;border-radius:10px;background:rgba(49,132,120,.09)}
+.cal-specific-session>strong{grid-column:1/-1;color:#9ae9d9}
+.cal-specific-session label{display:grid;gap:6px;min-width:0}
+.cal-specific-session input,.cal-specific-session select{box-sizing:border-box;width:100%;min-width:0;padding:10px;border:1px solid #365167;border-radius:8px;background:#101f2c;color:#edf7fc}
+@media(max-width:520px){.cal-specific-session{grid-template-columns:1fr}}
