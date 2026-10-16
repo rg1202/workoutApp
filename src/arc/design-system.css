@@ -1104,3 +1104,5 @@
 .arc-today-metrics .arc-plan-actual-row output{font-variant-numeric:tabular-nums;color:#d4e9ef}
 .arc-today-metrics .arc-plan-actual-row input{min-width:0;width:100%;box-sizing:border-box;padding:9px;border-radius:8px;border:1px solid #365167;background:#101f2c;color:#edf7fc}
 .arc-today-metrics>button{justify-self:start}
+
+.arc-focus-comparisons{margin:16px 0}.arc-focus-comparisons>p{color:var(--muted,#a4b5c2);font-size:.9rem}.arc-focus-comparison-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}.arc-focus-comparison-grid>article{min-width:0;padding:14px;border:1px solid #355465;border-radius:12px;background:rgba(16,35,48,.45)}.arc-focus-comparison-grid h3{margin:0 0 4px}.arc-focus-comparison-grid small{color:#a8bdc9}.arc-focus-comparison-metric{display:grid;gap:3px;margin-top:12px;padding-top:10px;border-top:1px solid #304b5a}.arc-focus-comparison-metric strong{font-variant-numeric:tabular-nums;color:#b4f3e2}@media(max-width:760px){.arc-focus-comparison-grid{grid-template-columns:1fr}}
