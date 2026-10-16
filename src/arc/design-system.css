@@ -1085,3 +1085,15 @@
 .cal-specific-session label{display:grid;gap:6px;min-width:0}
 .cal-specific-session input,.cal-specific-session select{box-sizing:border-box;width:100%;min-width:0;padding:10px;border:1px solid #365167;border-radius:8px;background:#101f2c;color:#edf7fc}
 @media(max-width:520px){.cal-specific-session{grid-template-columns:1fr}}
+
+/* Focus-owned planned vs actual recording: aligned measurements */
+.arc-plan-actual{display:grid;gap:9px;grid-column:1/-1;min-width:0}
+.arc-plan-actual-head,.arc-plan-actual-row{display:grid;grid-template-columns:minmax(110px,1.4fr) repeat(2,minmax(0,1fr));align-items:center;gap:10px}
+.arc-plan-actual-head{color:#9bc9c6;font-size:12px}
+.arc-plan-actual-head strong:first-child{visibility:hidden}
+.arc-plan-actual-row{padding:8px 0;border-bottom:1px solid rgba(133,170,191,.14)}
+.arc-plan-actual-row>span{font-size:13px;color:#c5d9e5}
+.arc-plan-actual-row label,.arc-plan-actual-row input{min-width:0;width:100%;box-sizing:border-box}
+.arc-plan-actual-row input{padding:10px;border-radius:8px;border:1px solid #365167;background:#101f2c;color:#edf7fc}
+.arc-visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+@media(max-width:480px){.arc-plan-actual-head,.arc-plan-actual-row{grid-template-columns:minmax(85px,1fr) repeat(2,minmax(0,1fr));gap:6px}.arc-plan-actual-row input{padding:8px 5px}}
