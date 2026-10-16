@@ -21,7 +21,18 @@ test('Mobile prescription input fits viewport',async({page})=>{
  await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
  await page.getByRole('button',{name:'Continue to Arc'}).click();
  await page.getByRole('button',{name:'Today',exact:true}).first().click();
- await page.getByRole('button',{name:'Add example mobility session'}).click();
+ await page.evaluate(async()=>{
+  const {bjjMobilityTemplate}=await import('/src/arc/sessionPrescriptions.ts');
+  const date=new Date().toLocaleDateString('en-CA');
+  localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([{
+   id:'e2e:mobile-mobility',date,time:'23:45',title:'Mobile mobility session',
+   type:'Mobility',durationMinutes:20,status:'Planned',sourceType:'Manual',
+   prescription:bjjMobilityTemplate()
+  }]));
+ });
+ await page.reload();
+ await page.getByRole('button',{name:'Today',exact:true}).first().click();
+ await page.getByRole('button',{name:'View details'}).click();
  const input=page.getByLabel('90/90 hip switches actual reps');
  await expect(input).toBeVisible();
  const bounds=await input.boundingBox();
