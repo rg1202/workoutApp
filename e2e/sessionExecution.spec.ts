@@ -5,7 +5,15 @@ test('Today mobility prescription records movement actuals and completion withou
  await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
  await page.getByRole('button',{name:'Continue to Arc'}).click();
  await page.getByRole('button',{name:'Today',exact:true}).first().click();
- await page.getByRole('button',{name:'Add example mobility session'}).click();
+ await page.evaluate(async()=>{
+  const {bjjMobilityTemplate}=await import('/src/arc/sessionPrescriptions.ts');
+  const date=new Date().toLocaleDateString('en-CA');
+  const activity={id:'demo:bjj-mobility:'+date,date,time:'23:45',title:'BJJ Mobility & Recovery · Session A',type:'Mobility',durationMinutes:20,status:'Planned',sourceType:'Manual',prescription:bjjMobilityTemplate()};
+  localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([activity]));
+ });
+ await page.reload();
+ await page.getByRole('button',{name:'Today',exact:true}).first().click();
+ await page.getByRole('button',{name:'View details'}).click();
  const details=page.getByRole('heading',{name:'Record your session'});
  if(!await details.isVisible())await page.getByRole('button',{name:'View details'}).click();
  await expect(page.getByRole('heading',{name:'Record your session'})).toBeVisible();
@@ -34,7 +42,15 @@ test('Completed prescribed session survives reload and appears in Progress histo
  await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
  await page.getByRole('button',{name:'Continue to Arc'}).click();
  await page.getByRole('button',{name:'Today',exact:true}).first().click();
- await page.getByRole('button',{name:'Add example mobility session'}).click();
+ await page.evaluate(async()=>{
+  const {bjjMobilityTemplate}=await import('/src/arc/sessionPrescriptions.ts');
+  const date=new Date().toLocaleDateString('en-CA');
+  const activity={id:'demo:bjj-mobility:'+date,date,time:'23:45',title:'BJJ Mobility & Recovery · Session A',type:'Mobility',durationMinutes:20,status:'Planned',sourceType:'Manual',prescription:bjjMobilityTemplate()};
+  localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([activity]));
+ });
+ await page.reload();
+ await page.getByRole('button',{name:'Today',exact:true}).first().click();
+ await page.getByRole('button',{name:'View details'}).click();
  await expect(page.getByRole('heading',{name:'Record your session'})).toBeVisible();
  await page.getByLabel('90/90 hip switches actual reps').fill('12');
  const checks=page.locator('.arc-session-movement input[type=checkbox]');
@@ -55,7 +71,15 @@ test('Recorded prescription is included in Arc backup without losing execution r
  await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
  await page.getByRole('button',{name:'Continue to Arc'}).click();
  await page.getByRole('button',{name:'Today',exact:true}).first().click();
- await page.getByRole('button',{name:'Add example mobility session'}).click();
+ await page.evaluate(async()=>{
+  const {bjjMobilityTemplate}=await import('/src/arc/sessionPrescriptions.ts');
+  const date=new Date().toLocaleDateString('en-CA');
+  const activity={id:'demo:bjj-mobility:'+date,date,time:'23:45',title:'BJJ Mobility & Recovery · Session A',type:'Mobility',durationMinutes:20,status:'Planned',sourceType:'Manual',prescription:bjjMobilityTemplate()};
+  localStorage.setItem('workoutapp.planned-activities.v1',JSON.stringify([activity]));
+ });
+ await page.reload();
+ await page.getByRole('button',{name:'Today',exact:true}).first().click();
+ await page.getByRole('button',{name:'View details'}).click();
  await page.getByLabel('90/90 hip switches actual reps').fill('12');
  const checks=page.locator('.arc-session-movement input[type=checkbox]');
  for(let i=0;i<5;i++)await checks.nth(i).check();
