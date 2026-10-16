@@ -32,3 +32,29 @@ test('Progress focus comparisons pair completed measurements and avoid double co
  await expect(bjj).toContainText('5 → 6');
  await expect(bjj).toContainText('60 → 65 min');
 });
+
+test('Calendar goal support keeps focus metrics when scheduled',async({page})=>{
+ await page.goto('/');
+ await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
+ await page.getByRole('button',{name:'Continue to Arc'}).click();
+ await page.evaluate(()=>{
+  localStorage.setItem('workoutapp.goals.v2',JSON.stringify([{id:'test-run-goal',name:'Test running goal',type:'Cardio',status:'Active',supportingTargets:[{id:'target-run',name:'Run support',activityType:'Cardio',frequencyPerWeek:1,durationMinutes:40}]}]));
+  localStorage.setItem('workoutapp.planned-activities.v1','[]');
+ });
+ await page.reload();
+ await page.getByRole('button',{name:'Calendar',exact:true}).first().click();
+ await page.getByRole('button',{name:'Manage support for Test running goal'}).click();
+ await page.getByRole('dialog',{name:'Manage support for Test running goal'}).getByRole('button',{name:/Run support/}).click();
+ await page.getByLabel('Session focus discipline').selectOption('Running');
+ await page.getByLabel('Planned distance km').fill('5');
+ await page.getByLabel('Goal plan Effort / RPE (1–10)').fill('4');
+ await page.locator('.cal-place-days button:not([disabled])').first().click();
+ await page.getByRole('button',{name:'Add 1 session'}).click();
+ const plans=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]'));
+ await expect.poll(async()=>(await plans()).length).toBe(1);
+ const item=(await plans())[0];
+ expect(item.goalIds).toContain('test-run-goal');
+ expect(item.specificPlan.discipline).toBe('Running');
+ expect(item.plannedMetrics.distanceKm).toBe(5);
+ expect(item.plannedMetrics.effort).toBe(4);
+});
