@@ -1064,3 +1064,10 @@
 .cal-goal-session-fields label:has(textarea){grid-column:1/-1}
 .cal-goal-session-fields input,.cal-goal-session-fields textarea{width:100%;min-width:0;box-sizing:border-box;border:1px solid #365167;border-radius:9px;padding:10px;background:#101f2c;color:#edf7fc;font:inherit}
 @media(max-width:520px){.cal-goal-session-fields{grid-template-columns:1fr}.cal-goal-session-fields label{grid-column:1/-1}}
+
+/* Structured strength and mobility prescription rows in Calendar. */
+.cal-session-movements{grid-column:1/-1;display:grid;gap:10px}
+.cal-session-movement{display:grid;grid-template-columns:minmax(140px,2fr) repeat(4,minmax(58px,1fr)) auto;gap:8px;align-items:end;padding:10px;border:1px solid #2c4659;border-radius:10px}
+.cal-session-movement label{min-width:0}
+.cal-session-movement button{min-height:40px}
+@media(max-width:760px){.cal-session-movement{grid-template-columns:repeat(2,minmax(0,1fr))}.cal-session-movement label:first-child{grid-column:1/-1}}
