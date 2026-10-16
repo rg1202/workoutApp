@@ -351,6 +351,14 @@ test('smart generator schedules strength around BJJ and previews the whole week'
  await expect(page.getByText('BJJ').first()).toBeVisible();
  const firstStrengthDate=await page.evaluate(()=>{const store=JSON.parse(localStorage.getItem('workoutapp.programs.v3')||'{}'),p=store.programs[store.programs.length-1],start=new Date(p.startDate+'T12:00:00'),weekday=p.days[0].weekday,offset=(weekday-start.getDay()+7)%7,d=new Date(start);d.setDate(d.getDate()+offset);return d.toLocaleDateString('en-CA')});
 
+ // Generated programs can begin outside the Calendar's initially visible week.
+ // Navigate to the generated session instead of assuming its date is already rendered.
+ for(let attempt=0;attempt<12;attempt++){
+  const visible=await page.locator('.cal-week [data-date]').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('data-date')||'').sort());
+  if(visible.includes(firstStrengthDate))break;
+  if(!visible.length)throw new Error('Calendar week has no dated cells');
+  await page.getByRole('button',{name:firstStrengthDate>visible[visible.length-1]?'Next calendar period':'Previous calendar period'}).click();
+ }
  const strengthCell=page.locator('[data-date="'+firstStrengthDate+'"]').first();
  await expect(strengthCell).toHaveCount(1);
  const strengthEvent=strengthCell.locator('.cal-event.cal-planned').filter({hasText:p.days[0].name});
