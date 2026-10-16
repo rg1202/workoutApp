@@ -1,3 +1,4 @@
+import {inferSessionDomain,isFocusId} from './focusSessionRegistry';
 export type SpecificSessionPlan={
  discipline:'BJJ'|'Running'|'Cycling';
  format?:string;
@@ -6,9 +7,8 @@ export type SpecificSessionPlan={
  intensity?:'Easy'|'Moderate'|'Hard';
 };
 export function classifySession(type:string,title:string):SpecificSessionPlan['discipline']|null{
- if(type==='BJJ')return 'BJJ';
- if(type!=='Cardio')return null;
- return /cycl|bike|ride/i.test(title)?'Cycling':'Running';
+ const domain=inferSessionDomain(type as 'BJJ'|'Cardio'|'Strength'|'Mobility'|'Recovery'|'Other',title);
+ return isFocusId(domain)?domain:null;
 }
 export default function EnduranceBjjSessionFields({discipline,value,onChange}:{discipline:SpecificSessionPlan['discipline'];value:SpecificSessionPlan;onChange:(v:SpecificSessionPlan)=>void}){
  const change=(patch:Partial<SpecificSessionPlan>)=>onChange({...value,...patch});
