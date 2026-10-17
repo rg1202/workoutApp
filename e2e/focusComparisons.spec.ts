@@ -34,27 +34,49 @@ test('Progress focus comparisons pair completed measurements and avoid double co
 });
 
 test('Calendar goal support keeps focus metrics when scheduled',async({page})=>{
- await page.goto('/');
- await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
- await page.getByRole('button',{name:'Continue to Arc'}).click();
- await page.evaluate(()=>{
-  localStorage.setItem('workoutapp.goals.v2',JSON.stringify([{id:'test-run-goal',name:'Test running goal',type:'Cardio',status:'Active',supportingTargets:[{id:'target-run',name:'Run support',activityType:'Cardio',frequencyPerWeek:1,durationMinutes:40}]}]));
-  localStorage.setItem('workoutapp.planned-activities.v1','[]');
+ await test.step('Open Arc with a clean goal-support fixture',async()=>{
+  await page.goto('/');
+  await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
+  await page.getByRole('button',{name:'Continue to Arc'}).click();
+  await page.evaluate(()=>{
+   localStorage.setItem('workoutapp.goals.v2',JSON.stringify([{
+    id:'test-run-goal',name:'Test running goal',type:'Cardio',status:'Active',
+    goalTypeV2:'Consistency',priority:'Primary',focus:'running',
+    supportingTargets:[{name:'Run support',activityType:'Cardio',frequencyPerWeek:1,durationMinutes:40}]
+   }]));
+   localStorage.setItem('workoutapp.planned-activities.v1','[]');
+  });
+  await page.reload();
  });
- await page.reload();
- await page.getByRole('button',{name:'Calendar',exact:true}).first().click();
- await page.getByRole('button',{name:'Manage support for Test running goal'}).click();
- await page.getByRole('dialog',{name:'Manage support for Test running goal'}).getByRole('button',{name:/Run support/}).click();
- await page.getByLabel('Session focus discipline').selectOption('Running');
- await page.getByLabel('Planned distance km').fill('5');
- await page.getByLabel('Goal plan Effort / RPE (1–10)').fill('4');
- await page.locator('.cal-place-days button:not([disabled])').first().click();
- await page.getByRole('button',{name:'Add 1 session'}).click();
- const plans=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]'));
- await expect.poll(async()=>(await plans()).length).toBe(1);
- const item=(await plans())[0];
- expect(item.goalIds).toContain('test-run-goal');
- expect(item.specificPlan.discipline).toBe('Running');
- expect(item.plannedMetrics.distanceKm).toBe(5);
- expect(item.plannedMetrics.effort).toBe(4);
+ await test.step('Find the running goal in Calendar coverage',async()=>{
+  await page.getByRole('button',{name:'Calendar',exact:true}).first().click();
+  await page.locator('.cal-switch').getByRole('button',{name:'Week',exact:true}).click();
+  const coverage=page.locator('.cal-goal-coverage');
+  await expect(coverage.getByText('Test running goal',{exact:true})).toBeVisible({timeout:5000});
+  await coverage.getByRole('button',{name:'Manage support for Test running goal'}).click();
+  await expect(page.getByRole('dialog',{name:'Manage support for Test running goal'})).toBeVisible({timeout:5000});
+ });
+ await test.step('Configure focus-specific goal support',async()=>{
+  const manager=page.getByRole('dialog',{name:'Manage support for Test running goal'});
+  await manager.locator('.arc-goal-manage-targets button').filter({hasText:'Run support'}).click();
+  await expect(page.getByText('ADD GOAL SUPPORT')).toBeVisible({timeout:5000});
+  await page.getByLabel('Session focus discipline').selectOption('Running');
+  await expect(page.getByLabel('Planned distance km')).toBeVisible({timeout:5000});
+  await page.getByLabel('Planned distance km').fill('5');
+  await page.getByLabel('Goal plan Effort / RPE (1–10)').fill('4');
+ });
+ await test.step('Schedule a date and persist the session',async()=>{
+  await page.locator('.cal-place-days button:not([disabled])').first().click();
+  await expect(page.getByRole('button',{name:'Add 1 session'})).toBeEnabled({timeout:5000});
+  await page.getByRole('button',{name:'Add 1 session'}).click();
+  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').length),{timeout:5000}).toBe(1);
+ });
+ await test.step('Verify the saved goal association and planned metrics',async()=>{
+  const plans=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]'));
+  const item=plans[0];
+  expect(item.goalIds).toContain('test-run-goal');
+  expect(item.specificPlan.discipline).toBe('Running');
+  expect(item.plannedMetrics.distanceKm).toBe(5);
+  expect(item.plannedMetrics.effort).toBe(4);
+ });
 });
