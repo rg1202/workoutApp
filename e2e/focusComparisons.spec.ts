@@ -34,6 +34,9 @@ test('Progress focus comparisons pair completed measurements and avoid double co
 });
 
 test('Calendar goal support keeps focus metrics when scheduled',async({page})=>{
+ // Bound Playwright actions individually so a missing control reports its locator instead of a generic 30-second test timeout.
+ page.setDefaultTimeout(3500);
+ page.setDefaultNavigationTimeout(5000);
  await test.step('Open Arc with a clean goal-support fixture',async()=>{
   await page.goto('/');
   await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
@@ -48,6 +51,7 @@ test('Calendar goal support keeps focus metrics when scheduled',async({page})=>{
   });
   await page.reload();
  });
+ console.log('[Arc goal support E2E] Previous step completed');
  await test.step('Find the running goal in Calendar coverage',async()=>{
   await page.getByRole('button',{name:'Calendar',exact:true}).first().click();
   await page.locator('.cal-switch').getByRole('button',{name:'Week',exact:true}).click();
@@ -56,6 +60,7 @@ test('Calendar goal support keeps focus metrics when scheduled',async({page})=>{
   await coverage.getByRole('button',{name:'Manage support for Test running goal'}).click();
   await expect(page.getByRole('dialog',{name:'Manage support for Test running goal'})).toBeVisible({timeout:5000});
  });
+ console.log('[Arc goal support E2E] Previous step completed');
  await test.step('Configure focus-specific goal support',async()=>{
   const manager=page.getByRole('dialog',{name:'Manage support for Test running goal'});
   await manager.locator('.arc-goal-manage-targets button').filter({hasText:'Run support'}).click();
@@ -65,12 +70,14 @@ test('Calendar goal support keeps focus metrics when scheduled',async({page})=>{
   await page.getByLabel('Planned distance km').fill('5');
   await page.getByLabel('Goal plan Effort / RPE (1–10)').fill('4');
  });
+ console.log('[Arc goal support E2E] Previous step completed');
  await test.step('Schedule a date and persist the session',async()=>{
   await page.locator('.cal-place-days button:not([disabled])').first().click();
   await expect(page.getByRole('button',{name:'Add 1 session'})).toBeEnabled({timeout:5000});
   await page.getByRole('button',{name:'Add 1 session'}).click();
   await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]').length),{timeout:5000}).toBe(1);
  });
+ console.log('[Arc goal support E2E] Previous step completed');
  await test.step('Verify the saved goal association and planned metrics',async()=>{
   const plans=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1')||'[]'));
   const item=plans[0];
