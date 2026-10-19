@@ -3,7 +3,7 @@ import { Archive, ChevronDown, Layers3, Plus } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { Goal } from '../goals';
 import type { GoalFocus } from './goalsV2';
-import { activeFocuses } from './focusRegistry';
+import { activeFocuses, type FocusId } from './focusRegistry';
 
 type SectionId = 'bjj' | 'running' | 'cycling' | 'general' | 'other';
 type FocusSection = {
@@ -20,7 +20,7 @@ const activeIds = new Set(activeFocuses.map(focus => focus.id));
 /** Resolve old records without rewriting them. Ambiguous goals stay shared. */
 export function goalSectionId(goal: Goal): SectionId {
   if (goal.focus) {
-    if (activeIds.has(goal.focus as never)) return goal.focus as SectionId;
+    if (activeIds.has(goal.focus as FocusId)) return goal.focus as SectionId;
     return goal.focus === 'general' ? 'general' : 'other';
   }
   if (goal.type === 'BJJ') return 'bjj';
@@ -93,13 +93,14 @@ export default function FocusGoalSections({
       {sections.map(section => {
         const isExpanded = expanded[section.id] ?? section.goals.length > 0;
         const contentId = 'arc-goal-focus-' + section.id;
+        const regionName = section.id === 'general' || section.id === 'other' ? section.title : section.title + ' goals';
         const Icon = section.Icon;
         return (
           <section key={section.id} className="arc-goal-focus-section"
-            aria-label={section.title + ' goals'} data-focus={section.id}>
+            aria-label={regionName} data-focus={section.id}>
             <div className="arc-goal-focus-header">
               <button type="button" className="arc-goal-focus-toggle"
-                aria-label={'Toggle ' + section.title + ' goals'}
+                aria-label={'Toggle ' + regionName}
                 aria-controls={contentId} aria-expanded={isExpanded}
                 onClick={() => setExpanded(current => ({ ...current, [section.id]: !isExpanded }))}>
                 <span className="arc-goal-focus-icon"><Icon size={21} aria-hidden="true"/></span>
@@ -112,7 +113,7 @@ export default function FocusGoalSections({
               </button>
               {section.id !== 'other' && <button type="button"
                 className="arc-ui-button arc-ui-button--quiet arc-goal-focus-add"
-                aria-label={'Add ' + section.title + ' goal'}
+                aria-label={section.id === 'general' ? 'Add shared goal' : 'Add ' + section.title + ' goal'}
                 onClick={() => {
                   setExpanded(current => ({ ...current, [section.id]: true }));
                   onCreate(section.id as GoalFocus);
