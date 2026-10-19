@@ -56,3 +56,40 @@ test('BJJ weekly target does not treat completed mobility as attendance',async({
  await expect(page.getByText('1/3 linked sessions this week')).toBeVisible();
  await expect(page.getByText('1 BJJ classes attended · 2 other supporting sessions (7 days)')).toBeVisible();
 });
+
+
+test('Goals organize primary and supporting objectives into full-width responsive rows',async({page})=>{
+ await page.goto('/');
+ await page.getByRole('checkbox',{name:/I have read and understand this private beta notice/i}).check();
+ await page.getByRole('button',{name:'Continue to Arc'}).click();
+ await page.evaluate(()=>{
+  localStorage.setItem('workoutapp.goals.v2',JSON.stringify([
+   {id:'layout:bjj',name:'Primary BJJ objective',type:'Consistency',goalTypeV2:'Consistency',status:'Active',priority:'Primary',focus:'bjj',metric:'Sessions',current:2,target:12,unit:'sessions',supportingTargets:[{id:'bjj',name:'BJJ training',activityType:'BJJ',frequencyPerWeek:3}]},
+   {id:'layout:milestone',name:'Primary milestone objective',type:'Milestone',goalTypeV2:'Outcome',status:'Active',priority:'Primary'},
+   {id:'layout:cycling',name:'Supporting cycling objective',type:'Cardio',goalTypeV2:'Performance',status:'Active',priority:'Supporting',metric:'Distance',current:15,target:100,unit:'mi'}
+  ]));
+ });
+ await page.reload();
+ await page.getByRole('button',{name:'Goals',exact:true}).first().click();
+ const primary=page.getByRole('region',{name:'Primary goals'});
+ const supporting=page.getByRole('region',{name:'Supporting goals'});
+ await expect(primary.locator('.goal-card')).toHaveCount(2);
+ await expect(supporting.locator('.goal-card')).toHaveCount(1);
+ await expect(primary.getByRole('heading',{name:'Primary BJJ objective'})).toBeVisible();
+ await expect(supporting.getByRole('heading',{name:'Supporting cycling objective'})).toBeVisible();
+ await expect(primary.getByText('Milestone',{exact:true})).toBeVisible();
+ const first=await primary.locator('.goal-card').nth(0).boundingBox();
+ const second=await primary.locator('.goal-card').nth(1).boundingBox();
+ const support=await supporting.locator('.goal-card').boundingBox();
+ expect(first&&second&&support).toBeTruthy();
+ expect(Math.abs(first!.x-second!.x)).toBeLessThan(3);
+ expect(second!.y).toBeGreaterThan(first!.y);
+ expect(support!.y).toBeGreaterThan(second!.y);
+ await page.setViewportSize({width:390,height:844});
+ await expect(primary.getByRole('heading',{name:'Primary BJJ objective'})).toBeVisible();
+ const body=primary.locator('.arc-goal-card-body').first();
+ const dimensions=await body.evaluate(el=>({width:el.clientWidth,scroll:el.scrollWidth}));
+ expect(dimensions.scroll).toBeLessThanOrEqual(dimensions.width+1);
+ await primary.getByRole('button',{name:'Edit goal'}).first().click();
+ await expect(page.locator('.goal-wizard')).toBeVisible();
+});
