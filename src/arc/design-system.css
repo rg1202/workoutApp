@@ -1115,3 +1115,62 @@
 .arc-goal-manage-session>div{flex:1 1 180px;display:grid;gap:4px;min-width:0}
 .arc-goal-manage-session small{opacity:.75}
 .arc-goal-manage-targets{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 20px}
+
+
+/* Goals V2: priority-led sections and scan-friendly full-width rows. */
+.arc-goal-sections{display:grid;gap:30px;margin:20px 0 30px;min-width:0}
+.arc-goal-section{display:grid;gap:13px;min-width:0}
+.arc-goal-section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:0 2px 12px;border-bottom:1px solid rgba(125,160,190,.2)}
+.arc-goal-section-head>div{display:grid;gap:4px}
+.arc-goal-section-head .eyebrow{color:var(--arc-text-muted,#93a6b9);font-size:10px;letter-spacing:.1em}
+.arc-goal-section-head h2{margin:0;font-size:21px;letter-spacing:-.045em}
+.arc-goal-section-head h2 small{font-size:12px;font-weight:600;color:var(--arc-text-muted,#93a6b9);vertical-align:middle;margin-left:5px}
+.arc-goal-section-head p{margin:0;color:var(--arc-text-muted,#93a6b9);font-size:12px;line-height:1.5}
+.arc-goal-section .goal-grid{grid-template-columns:minmax(0,1fr)!important;gap:12px!important}
+.arc-goal-section .goal-grid>.goal-card{width:100%;box-sizing:border-box;min-width:0;padding:20px 22px!important}
+.arc-goal-section--primary .goal-card{border-left:3px solid var(--arc-mint,#5ce5bf)}
+.arc-goal-section .goal-card-head{align-items:flex-start;gap:14px;margin-bottom:16px}
+.arc-goal-section .goal-card-head>div:first-child{min-width:0}
+.arc-goal-section .goal-card-head h2{font-size:19px!important;line-height:1.35;overflow-wrap:anywhere;margin:7px 0 0}
+.arc-goal-card-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr) minmax(0,1.18fr);gap:22px;min-width:0}
+.arc-goal-card-measure,.arc-goal-card-support,.arc-goal-card-week{min-width:0}
+.arc-goal-card-support,.arc-goal-card-week{border-left:1px solid rgba(125,160,190,.17);padding-left:22px}
+.arc-goal-card-measure .goal-destination{margin:0 0 10px}
+.arc-goal-card-measure .goal-destination b{font-size:14px}
+.arc-goal-card-measure .goal-numbers{margin:0}
+.arc-goal-card-measure .goal-progress{margin:11px 0 7px}
+.arc-goal-card-measure .goal-foot{margin:0}
+.arc-goal-card-support .goal-support-preview{margin:0!important;padding:0!important;border:0!important;gap:8px}
+.arc-goal-card-support .goal-support-preview>span{margin-bottom:2px;font-size:10px}
+.arc-goal-card-support .goal-support-preview>div{align-items:center;gap:10px}
+.arc-goal-card-support .goal-support-preview b{font-size:13px;min-width:0;overflow-wrap:anywhere}
+.arc-goal-card-support .goal-support-preview small{font-size:11px;white-space:nowrap}
+.arc-goal-card-week .goal-card-execution-summary{margin:0!important;padding:0;border:0;display:flex!important;flex-direction:column;align-items:flex-start!important;gap:7px}
+.arc-goal-card-week .goal-card-weekly{flex:none;width:100%}
+.arc-goal-card-week .goal-card-execution-summary>.goal-intelligence-status{margin:0!important}
+.arc-goal-card-week .goal-card-execution-summary>button{padding:5px 0;font-size:12px}
+.arc-goal-milestone{display:grid;gap:6px;color:var(--arc-text,#e9f2f5)}
+.arc-goal-milestone small,.arc-goal-no-support p{color:var(--arc-text-muted,#93a6b9);font-size:12px;line-height:1.5}
+.arc-goal-no-support{display:grid;justify-items:start;align-content:start;gap:8px}
+.arc-goal-no-support strong{font-size:10px;letter-spacing:.08em;color:var(--arc-text-muted,#93a6b9)}
+.arc-goal-no-support p{margin:0}
+.arc-goal-no-support button{font-size:12px;min-height:34px}
+.arc-goal-section .goal-card-expanded{margin-top:15px;padding-top:15px;border-top:1px solid rgba(125,160,190,.17)}
+.arc-goal-section .goal-actions{margin-top:15px!important;justify-content:flex-end!important;gap:10px}
+.arc-goal-section .goal-actions>.arc-ui-button{flex:none}
+@media(max-width:1050px){
+ .arc-goal-card-body{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+ .arc-goal-card-week{grid-column:1/-1;border-left:0;padding-left:0;border-top:1px solid rgba(125,160,190,.17);padding-top:12px}
+ .arc-goal-card-week .goal-card-execution-summary{flex-direction:row;align-items:center!important;flex-wrap:wrap}
+ .arc-goal-card-week .goal-card-weekly{flex:1 1 200px;width:auto}
+}
+@media(max-width:620px){
+ .arc-goal-sections{gap:25px}
+ .arc-goal-section-head{align-items:flex-start}
+ .arc-goal-section-head h2{font-size:19px}
+ .arc-goal-section .goal-grid>.goal-card{padding:16px!important}
+ .arc-goal-section .goal-card-head{margin-bottom:12px}
+ .arc-goal-card-body{grid-template-columns:minmax(0,1fr);gap:14px}
+ .arc-goal-card-support,.arc-goal-card-week{grid-column:auto;border-left:0;padding-left:0;border-top:1px solid rgba(125,160,190,.17);padding-top:14px}
+ .arc-goal-section .goal-actions>.arc-ui-button{flex:1 1 auto}
+}
