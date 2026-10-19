@@ -70,7 +70,7 @@ test('creating from a focus preselects it and offers relevant goal presets', asy
 test('shared goal supports multiple focuses without duplicating the goal or changing its ID', async ({ page }) => {
   await navGoals(page).click();
   await page.getByRole('region', { name: 'Shared goals' })
-    .getByRole('button', { name: 'Add Shared goals goal' }).click();
+    .getByRole('button', { name: 'Add shared goal' }).click();
   await expect(page.getByLabel('Goal focus')).toHaveValue('general');
   await page.getByRole('button', { name: 'Use Body composition goal preset' }).click();
   await page.getByLabel('Goal name').fill('Target weight');
