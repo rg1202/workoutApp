@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [product/v2]
 
+concurrency:
+  group: arc-v2-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   build-and-e2e:
     runs-on: ubuntu-latest
