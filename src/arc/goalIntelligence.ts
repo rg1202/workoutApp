@@ -1,4 +1,4 @@
-import {uniqueActivities} from './uniqueActivities';
+import {goalActivities} from './goalExecution';
 import type {Goal} from '../goals';
 import type {PlannedActivity} from '../plans';
 
@@ -11,7 +11,7 @@ export type GoalSignal={
 };
 const day=(date:string)=>new Date(date+'T12:00:00').getTime();
 export function goalSignal(goal:Goal,plans:PlannedActivity[],today:string):GoalSignal{
- const linked=uniqueActivities(plans).filter(p=>(p.goalIds?.includes(goal.id)||p.sourceType==='Goal'&&p.sourceId===goal.id));
+ const linked=goalActivities(plans,goal.id);
  const now=day(today),start=now-6*86400000,end=now+7*86400000;
  const recent=linked.filter(p=>day(p.date)>=start&&day(p.date)<=now);
  const upcoming=linked.filter(p=>day(p.date)>now&&day(p.date)<=end&&p.status==='Planned');
@@ -27,9 +27,13 @@ export function goalSignal(goal:Goal,plans:PlannedActivity[],today:string):GoalS
  const iso=(d:Date)=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
  const week=linked.filter(p=>p.date>=iso(weekStart)&&p.date<=iso(weekEnd));
  const weeklyTarget=(goal.supportingTargets??[]).reduce((sum,t)=>sum+Math.max(0,t.frequencyPerWeek||0),0);
- const weeklyCompleted=week.filter(p=>p.status==='Completed').length;
- const weeklyPlanned=week.filter(p=>p.status==='Planned').length;
- const remainingThisWeek=week.filter(p=>p.status==='Planned'&&p.date>=today).length;
+ // A linked cross-training session may support the goal, but it must not fulfill
+ // a BJJ/Cardio/etc. frequency target of a different activity type.
+ const targetTypes=new Set((goal.supportingTargets??[]).map(t=>t.activityType));
+ const targetWeek=weeklyTarget>0?week.filter(p=>targetTypes.has(p.type)):week;
+ const weeklyCompleted=targetWeek.filter(p=>p.status==='Completed').length;
+ const weeklyPlanned=targetWeek.filter(p=>p.status==='Planned').length;
+ const remainingThisWeek=targetWeek.filter(p=>p.status==='Planned'&&p.date>=today).length;
  const actualMinutes=completed.reduce((sum,p)=>sum+(p.actuals?.actualDurationMinutes??0),0);
  const missingMinutes=completed.filter(p=>p.actuals?.actualDurationMinutes===undefined).length;
  const completionRate=completed.length+skipped.length?Math.round(100*completed.length/(completed.length+skipped.length)):null;
