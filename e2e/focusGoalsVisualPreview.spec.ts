@@ -26,6 +26,17 @@ test('capture Focus-first Goals at desktop and mobile sizes', async ({ page }) =
       pageHeight: document.documentElement.scrollHeight
     }));
     console.log('ARC_VISUAL_METRICS_' + name + '=' + JSON.stringify(dimensions));
+    const headerDebug = await page.evaluate(() => {
+      const el = document.querySelector('.arc-goals-page-header');
+      const children = Array.from(el?.children ?? []);
+      const describe = (node: Element) => {
+        const rect = node.getBoundingClientRect();
+        const css = getComputedStyle(node);
+        return { tag: node.tagName, className: node.className, x: rect.x, y: rect.y, w: rect.width, h: rect.height, marginTop: css.marginTop, marginBottom: css.marginBottom, minHeight: css.minHeight, height: css.height, alignContent: css.alignContent, alignItems: css.alignItems, flex: css.flex, position: css.position };
+      };
+      return el ? { header: describe(el), children: children.map(describe) } : null;
+    });
+    console.log('ARC_VISUAL_HEADER_' + name + '=' + JSON.stringify(headerDebug));
     const bytes = await page.screenshot({ type: 'jpeg', quality: 48, fullPage: true, animations: 'disabled' });
     const base64 = bytes.toString('base64');
     for (let offset = 0, part = 0; offset < base64.length; offset += 1500, part++) {
