@@ -27,9 +27,13 @@ export function goalSignal(goal:Goal,plans:PlannedActivity[],today:string):GoalS
  const iso=(d:Date)=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
  const week=linked.filter(p=>p.date>=iso(weekStart)&&p.date<=iso(weekEnd));
  const weeklyTarget=(goal.supportingTargets??[]).reduce((sum,t)=>sum+Math.max(0,t.frequencyPerWeek||0),0);
- const weeklyCompleted=week.filter(p=>p.status==='Completed').length;
- const weeklyPlanned=week.filter(p=>p.status==='Planned').length;
- const remainingThisWeek=week.filter(p=>p.status==='Planned'&&p.date>=today).length;
+ // A linked cross-training session may support the goal, but it must not fulfill
+ // a BJJ/Cardio/etc. frequency target of a different activity type.
+ const targetTypes=new Set((goal.supportingTargets??[]).map(t=>t.activityType));
+ const targetWeek=weeklyTarget>0?week.filter(p=>targetTypes.has(p.type)):week;
+ const weeklyCompleted=targetWeek.filter(p=>p.status==='Completed').length;
+ const weeklyPlanned=targetWeek.filter(p=>p.status==='Planned').length;
+ const remainingThisWeek=targetWeek.filter(p=>p.status==='Planned'&&p.date>=today).length;
  const actualMinutes=completed.reduce((sum,p)=>sum+(p.actuals?.actualDurationMinutes??0),0);
  const missingMinutes=completed.filter(p=>p.actuals?.actualDurationMinutes===undefined).length;
  const completionRate=completed.length+skipped.length?Math.round(100*completed.length/(completed.length+skipped.length)):null;
