@@ -39,7 +39,7 @@ test('Progress plans a linked activity, Today completes it, and Progress reflect
   await expect(page.getByPlaceholder(/Gi BJJ/i)).toHaveValue('BJJ drills');
   await expect(page.locator('.plan-form').getByRole('checkbox', { name: 'BJJ competition' })).toBeChecked();
   await expect(page.locator('.plan-form').getByRole('checkbox', { name: 'Run a 10K' })).not.toBeChecked();
-  await expect(page.locator('.plan-form').getByText('BJJ', { exact: true }).first()).toBeVisible();
+  await expect(page.locator('.plan-form select').first()).toHaveValue('BJJ');
   await page.getByRole('button', { name: 'Add to calendar' }).click();
 
   await expect.poll(() => page.evaluate(() => {
