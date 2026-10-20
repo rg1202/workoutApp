@@ -123,7 +123,7 @@ test('cross-training does not satisfy a different weekly target and Calendar gap
   await expect(goal).toContainText('Needs attention');
 
   await nav(page, 'Calendar').click();
-  const coverage = page.locator('.cal-goal-coverage').getByText('BJJ weekly consistency').locator('..');
+  const coverage = page.locator('.cal-goal-coverage article').filter({ hasText: 'BJJ weekly consistency' });
   await expect(coverage).toContainText('1/2 supporting sessions scheduled');
   await coverage.getByRole('button', { name: /BJJ 1\/2.*schedule/i }).click();
   await expect(page.getByText('ADD GOAL SUPPORT')).toBeVisible();
