@@ -94,4 +94,12 @@ test('one multi-goal session contributes once to global execution and to each ex
   await expect(page.locator('.arc-progress-goal[data-goal-id="g-two"]')).toContainText('1 / 1');
   await expect(page.locator('.progress-snapshot').first()).toContainText('1 of 1 planned sessions completed');
   await expect(page.locator('.progress-recent')).toContainText('Supports: Goal one, Goal two');
+  await page.setViewportSize({ width: 390, height: 844 });
+  const mobile = await page.evaluate(() => ({
+    scrollWidth: document.documentElement.scrollWidth,
+    viewportWidth: window.innerWidth,
+    columns: getComputedStyle(document.querySelector('.arc-progress-goal-execution')!).gridTemplateColumns.split(' ').length
+  }));
+  expect(mobile.scrollWidth).toBeLessThanOrEqual(mobile.viewportWidth);
+  expect(mobile.columns).toBe(1);
 });
