@@ -540,3 +540,49 @@
 @media(max-width:560px){
  .unified-shell main .arc-progress-goal-execution{grid-template-columns:minmax(0,1fr)}
 }
+
+
+/* Reviewable goal-week planner: responsive, accessible and consistent with Arc controls. */
+.unified-shell main .goal-plan-modal>section.arc-week-planner{
+ width:min(720px,100%);max-height:min(88vh,940px);padding:22px 24px;
+}
+.unified-shell main .arc-week-planner-explain{font-size:.8rem;line-height:1.55;margin:6px 0 14px}
+.unified-shell main .arc-week-planner-totals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.unified-shell main .arc-week-planner-totals>div{min-width:0;border:1px solid var(--arc-border);border-radius:10px;padding:12px;background:var(--arc-surface-2);display:flex;flex-direction:column;gap:3px}
+.unified-shell main .arc-week-planner-totals strong{font-size:1.5rem;color:var(--arc-text);line-height:1.2}
+.unified-shell main .arc-week-planner-totals span{font-size:.7rem;color:var(--arc-muted)}
+.unified-shell main .arc-week-planner-weeks{display:grid;gap:6px;margin:12px 0}
+.unified-shell main .arc-week-planner-weeks>div{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px 12px;padding:10px 12px;border:1px solid var(--arc-border);border-radius:9px;font-size:.78rem}
+.unified-shell main .arc-week-planner-weeks span{color:var(--arc-muted);font-size:.73rem}
+.unified-shell main .arc-week-planner-review-note,
+.unified-shell main .arc-week-planner-notice{display:flex;align-items:flex-start;gap:8px;margin:8px 0;color:var(--arc-muted);font-size:.76rem;line-height:1.5}
+.unified-shell main .arc-week-planner-review-note{color:var(--arc-text)}
+.unified-shell main .arc-week-planner-review-note svg,
+.unified-shell main .arc-week-planner-notice svg{flex-shrink:0;margin-top:1px}
+.unified-shell main .arc-week-planner-list{display:grid;gap:9px;margin:16px 0}
+.unified-shell main .arc-week-planner-item{
+ display:flex;align-items:flex-start;gap:11px;cursor:pointer;padding:13px;
+ background:var(--arc-surface-2);border:1px solid var(--arc-border);border-radius:11px;min-width:0;
+}
+.unified-shell main .arc-week-planner-item:has(input:checked){border-color:var(--arc-cyan)}
+.unified-shell main .arc-week-planner-item:focus-within{outline:2px solid var(--arc-cyan);outline-offset:2px}
+.unified-shell main .arc-week-planner-item>input{flex:0 0 auto;accent-color:var(--arc-cyan);width:17px;height:17px;margin:3px 0 0}
+.unified-shell main .arc-week-planner-item-main{display:flex;flex:1;flex-direction:column;align-items:flex-start;gap:4px;min-width:0}
+.unified-shell main .arc-week-planner-item-main>b{font-size:.85rem;color:var(--arc-text)}
+.unified-shell main .arc-week-planner-item-main>small,
+.unified-shell main .arc-week-planner-item-main>span{font-size:.73rem;color:var(--arc-muted);line-height:1.4}
+.unified-shell main .arc-week-planner-item-main>small.arc-week-planner-warning{display:flex;align-items:flex-start;gap:6px;color:var(--arc-muted)}
+.unified-shell main .arc-week-planner-item-main>small.arc-week-planner-warning svg{flex-shrink:0}
+.unified-shell main .arc-week-planner-check{flex-shrink:0;color:var(--arc-cyan)}
+.unified-shell main .arc-week-planner-empty{padding:14px;border:1px dashed var(--arc-border);border-radius:9px;font-size:.8rem}
+.unified-shell main .arc-week-planner-actions{position:sticky;bottom:-24px;z-index:1;background:var(--arc-surface);padding:16px 0 2px;margin-top:14px;border-top:1px solid var(--arc-border);flex-wrap:wrap}
+.unified-shell main .arc-week-planner-actions>div{display:flex;gap:9px;flex-wrap:wrap}
+.unified-shell main .arc-week-planner-actions .arc-ui-button{min-height:38px;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+@media(max-width:640px){
+ .unified-shell main .goal-plan-modal>section.arc-week-planner{padding:18px 16px;max-height:90vh;border-radius:18px 18px 0 0}
+ .unified-shell main .arc-week-planner-totals{gap:6px}
+ .unified-shell main .arc-week-planner-totals>div{padding:10px 8px}
+ .unified-shell main .arc-week-planner-actions{bottom:-18px}
+ .unified-shell main .arc-week-planner-actions>div{width:100%}
+ .unified-shell main .arc-week-planner-actions>div button{flex:1}
+}
