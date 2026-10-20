@@ -500,3 +500,43 @@
     justify-content:flex-start;
   }
 }
+
+
+/* Goal execution loop: outcome and scheduled support remain separate signals. */
+.unified-shell main .arc-progress-goal-list{display:grid;gap:0;min-width:0}
+.unified-shell main .arc-progress-goal{min-width:0;padding:16px 0}
+.unified-shell main .arc-progress-goal-title{display:flex;align-items:center;gap:10px;min-width:0}
+.unified-shell main .arc-progress-goal-title>div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.unified-shell main .arc-progress-goal-title b{font-size:.91rem;line-height:1.35;color:var(--arc-text)}
+.unified-shell main .arc-progress-goal-title small{font-size:.72rem;color:var(--arc-muted)}
+.unified-shell main .arc-progress-goal-execution{
+ display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:12px;margin-top:14px;
+}
+.unified-shell main .arc-progress-goal-execution>div{
+ display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0;
+ border:1px solid var(--arc-border);border-radius:10px;
+ background:var(--arc-surface-2);padding:12px;
+}
+.unified-shell main .arc-progress-goal-execution span{
+ display:block;font-size:.63rem;letter-spacing:.075em;font-weight:750;color:var(--arc-muted);
+}
+.unified-shell main .arc-progress-goal-execution strong{font-size:1.13rem;line-height:1.3;color:var(--arc-text)}
+.unified-shell main .arc-progress-goal-execution strong.arc-progress-goal-direction{font-size:.87rem}
+.unified-shell main .arc-progress-goal-execution small{font-size:.72rem;line-height:1.5;color:var(--arc-muted)}
+.unified-shell main .arc-progress-goal-next{font-size:.76rem;line-height:1.5;color:var(--arc-muted);margin:12px 0}
+.unified-shell main .arc-progress-plan-action,
+.unified-shell main .today-goal-plan-action{
+ display:inline-flex;align-items:center;justify-content:center;gap:7px;
+ min-height:36px;padding:8px 11px;border:1px solid var(--arc-action-border);
+ border-radius:var(--arc-action-radius);background:var(--arc-control);
+ color:var(--arc-action-text);font:inherit;font-size:.77rem;font-weight:700;cursor:pointer;
+}
+.unified-shell main .arc-progress-plan-action:hover,
+.unified-shell main .today-goal-plan-action:hover{border-color:var(--arc-cyan);background:var(--arc-control-hover)}
+.unified-shell main .arc-progress-plan-action:focus-visible,
+.unified-shell main .today-goal-plan-action:focus-visible{outline:3px solid var(--arc-focus-outline);outline-offset:3px}
+.unified-shell main .arc-progress-goal-caveat{display:block;margin-top:10px;color:var(--arc-muted);font-size:.72rem;line-height:1.5}
+.unified-shell main .today-goal-plan-action{align-self:flex-start;margin-top:3px}
+@media(max-width:560px){
+ .unified-shell main .arc-progress-goal-execution{grid-template-columns:minmax(0,1fr)}
+}
