@@ -103,3 +103,33 @@ test('one multi-goal session contributes once to global execution and to each ex
   expect(mobile.scrollWidth).toBeLessThanOrEqual(mobile.viewportWidth);
   expect(mobile.columns).toBe(1);
 });
+
+test('cross-training does not satisfy a different weekly target and Calendar gaps remain schedulable', async ({ page }) => {
+  const today = new Date().toLocaleDateString('en-CA');
+  await page.evaluate(date => {
+    localStorage.setItem('workoutapp.goals.v2', JSON.stringify([
+      { id: 'target-specific', name: 'BJJ weekly consistency', type: 'BJJ', focus: 'bjj', status: 'Active',
+        supportingTargets: [{ id: 'bjj-weekly', name: 'BJJ drills', activityType: 'BJJ', frequencyPerWeek: 2 }] }
+    ]));
+    localStorage.setItem('workoutapp.planned-activities.v1', JSON.stringify([
+      { id: 'bjj-done', date, title: 'BJJ class', type: 'BJJ', status: 'Completed', goalIds: ['target-specific'] },
+      { id: 'cardio-done', date, title: 'Recovery run', type: 'Cardio', status: 'Completed', goalIds: ['target-specific'] }
+    ]));
+  }, today);
+  await page.reload();
+  await nav(page, 'Progress').click();
+  const goal = page.locator('.arc-progress-goal[data-goal-id="target-specific"]');
+  await expect(goal).toContainText('1 / 2');
+  await expect(goal).toContainText('Needs attention');
+
+  await nav(page, 'Calendar').click();
+  const coverage = page.locator('.cal-goal-coverage').getByText('BJJ weekly consistency').locator('..');
+  await expect(coverage).toContainText('1/2 supporting sessions scheduled');
+  await coverage.getByRole('button', { name: /BJJ 1\/2.*schedule/i }).click();
+  await expect(page.getByText('ADD GOAL SUPPORT')).toBeVisible();
+  await page.locator('.cal-place-days button').nth(new Date().getDay()).click();
+
+  await nav(page, 'Progress').click();
+  await expect(goal).toContainText('1 / 2');
+  await expect(goal).toContainText('On pace');
+});
