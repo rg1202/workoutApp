@@ -11,7 +11,7 @@ test('capture Focus-first Goals at desktop and mobile sizes', async ({ page }) =
     { id: 'v-bjj', name: 'Earn my blue belt', type: 'BJJ', status: 'Active', focus: 'bjj', priority: 'Primary', goalTypeV2: 'Skill' },
     { id: 'v-run', name: 'Complete a 10K', type: 'Cardio', status: 'Active', focus: 'running', priority: 'Supporting', goalTypeV2: 'Event' },
     { id: 'v-cycle', name: 'Ride 100 miles', type: 'Cardio', status: 'Active', focus: 'cycling', priority: 'Maintenance', goalTypeV2: 'Performance', metric: 'Distance', unit: 'mi', target: 100, current: 30 },
-    { id: 'v-shared', name: 'Reach my target weight', type: 'Body', status: 'Active', focus: 'general', priority: 'Primary', goalTypeV2: 'Body Composition', metric: 'Bodyweight', unit: 'lb', target: 165, current: 195, relatedFocuses: ['bjj', 'running'] }
+    { id: 'v-shared', name: 'Reach my target weight', type: 'Body', status: 'Active', focus: 'general', priority: 'Primary', goalTypeV2: 'Body Composition', metric: 'Bodyweight', unit: 'lb', start: 205, target: 165, current: 195, relatedFocuses: ['bjj', 'running'] }
   ])));
   await page.reload();
   await page.locator('aside').getByRole('button', { name: 'Goals', exact: true }).first().click();
@@ -37,6 +37,10 @@ test('capture Focus-first Goals at desktop and mobile sizes', async ({ page }) =
       return el ? { header: describe(el), children: children.map(describe) } : null;
     });
     console.log('ARC_VISUAL_HEADER_' + name + '=' + JSON.stringify(headerDebug));
+    if (name === 'MOBILE') {
+      expect(headerDebug?.header.h).toBeLessThan(210);
+      expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.viewportWidth);
+    }
     const bytes = await page.screenshot({ type: 'jpeg', quality: 48, fullPage: true, animations: 'disabled' });
     const base64 = bytes.toString('base64');
     for (let offset = 0, part = 0; offset < base64.length; offset += 1500, part++) {
