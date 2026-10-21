@@ -1,3 +1,4 @@
+import { focusRegistry } from './focusRegistry';
 import type { GoalFocus, GoalV2Type } from './goalsV2';
 
 export type GoalFocusPreset = {
@@ -32,5 +33,13 @@ const presets: Record<'bjj' | 'running' | 'cycling' | 'general', readonly GoalFo
   ]
 };
 
-export const goalPresetsForFocus = (focus: GoalFocus): readonly GoalFocusPreset[] =>
-  presets[focus as keyof typeof presets] ?? presets.general;
+export const goalPresetsForFocus = (focus: GoalFocus): readonly GoalFocusPreset[] => {
+  const known = presets[focus as keyof typeof presets];
+  if (known) return known;
+  const label = focusRegistry.find(item => item.id === focus)?.name ?? 'focus';
+  return [
+    { label: 'Practice consistency', name: 'Practice ' + label + ' consistently', goalTypeV2: 'Consistency', metric: 'Sessions', unit: 'sessions' },
+    { label: 'Skill milestone', name: 'Reach my next ' + label + ' milestone', goalTypeV2: 'Skill', metric: '', unit: '' },
+    { label: 'Event or challenge', name: 'Complete a ' + label + ' challenge', goalTypeV2: 'Event', metric: '', unit: '' }
+  ];
+};
