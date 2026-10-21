@@ -5,6 +5,7 @@ import type { DailyState } from './arc/dailyState';
 import { uniqueActivities } from './arc/uniqueActivities';
 import { goalSignal } from './arc/goalIntelligence';
 import { goalActivities, supportsGoal } from './arc/goalExecution';
+import { goalExecutionEvidence } from './arc/goalExecutionEvidence';
 
 const iso = (d: Date) => d.toLocaleDateString('en-CA');
 const daysAgo = (n: number) => {
@@ -18,7 +19,7 @@ const avg = (xs: (number | undefined)[]) => {
 };
 
 export default function ProgressLanding({
-  goals, planned, dailyStates, onOpenAnalytics, onOpenGoals, onPlanGoal
+  goals, planned, dailyStates, onOpenAnalytics, onOpenGoals, onPlanGoal, selectedGoalId, onShowAllGoals
 }: {
   goals: Goal[];
   planned: PlannedActivity[];
@@ -26,6 +27,8 @@ export default function ProgressLanding({
   onOpenAnalytics: () => void;
   onOpenGoals: () => void;
   onPlanGoal: (goalId: string) => void;
+  selectedGoalId?: string | null;
+  onShowAllGoals?: () => void;
 }) {
   const today = iso(new Date());
   const since = daysAgo(6);
@@ -33,6 +36,8 @@ export default function ProgressLanding({
   const completed = recent.filter(p => p.status === 'Completed');
   const rate = recent.length ? Math.round(completed.length / recent.length * 100) : null;
   const active = goals.filter(g => g.status === 'Active');
+  const selectedGoal = active.find(g => g.id === selectedGoalId);
+  const shownGoals = selectedGoal ? [selectedGoal] : active;
   const states = dailyStates.filter(s => s.date >= since);
   const quality = completed.filter(p => p.sessionResult);
   const good = quality.filter(p => p.sessionResult === 'Good' || p.sessionResult === 'Great').length;
@@ -54,6 +59,8 @@ export default function ProgressLanding({
       <button onClick={onOpenAnalytics}>Detailed analytics <ArrowRight size={15}/></button>
     </header>
 
+    {selectedGoal && <section className="arc-progress-focus-context" aria-label="Focused goal progress"><span>Showing progress for <strong>{selectedGoal.name}</strong></span><button type="button" className="arc-ui-button arc-ui-button--quiet" onClick={onShowAllGoals}>Show all goals</button></section>}
+
     <section className="progress-snapshot">
       <article><span>7-DAY EXECUTION</span><strong>{rate === null ? '—' : rate + '%'}</strong><small>{completed.length} of {recent.length} planned sessions completed</small></article>
       <article><span>SESSION QUALITY</span><strong>{quality.length ? good + '/' + quality.length : '—'}</strong><small>{quality.length ? 'rated Good or Great' : 'No rated sessions yet'}</small></article>
@@ -66,9 +73,10 @@ export default function ProgressLanding({
           <div><span className="eyebrow">DIRECTION + EXECUTION</span><h2>Goal movement</h2></div>
           <button onClick={onOpenGoals}>Goals</button>
         </div>
-        {active.length ? <div className="arc-progress-goal-list">
-          {active.map(g => {
+        {shownGoals.length ? <div className="arc-progress-goal-list">
+          {shownGoals.map(g => {
             const outcome = goalProgress(g);
+            const evidence = goalExecutionEvidence(g, planned, today);
             const signal = goalSignal(g, planned, today);
             const next = goalActivities(planned, g.id)
               .filter(p => p.status === 'Planned' && p.date >= today)
@@ -94,6 +102,13 @@ export default function ProgressLanding({
                   <small>{signal.explanation}</small>
                 </div>
               </div>
+              <div className="arc-progress-goal-evidence" aria-label={'Execution evidence for ' + g.name}>
+                <div className="arc-progress-evidence-grid">
+                  <div><span>LAST 7 DAYS</span><strong>{evidence.recentCompleted} {evidence.recentCompleted === 1 ? 'session' : 'sessions'}</strong><small>vs {evidence.previousCompleted} completed in the previous 7 days</small></div>
+                  <div><span>RECORDED TRAINING TIME</span><strong>{evidence.measuredSessions ? evidence.measuredMinutes + ' min' : '—'}</strong><small>{evidence.measuredSessions} of {evidence.recentCompleted} recent completed sessions have actual duration</small></div>
+                </div>
+                {evidence.latestCompleted ? <p className="arc-progress-latest"><CheckCircle2 size={14} aria-hidden="true"/><span><b>Latest completed:</b> {evidence.latestCompleted.title} · {evidence.latestCompleted.date}{evidence.latestCompleted.sessionResult ? ' · Result: ' + evidence.latestCompleted.sessionResult : ''}</span></p> : <p className="arc-progress-latest arc-progress-latest--empty">No completed activities linked to this goal yet.</p>}
+              </div>
               <p className="arc-progress-goal-next">{next ? 'Next: ' + next.title + ' · ' + next.date : 'No upcoming goal-linked activity scheduled'}</p>
               <button type="button" className="arc-ui-button arc-ui-button--quiet arc-progress-plan-action" onClick={() => onPlanGoal(g.id)} aria-label={'Plan activity for ' + g.name}>
                 <CalendarPlus size={15}/> Plan next activity
@@ -104,7 +119,7 @@ export default function ProgressLanding({
           <p>No active goals yet. Set a direction in Goals to connect your activity with meaningful progress.</p>
           <button type="button" onClick={onOpenGoals}>Create a goal <ArrowRight size={15}/></button>
         </div>}
-        {active.length > 0 && <small className="arc-progress-goal-caveat">Outcome progress and supporting-session completion are separate measurements. Only Calendar activities explicitly linked to a goal contribute to its execution totals.</small>}
+        {active.length > 0 && <small className="arc-progress-goal-caveat">Outcome progress and supporting-session completion are separate measurements. Seven-day comparisons describe recorded activity, not changes in fitness or goal attainment. Actual training time appears only when recorded. Only Calendar activities explicitly linked to a goal contribute to its execution totals.</small>}
       </section>
 
       <section className="builder-card progress-state">
