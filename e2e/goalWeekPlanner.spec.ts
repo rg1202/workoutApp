@@ -37,7 +37,7 @@ test('old goals receive current-week suggestions, credit linked sessions, and do
   const date = await dialog.locator('.arc-week-planner-item input').getAttribute('aria-label');
   expect(date).toContain('Gi class on ');
   expect(date!.split(' on ')[1] >= today).toBeTruthy();
-  await dialog.getByRole('button', { name: 'Add 1 to Calendar' }).click();
+  await dialog.getByRole('button', { name: 'Add to Calendar (1)' }).click();
   await expect(page.getByRole('heading', { name: 'Calendar', exact: true })).toBeVisible();
   const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('workoutapp.planned-activities.v1') || '[]'));
   expect(stored.filter((p: any) => p.title === 'Gi class')).toHaveLength(2);
@@ -95,9 +95,9 @@ test('recovery cautions require opt-in and mobile layout does not overflow', asy
   await expect(dialog).toContainText('need your review');
   const check = dialog.locator('.arc-week-planner-item input');
   await expect(check).not.toBeChecked();
-  await expect(dialog.getByRole('button', { name: 'Add 0 to Calendar' })).toBeDisabled();
+  await expect(dialog.getByRole('button', { name: 'Add to Calendar (0)' })).toBeDisabled();
   await check.check();
-  await expect(dialog.getByRole('button', { name: 'Add 1 to Calendar' })).toBeEnabled();
+  await expect(dialog.getByRole('button', { name: 'Add to Calendar (1)' })).toBeEnabled();
   await page.setViewportSize({ width: 390, height: 844 });
   const viewport = await page.evaluate(() => ({
     pageWidth: document.documentElement.scrollWidth,
