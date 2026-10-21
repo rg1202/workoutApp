@@ -146,7 +146,7 @@ export default function ProgressLanding({
                   </div>)}
                 </div>
                 <p><b>{insight.status}.</b> {insight.detail}</p>
-                {insight.windowsMeetingTarget !== null && <small>{insight.windowsMeetingTarget} of {insight.eligibleWindowCount} complete seven-day windows met the matching-type target of {insight.targetPerWeek} sessions. Missing logs may affect this comparison.</small>}
+                {insight.windowsMeetingTarget !== null && <small>{insight.eligibleWindowCount ? insight.windowsMeetingTarget + ' of ' + insight.eligibleWindowCount + ' complete seven-day windows met the matching-type target of ' + insight.targetPerWeek + ' sessions. Missing logs may affect this comparison.' : 'No complete seven-day window is available since the goal start date for a target comparison.'}</small>}
               </div>
               <p className="arc-progress-goal-next">{next ? 'Next: ' + next.title + ' · ' + next.date : 'No upcoming goal-linked activity scheduled'}</p>
               <button type="button" className="arc-ui-button arc-ui-button--quiet arc-progress-plan-action" onClick={() => onPlanGoal(g.id)} aria-label={'Plan activity for ' + g.name}>
