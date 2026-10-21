@@ -3,9 +3,9 @@ import { Archive, ChevronDown, Layers3, Plus } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { Goal } from '../goals';
 import type { GoalFocus } from './goalsV2';
-import { activeFocuses, type FocusId } from './focusRegistry';
+import { focusRegistry, type FocusId } from './focusRegistry';
 
-type SectionId = 'bjj' | 'running' | 'cycling' | 'general' | 'other';
+type SectionId = FocusId | 'general' | 'other';
 type FocusSection = {
   id: SectionId;
   title: string;
@@ -15,13 +15,13 @@ type FocusSection = {
 };
 
 const priorityRank: Record<string, number> = { Primary: 0, Supporting: 1, Maintenance: 2 };
-const activeIds = new Set(activeFocuses.map(focus => focus.id));
-
 /** Resolve old records without rewriting them. Ambiguous goals stay shared. */
 export function goalSectionId(goal: Goal): SectionId {
   if (goal.focus) {
-    if (activeIds.has(goal.focus as FocusId)) return goal.focus as SectionId;
-    return goal.focus === 'general' ? 'general' : 'other';
+    if (goal.focus === 'general') return 'general';
+    // Keep the original Focus association even when that Focus is removed or defocused.
+    // Visibility is handled by the current user selection, never by rewriting goal data.
+    return focusRegistry.some(focus => focus.id === goal.focus) ? goal.focus as FocusId : 'other';
   }
   if (goal.type === 'BJJ') return 'bjj';
   if (goal.type === 'Cardio') {
@@ -39,9 +39,10 @@ const sortGoals = (goals: Goal[]) => [...goals].sort((a, b) =>
 );
 
 export default function FocusGoalSections({
-  goals, onCreate, renderGoal
+  goals, visibleFocuses, onCreate, renderGoal
 }: {
   goals: Goal[];
+  visibleFocuses: FocusId[];
   onCreate: (focus: GoalFocus) => void;
   renderGoal: (goal: Goal) => ReactNode;
 }) {
@@ -53,8 +54,10 @@ export default function FocusGoalSections({
     groups.set(id, [...(groups.get(id) ?? []), goal]);
   });
 
+  // Use exactly the Focuses visible in the user's sidebar, not the static MVP registry.
+  const visibleIds = new Set(visibleFocuses);
   const sections: FocusSection[] = [
-    ...activeFocuses.map(focus => ({
+    ...focusRegistry.filter(focus => visibleIds.has(focus.id)).map(focus => ({
       id: focus.id as SectionId,
       title: focus.name,
       description: focus.connection ?? focus.description,
@@ -77,6 +80,8 @@ export default function FocusGoalSections({
     }] : [])
   ];
 
+  const visibleGoalCount = sections.reduce((count, section) => count + section.goals.length, 0);
+
   return (
     <div className="arc-focus-goals">
       <div className="arc-focus-goals-overview">
@@ -86,8 +91,8 @@ export default function FocusGoalSections({
           <p>Choose a focus to see its goals, supporting actions, and next steps.</p>
         </div>
         <div className="arc-focus-goals-total">
-          <strong>{active.length}</strong>
-          <span>active {active.length === 1 ? 'goal' : 'goals'}</span>
+          <strong>{visibleGoalCount}</strong>
+          <span>active {visibleGoalCount === 1 ? 'goal' : 'goals'}</span>
         </div>
       </div>
       {sections.map(section => {
