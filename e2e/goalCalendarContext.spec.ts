@@ -106,3 +106,18 @@ test('unfiltered Calendar remains the default when opened directly', async ({ pa
   await page.getByRole('button', { name: '+ Plan activity' }).click();
   await expect(page.locator('.plan-form').locator('input[type="checkbox"]:checked')).toHaveCount(0);
 });
+
+test('smart weekly planner retains the selected goal when opening Calendar', async ({ page }) => {
+  await page.evaluate(goal => localStorage.setItem('workoutapp.goals.v2', JSON.stringify([goal])), goal);
+  await page.reload();
+  await nav(page, 'Goals').click();
+  await page.getByRole('region', { name: 'Brazilian Jiu-Jitsu goals' })
+    .getByRole('button', { name: 'Plan on Calendar' }).click();
+  const planner = page.getByRole('dialog', { name: 'Plan your supporting activities' });
+  await expect(planner).toBeVisible();
+  await planner.getByRole('button', { name: 'Open Calendar' }).click();
+  const context = page.getByRole('region', { name: 'Selected goal Calendar filter' });
+  await expect(context).toContainText('BJJ competition preparation');
+  await context.getByRole('button', { name: 'Plan for this goal' }).click();
+  await expect(page.locator('.plan-form').getByRole('checkbox', { name: 'BJJ competition preparation' })).toBeChecked();
+});
