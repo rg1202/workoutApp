@@ -6,6 +6,7 @@ import { uniqueActivities } from './arc/uniqueActivities';
 import { goalSignal } from './arc/goalIntelligence';
 import { goalActivities, supportsGoal } from './arc/goalExecution';
 import { goalExecutionEvidence } from './arc/goalExecutionEvidence';
+import { goalProgressInsight } from './arc/goalProgressIntelligence';
 
 const iso = (d: Date) => d.toLocaleDateString('en-CA');
 const daysAgo = (n: number) => {
@@ -19,7 +20,7 @@ const avg = (xs: (number | undefined)[]) => {
 };
 
 export default function ProgressLanding({
-  goals, planned, dailyStates, onOpenAnalytics, onOpenGoals, onPlanGoal, selectedGoalId, onShowAllGoals
+  goals, planned, dailyStates, onOpenAnalytics, onOpenGoals, onPlanGoal, selectedGoalId, onShowAllGoals, onFocusGoal
 }: {
   goals: Goal[];
   planned: PlannedActivity[];
@@ -29,6 +30,7 @@ export default function ProgressLanding({
   onPlanGoal: (goalId: string) => void;
   selectedGoalId?: string | null;
   onShowAllGoals?: () => void;
+  onFocusGoal?: (goalId: string) => void;
 }) {
   const today = iso(new Date());
   const since = daysAgo(6);
@@ -39,6 +41,10 @@ export default function ProgressLanding({
   const selectedGoal = active.find(g => g.id === selectedGoalId);
   const shownGoals = selectedGoal ? [selectedGoal] : active;
   const shownRecent = selectedGoal ? recent.filter(p => supportsGoal(p, selectedGoal.id)) : recent;
+  const insights = shownGoals.map(goal => ({ goal, insight: goalProgressInsight(goal, planned, today) }));
+  const priorities = insights.filter(x => x.insight.action !== 'none')
+    .sort((a, b) => b.insight.priority - a.insight.priority || a.goal.name.localeCompare(b.goal.name))
+    .slice(0, 2);
   const states = dailyStates.filter(s => s.date >= since);
   const quality = completed.filter(p => p.sessionResult);
   const good = quality.filter(p => p.sessionResult === 'Good' || p.sessionResult === 'Great').length;
@@ -68,6 +74,25 @@ export default function ProgressLanding({
       <article><span>RECOVERY FLAGS</span><strong>{recovery.length}</strong><small>{recovery.length ? 'sessions need attention' : 'No recent flags'}</small></article>
     </section>
 
+    {shownGoals.length > 0 && <section className="arc-progress-next-moves" aria-label="Suggested next moves">
+      <div className="arc-progress-next-heading"><span className="eyebrow">BASED ON RECORDED ACTIVITY</span><h2>Next moves</h2><small>Suggestions to review, not automatic schedule changes</small></div>
+      {priorities.length ? <div className="arc-progress-next-list">{priorities.map(({ goal, insight }) =>
+        <article key={goal.id} className="arc-progress-next-item">
+          <div>
+            <button type="button" className="arc-progress-next-goal" onClick={() => onFocusGoal?.(goal.id)} disabled={!onFocusGoal || Boolean(selectedGoal)}>{goal.name}</button>
+            <strong>{insight.status}</strong>
+            <p>{insight.nextMove}</p>
+          </div>
+          <button type="button" className="arc-ui-button arc-ui-button--quiet arc-progress-next-action"
+            onClick={() => insight.action === 'review-recovery'
+              ? document.getElementById('progress-recovery-signals')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+              : onPlanGoal(goal.id)}>
+            {insight.action === 'review-recovery' ? 'Review recovery' : 'Plan activity'} <ArrowRight size={14}/>
+          </button>
+        </article>)}</div> :
+        <p className="arc-progress-next-clear"><CheckCircle2 size={16}/> No immediate planning or recovery gaps identified from the available goal-linked records.</p>}
+    </section>}
+
     <div className="progress-grid">
       <section className="builder-card progress-goals">
         <div className="overview-heading">
@@ -78,6 +103,8 @@ export default function ProgressLanding({
           {shownGoals.map(g => {
             const outcome = goalProgress(g);
             const evidence = goalExecutionEvidence(g, planned, today);
+            const insight = goalProgressInsight(g, planned, today);
+            const peak = Math.max(1, ...insight.windows.map(w => w.completed));
             const signal = goalSignal(g, planned, today);
             const next = goalActivities(planned, g.id)
               .filter(p => p.status === 'Planned' && p.date >= today)
@@ -110,6 +137,17 @@ export default function ProgressLanding({
                 </div>
                 {evidence.latestCompleted ? <p className="arc-progress-latest"><CheckCircle2 size={14} aria-hidden="true"/><span><b>Latest completed:</b> {evidence.latestCompleted.title} · {evidence.latestCompleted.date}{evidence.latestCompleted.sessionResult ? ' · Result: ' + evidence.latestCompleted.sessionResult : ''}</span></p> : <p className="arc-progress-latest arc-progress-latest--empty">No completed activities linked to this goal yet.</p>}
               </div>
+              <div className="arc-progress-intelligence" aria-label={'Execution trend for ' + g.name}>
+                <div className="arc-progress-intelligence-heading"><span>28-DAY EXECUTION</span><strong>{insight.trend}</strong></div>
+                <div className="arc-progress-mini-chart" role="img" aria-label={insight.windows.map((w, i) => ['Oldest', 'Older', 'Previous', 'Recent'][i] + ' seven-day window, ' + w.start + ' to ' + w.end + ': ' + w.completed + ' completed').join('; ')}>
+                  {insight.windows.map((w, i) => <div className="arc-progress-mini-week" key={w.start} title={w.start + ' to ' + w.end + ': ' + w.completed + ' completed' + (w.eligible ? '' : ' · target comparison unavailable for partial or pre-start window')}>
+                    <span className="arc-progress-mini-bar-track"><i style={{height: Math.max(3, Math.round(w.completed / peak * 32)) + 'px'}}/></span>
+                    <b>{w.completed}</b><small>{['W−3', 'W−2', 'Previous', 'Recent'][i]}</small>
+                  </div>)}
+                </div>
+                <p><b>{insight.status}.</b> {insight.detail}</p>
+                {insight.windowsMeetingTarget !== null && <small>{insight.windowsMeetingTarget} of {insight.eligibleWindowCount} complete seven-day windows met the matching-type target of {insight.targetPerWeek} sessions. Missing logs may affect this comparison.</small>}
+              </div>
               <p className="arc-progress-goal-next">{next ? 'Next: ' + next.title + ' · ' + next.date : 'No upcoming goal-linked activity scheduled'}</p>
               <button type="button" className="arc-ui-button arc-ui-button--quiet arc-progress-plan-action" onClick={() => onPlanGoal(g.id)} aria-label={'Plan activity for ' + g.name}>
                 <CalendarPlus size={15}/> Plan next activity
@@ -120,7 +158,7 @@ export default function ProgressLanding({
           <p>No active goals yet. Set a direction in Goals to connect your activity with meaningful progress.</p>
           <button type="button" onClick={onOpenGoals}>Create a goal <ArrowRight size={15}/></button>
         </div>}
-        {active.length > 0 && <small className="arc-progress-goal-caveat">Outcome progress and supporting-session completion are separate measurements. Seven-day comparisons describe recorded activity, not changes in fitness or goal attainment. Actual training time appears only when recorded. Only Calendar activities explicitly linked to a goal contribute to its execution totals.</small>}
+        {active.length > 0 && <small className="arc-progress-goal-caveat">Outcome progress and supporting-session completion are separate measurements. Seven- and 28-day comparisons describe recorded activity, not changes in fitness or goal attainment. Actual training time appears only when recorded. Only Calendar activities explicitly linked to a goal contribute to its execution totals.</small>}
       </section>
 
       <section className="builder-card progress-state">
@@ -129,7 +167,7 @@ export default function ProgressLanding({
         <small>{states.length} daily state {states.length === 1 ? 'entry' : 'entries'} in this window</small>
       </section>
 
-      <section className="builder-card progress-signals">
+      <section id="progress-recovery-signals" className="builder-card progress-signals">
         <span className="eyebrow">SIGNALS</span><h2>What deserves attention</h2>
         {recovery.length ? recovery.slice(-3).reverse().map(p => <div className="progress-signal" key={p.id}>
           <AlertTriangle size={15}/><span><b>{p.title}</b><small>{[p.recoveryBody, p.recoveryNeed === 'High' ? 'High recovery need' : undefined, p.recoveryNote].filter(Boolean).join(' · ')}</small></span>
