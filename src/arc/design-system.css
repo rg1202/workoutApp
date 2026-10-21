@@ -586,3 +586,20 @@
  .unified-shell main .arc-week-planner-actions>div{width:100%}
  .unified-shell main .arc-week-planner-actions>div button{flex:1}
 }
+
+
+/* The mobile navigation is z-index:100; review dialogs must remain above it. */
+.unified-shell main .goal-plan-modal{z-index:150}
+@media(max-width:640px){
+ .unified-shell main .goal-plan-modal>section.arc-week-planner{
+   max-height:calc(100dvh - 12px);
+   padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
+ }
+ .unified-shell main .arc-week-planner-actions{
+   display:flex;flex-direction:column-reverse;align-items:stretch;gap:9px;
+   padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));
+ }
+ .unified-shell main .arc-week-planner-actions>button{width:100%;min-height:38px}
+ .unified-shell main .arc-week-planner-actions>div{display:flex;gap:8px;width:100%}
+ .unified-shell main .arc-week-planner-actions>div button{flex:1;min-width:0}
+}
