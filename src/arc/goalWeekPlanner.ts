@@ -3,7 +3,6 @@ import type { PlannedActivity, PlannedActivityType } from '../plans';
 import type { Injury } from '../storage';
 import type { DailyState } from './dailyState';
 import type { StateObservation } from './stateHistory';
-import type { SupportingTarget } from './goalsV2';
 import { goalActivities } from './goalExecution';
 import { uniqueActivities } from './uniqueActivities';
 import { recoveryAssessment } from './recoveryScheduling';
@@ -14,7 +13,6 @@ const addDays = (date: string, n: number) => { const d = parse(date); d.setDate(
 const weekStart = (date: string) => addDays(date, -parse(date).getDay());
 const demanding = (type: PlannedActivityType) => type === 'BJJ' || type === 'Strength';
 const clampFrequency = (n: number) => Number.isFinite(n) ? Math.max(0, Math.min(7, Math.floor(n))) : 0;
-const dayLabel = (date: string) => parse(date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
 
 export type GoalWeekSuggestion = {
   plan: PlannedActivity;
@@ -172,5 +170,6 @@ export function planGoalWeeks({ goal, planned, today, weeks, states = [], histor
   if (!result.weeks.length) result.notices.push('No dates in this planning horizon fall within the goal’s active dates.');
   if (result.unplaced > 0) result.notices.push(result.unplaced + ' session(s) could not fit within available days or recorded constraints.');
   if (result.suggestions.some(s => s.warnings.includes('Recovery data is incomplete'))) result.notices.push('Some recovery information is missing. Suggested dates are planning aids, not clearance to train.');
+  result.notices = [...new Set(result.notices)];
   return result;
 }
