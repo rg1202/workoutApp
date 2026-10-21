@@ -101,7 +101,7 @@ export default function GoalSchedulePlanner({ goal, planned, states, history, in
             onClick={() => { onClose(); onOpenCalendar(); }}>Open Calendar</button>}
           {result.suggestions.length > 0 && <button type="button" className="arc-ui-button arc-ui-button--primary"
             disabled={!onApply || chosen.length === 0} onClick={add}>
-            <CalendarPlus size={16}/>Add {chosen.length} to Calendar
+            <CalendarPlus size={16}/>Add to Calendar ({chosen.length})
           </button>}
         </div>
       </div>
