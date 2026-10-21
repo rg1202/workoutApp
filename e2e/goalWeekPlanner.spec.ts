@@ -19,8 +19,11 @@ test('old goals receive current-week suggestions, credit linked sessions, and do
         startDate: '2025-01-01', deadline: '2028-01-01',
         supportingTargets: [{ id: 'target-bjj', name: 'Gi class', activityType: 'BJJ', frequencyPerWeek: 2, durationMinutes: 60 }] }
     ]));
+    const sunday = new Date(date + 'T12:00:00');
+    sunday.setDate(sunday.getDate() - sunday.getDay());
+    const weekStart = sunday.toLocaleDateString('en-CA');
     localStorage.setItem('workoutapp.planned-activities.v1', JSON.stringify([
-      { id: 'already-done', date, title: 'Gi class', type: 'BJJ', status: 'Completed', goalIds: ['planner-bjj'] }
+      { id: 'already-done', date: weekStart, title: 'Gi class', type: 'BJJ', status: 'Completed', goalIds: ['planner-bjj'] }
     ]));
   }, today);
   await page.reload();
