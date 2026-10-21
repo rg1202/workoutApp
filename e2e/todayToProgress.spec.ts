@@ -24,8 +24,8 @@ test('completing a Today activity updates its goal execution evidence without ch
       { id: 'goal-run', name: 'Run a race', type: 'Cardio', focus: 'running', status: 'Active' }
     ]));
     localStorage.setItem('workoutapp.planned-activities.v1', JSON.stringify([
-      { id: 'mat-today', date: today, title: 'Open mat', type: 'BJJ', status: 'Planned', goalIds: ['goal-mat'], durationMinutes: 90 },
-      { id: 'mat-yesterday', date: today, title: 'Drilling', type: 'BJJ', status: 'Completed', goalIds: ['goal-mat'], actuals: { actualDurationMinutes: 60 } },
+      { id: 'mat-today', date: today, time: '18:00', title: 'Open mat', type: 'BJJ', status: 'Planned', goalIds: ['goal-mat'], durationMinutes: 90 },
+      { id: 'mat-yesterday', date: today, time: '07:00', title: 'Drilling', type: 'BJJ', status: 'Completed', goalIds: ['goal-mat'], actuals: { actualDurationMinutes: 60 } },
       { id: 'mat-previous', date: previous, title: 'Last week class', type: 'BJJ', status: 'Completed', goalIds: ['goal-mat'], actuals: { actualDurationMinutes: 40 } },
       { id: 'unlinked', date: today, title: 'Unlinked walk', type: 'Cardio', status: 'Completed' }
     ]));
