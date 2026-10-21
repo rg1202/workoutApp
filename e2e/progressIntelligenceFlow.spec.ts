@@ -40,6 +40,8 @@ test('Progress prioritizes recovery over an uncovered weekly plan, with working 
   await expect(next).toContainText('Recorded activity gap');
   await expect(next).not.toContainText('Cycle weekly');
   await expect(next.locator('.arc-progress-next-item').first()).toContainText('Recover well');
+  await expect(page.locator('.arc-progress-goal[data-goal-id="recovery"]').getByRole('button', { name: 'Review recovery for Recover well' })).toBeVisible();
+  await expect(page.locator('.arc-progress-goal[data-goal-id="recovery"]').getByRole('button', { name: /Plan activity/ })).toHaveCount(0);
   await expect(page.locator('.arc-progress-goal[data-goal-id="mat"] .arc-progress-intelligence')).toContainText('Recorded activity gap');
   await expect(page.locator('.arc-progress-goal[data-goal-id="mat"] .arc-progress-mini-week')).toHaveCount(4);
 
