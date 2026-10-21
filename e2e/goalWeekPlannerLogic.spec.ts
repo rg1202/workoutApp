@@ -25,7 +25,7 @@ test('same-type targets cannot double-credit one existing linked session', () =>
   expect(plan.covered).toBe(1);
   expect(plan.suggestions).toHaveLength(1);
   expect(plan.suggestions[0].plan.title).toBe('No-Gi class');
-  expect(plan.suggestions[0].plan.date).toBeGreaterThanOrEqual(today);
+  expect(plan.suggestions[0].plan.date.localeCompare(today)).toBeGreaterThanOrEqual(0);
   expect(plan.suggestions[0].plan.time).toBeUndefined();
   expect(plan.suggestions[0].plan.goalIds).toEqual(['goal-1']);
 });
