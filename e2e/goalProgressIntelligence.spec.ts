@@ -94,7 +94,7 @@ test('missing history and a future goal start never masquerade as an established
   expect(recentlyStarted.windows.map(w => w.completed)).toEqual([0, 0, 0, 1]);
   expect(recentlyStarted.eligibleWindowCount).toBe(0);
   expect(recentlyStarted.windowsMeetingTarget).toBe(0);
-  expect(recentlyStarted.trend).toBe('Recently started');
+  expect(recentlyStarted.trend).toBe('Recent activity');
 });
 
 test('two equal active weeks are steady; reduced recorded activity is fewer logged, not evidence of declining fitness', () => {
