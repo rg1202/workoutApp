@@ -780,3 +780,91 @@
   }
   .unified-shell main .arc-progress-focus-context{padding:12px}
 }
+
+
+/* Progress Intelligence: explicit next steps and factual 28-day recorded activity. */
+.unified-shell main .arc-progress-next-moves{
+  display:grid;gap:12px;margin:0 0 16px;padding:16px 18px;min-width:0;
+  border:1px solid var(--arc-border);border-radius:var(--arc-radius);
+  background:var(--arc-surface);
+}
+.unified-shell main .arc-progress-next-heading{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.unified-shell main .arc-progress-next-heading .eyebrow{flex-basis:100%}
+.unified-shell main .arc-progress-next-heading h2{margin:0;font-size:1.07rem;color:var(--arc-text)}
+.unified-shell main .arc-progress-next-heading small{font-size:.7rem;color:var(--arc-muted)}
+.unified-shell main .arc-progress-next-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.unified-shell main .arc-progress-next-item{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  min-width:0;padding:12px;border:1px solid var(--arc-border);
+  border-radius:var(--arc-action-radius);background:var(--arc-surface-2);
+}
+.unified-shell main .arc-progress-next-item>div{display:grid;gap:4px;min-width:0}
+.unified-shell main .arc-progress-next-goal{
+  width:fit-content;max-width:100%;padding:0;border:0;background:transparent;
+  color:var(--arc-cyan);font:inherit;font-size:.75rem;font-weight:700;text-align:left;
+  cursor:pointer;overflow-wrap:anywhere;
+}
+.unified-shell main .arc-progress-next-goal:disabled{color:var(--arc-muted);cursor:default}
+.unified-shell main .arc-progress-next-goal:not(:disabled):hover{text-decoration:underline}
+.unified-shell main .arc-progress-next-item strong{font-size:.82rem;line-height:1.3;color:var(--arc-text)}
+.unified-shell main .arc-progress-next-item p{margin:0;font-size:.74rem;line-height:1.5;color:var(--arc-muted)}
+.unified-shell main .arc-progress-next-action{
+  display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;
+  min-height:34px;padding:7px 10px;font-size:.73rem;white-space:nowrap;
+}
+.unified-shell main .arc-progress-next-clear{
+  display:flex;align-items:flex-start;gap:8px;margin:0;
+  color:var(--arc-muted);font-size:.77rem;line-height:1.5;
+}
+.unified-shell main .arc-progress-next-clear svg{flex:0 0 auto;color:var(--arc-mint)}
+.unified-shell main .arc-progress-intelligence{
+  display:grid;gap:9px;min-width:0;margin-top:12px;padding:12px;
+  border:1px solid var(--arc-border);border-radius:var(--arc-action-radius);
+}
+.unified-shell main .arc-progress-intelligence-heading{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;
+}
+.unified-shell main .arc-progress-intelligence-heading span{
+  font-size:.64rem;font-weight:750;letter-spacing:.065em;color:var(--arc-muted);
+}
+.unified-shell main .arc-progress-intelligence-heading strong{
+  font-size:.76rem;color:var(--arc-text);
+}
+.unified-shell main .arc-progress-mini-chart{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;
+  min-width:0;padding:9px 0 5px;
+}
+.unified-shell main .arc-progress-mini-week{
+  display:grid;grid-template-rows:34px auto auto;justify-items:center;align-items:end;
+  gap:3px;min-width:0;border-right:1px solid var(--arc-border);
+}
+.unified-shell main .arc-progress-mini-week:last-child{border-right:0}
+.unified-shell main .arc-progress-mini-bar-track{
+  display:flex;align-items:flex-end;justify-content:center;width:100%;height:34px;
+}
+.unified-shell main .arc-progress-mini-bar-track i{
+  display:block;width:min(32px,55%);min-height:3px;
+  border-radius:4px 4px 1px 1px;background:var(--arc-cyan);
+}
+.unified-shell main .arc-progress-mini-week b{
+  font-size:.8rem;color:var(--arc-text);font-variant-numeric:tabular-nums;
+}
+.unified-shell main .arc-progress-mini-week small{
+  font-size:.66rem;line-height:1.4;color:var(--arc-muted);text-align:center;
+}
+.unified-shell main .arc-progress-intelligence p{
+  margin:0;font-size:.75rem;line-height:1.5;color:var(--arc-muted);
+}
+.unified-shell main .arc-progress-intelligence p b{color:var(--arc-text)}
+.unified-shell main .arc-progress-intelligence>small{
+  font-size:.7rem;line-height:1.5;color:var(--arc-muted);
+}
+@media(max-width:900px){
+  .unified-shell main .arc-progress-next-list{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:520px){
+  .unified-shell main .arc-progress-next-moves{padding:12px}
+  .unified-shell main .arc-progress-next-item{flex-wrap:wrap}
+  .unified-shell main .arc-progress-next-action{width:100%;justify-content:center}
+  .unified-shell main .arc-progress-mini-week small{font-size:.62rem}
+}
