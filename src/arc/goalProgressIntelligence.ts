@@ -6,7 +6,7 @@ export type ProgressNextAction = 'plan' | 'review-recovery' | 'none';
 export type GoalProgressInsight = {
   /** Four oldest-to-newest disjoint seven-day windows, ending on local today. */
   windows: { start: string; end: string; completed: number; targetCompleted: number; eligible: boolean }[];
-  trend: 'More logged' | 'Steady' | 'Fewer logged' | 'Recently started' | 'No recent completions' | 'No completion history';
+  trend: 'More logged' | 'Steady' | 'Fewer logged' | 'Recent activity' | 'No recent completions' | 'No completion history';
   targetPerWeek: number;
   windowsMeetingTarget: number | null;
   eligibleWindowCount: number;
@@ -53,10 +53,9 @@ export function goalProgressInsight(goal: Goal, plans: PlannedActivity[], today:
   });
   const recent = windows[3].completed;
   const previous = windows[2].completed;
-  const history = windows.reduce((sum, w) => sum + w.completed, 0);
   const trend: GoalProgressInsight['trend'] =
-    recent > 0 && previous === 0 ? 'Recently started' :
-    recent === 0 && previous === 0 ? (history > 0 ? 'No recent completions' : 'No completion history') :
+    recent > 0 && previous === 0 ? 'Recent activity' :
+    recent === 0 && previous === 0 ? (completed.length > 0 ? 'No recent completions' : 'No completion history') :
     recent > previous ? 'More logged' :
     recent < previous ? 'Fewer logged' : 'Steady';
   const eligibleWindows = windows.filter(w => w.eligible);
