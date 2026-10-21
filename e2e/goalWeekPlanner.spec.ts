@@ -106,5 +106,8 @@ test('recovery cautions require opt-in and mobile layout does not overflow', asy
   }));
   expect(viewport.pageWidth).toBeLessThanOrEqual(viewport.viewportWidth);
   expect(viewport.dialogWidth).toBeLessThanOrEqual(viewport.viewportWidth);
+  await expect(page.locator('.goal-plan-modal')).toHaveCSS('z-index', '150');
+  await expect(dialog.getByRole('button', { name: 'Add to Calendar (1)' })).toBeInViewport();
+  await expect(dialog.getByRole('button', { name: 'Not now' })).toBeInViewport();
   await dialog.getByRole('button', { name: 'Not now' }).click();
 });
