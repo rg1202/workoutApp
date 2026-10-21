@@ -1154,18 +1154,20 @@ test('Arc restores a validated backup after confirmation',async({page})=>{
 });
 test('Arc rejects unsupported backups without overwriting browser data',async({page})=>{
  await page.evaluate(()=>localStorage.setItem('workoutapp.goals.v2','[]'));
- page.on('dialog',dialog=>dialog.accept());
+ const dialogAccepted=page.waitForEvent('dialog').then(dialog=>dialog.accept());
  const backup={format:'arc-local-backup',version:999,exportedAt:'2026-10-07T12:00:00.000Z',data:{'workoutapp.goals.v2':'[1]'}};
  await page.locator('input[aria-label="Restore Arc backup file"]').setInputFiles({name:'bad.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
+ await dialogAccepted;
  expect(await page.evaluate(()=>localStorage.getItem('workoutapp.goals.v2'))).toBe('[]');
 });
 
 
 test('Arc rejects malformed goal records without replacing current data',async({page})=>{
  await page.evaluate(()=>localStorage.setItem('workoutapp.goals.v2','[]'));
- page.on('dialog',dialog=>dialog.accept());
+ const dialogAccepted=page.waitForEvent('dialog').then(dialog=>dialog.accept());
  const backup={format:'arc-local-backup',version:1,exportedAt:'2026-10-07T12:00:00.000Z',data:{'workoutapp.goals.v2':JSON.stringify([{id:'incomplete',name:'Missing status'}])}};
  await page.locator('input[aria-label="Restore Arc backup file"]').setInputFiles({name:'malformed-goal.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
+ await dialogAccepted;
  expect(await page.evaluate(()=>localStorage.getItem('workoutapp.goals.v2'))).toBe('[]');
 });
 
