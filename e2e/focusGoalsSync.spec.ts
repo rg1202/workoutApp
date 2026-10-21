@@ -54,7 +54,7 @@ test('removing and restoring a Focus synchronizes Goals without deleting existin
   await goalsNav(page).click();
   await expect(section(page, 'Running')).toContainText('Run a 5K');
   await expect(page.locator('.goal-card')).toHaveCount(4);
-  await expect(page.getByText('Also supports: Brazilian Jiu-Jitsu, Running')).toBeVisible();
+  await expect(page.getByText('Also supports: Running, Brazilian Jiu-Jitsu')).toBeVisible();
   await page.reload();
   await goalsNav(page).click();
   await expect(section(page, 'Running')).toContainText('Run a 5K');
