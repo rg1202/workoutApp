@@ -149,9 +149,13 @@ export default function ProgressLanding({
                 {insight.windowsMeetingTarget !== null && <small>{insight.eligibleWindowCount ? insight.windowsMeetingTarget + ' of ' + insight.eligibleWindowCount + ' complete seven-day windows met the matching-type target of ' + insight.targetPerWeek + ' sessions. Missing logs may affect this comparison.' : 'No complete seven-day window is available since the goal start date for a target comparison.'}</small>}
               </div>
               <p className="arc-progress-goal-next">{next ? 'Next: ' + next.title + ' · ' + next.date : 'No upcoming goal-linked activity scheduled'}</p>
-              <button type="button" className="arc-ui-button arc-ui-button--quiet arc-progress-plan-action" onClick={() => onPlanGoal(g.id)} aria-label={'Plan activity for ' + g.name}>
+              {insight.action === 'review-recovery' ? <button type="button" className="arc-ui-button arc-ui-button--quiet arc-progress-plan-action"
+                onClick={() => document.getElementById('progress-recovery-signals')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                aria-label={'Review recovery for ' + g.name}>
+                <AlertTriangle size={15}/> Review recovery
+              </button> : <button type="button" className="arc-ui-button arc-ui-button--quiet arc-progress-plan-action" onClick={() => onPlanGoal(g.id)} aria-label={'Plan activity for ' + g.name}>
                 <CalendarPlus size={15}/> Plan next activity
-              </button>
+              </button>}
             </article>;
           })}
         </div> : <div className="arc-progress-empty">
