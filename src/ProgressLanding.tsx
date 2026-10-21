@@ -38,6 +38,7 @@ export default function ProgressLanding({
   const active = goals.filter(g => g.status === 'Active');
   const selectedGoal = active.find(g => g.id === selectedGoalId);
   const shownGoals = selectedGoal ? [selectedGoal] : active;
+  const shownRecent = selectedGoal ? recent.filter(p => supportsGoal(p, selectedGoal.id)) : recent;
   const states = dailyStates.filter(s => s.date >= since);
   const quality = completed.filter(p => p.sessionResult);
   const good = quality.filter(p => p.sessionResult === 'Good' || p.sessionResult === 'Great').length;
@@ -59,7 +60,7 @@ export default function ProgressLanding({
       <button onClick={onOpenAnalytics}>Detailed analytics <ArrowRight size={15}/></button>
     </header>
 
-    {selectedGoal && <section className="arc-progress-focus-context" aria-label="Focused goal progress"><span>Showing progress for <strong>{selectedGoal.name}</strong></span><button type="button" className="arc-ui-button arc-ui-button--quiet" onClick={onShowAllGoals}>Show all goals</button></section>}
+    {selectedGoal && <section className="arc-progress-focus-context" aria-label="Focused goal progress"><span>Showing progress for <strong>{selectedGoal.name}</strong><small>Goal details and recent activities are filtered. Summary cards show all training.</small></span><button type="button" className="arc-ui-button arc-ui-button--quiet" onClick={onShowAllGoals}>Show all goals</button></section>}
 
     <section className="progress-snapshot">
       <article><span>7-DAY EXECUTION</span><strong>{rate === null ? '—' : rate + '%'}</strong><small>{completed.length} of {recent.length} planned sessions completed</small></article>
@@ -137,13 +138,13 @@ export default function ProgressLanding({
 
       <section className="builder-card progress-recent">
         <span className="eyebrow">RECENT EXECUTION</span><h2>Plan → action</h2>
-        {recent.length ? recent.slice(-5).reverse().map(p => {
+        {shownRecent.length ? shownRecent.slice(-5).reverse().map(p => {
           const linked = active.filter(g => supportsGoal(p, g.id)).map(g => g.name);
           return <div key={p.id}>
             <Activity size={14}/><span><b>{p.title}</b><small>{p.date}{p.sessionResult ? ' · ' + p.sessionResult : ''}{p.sessionEffort ? ' · effort ' + p.sessionEffort + '/5' : ''}{linked.length ? ' · Supports: ' + linked.join(', ') : ''}</small></span>
             <strong className={p.status === 'Completed' ? 'done' : ''}>{p.status}</strong>
           </div>;
-        }) : <p>No planned sessions in the last 7 days. Add a goal and schedule supporting activities to start building your progress history.</p>}
+        }) : <p>{selectedGoal ? 'No recent sessions linked to this goal. Plan a supporting activity to build its execution history.' : 'No planned sessions in the last 7 days. Add a goal and schedule supporting activities to start building your progress history.'}</p>}
       </section>
     </div>
   </div>;
