@@ -16,7 +16,7 @@ test('focus-first Goals groups active records once and preserves legacy focus re
     { id: 'run-goal', name: '5K Running', type: 'Cardio', status: 'Active', focus: 'running' },
     { id: 'cycle-goal', name: 'Century Ride', type: 'Cardio', status: 'Active', focus: 'cycling' },
     { id: 'shared-goal', name: 'Shared Weight', type: 'Body', status: 'Active', focus: 'general', relatedFocuses: ['bjj', 'running'] },
-    { id: 'legacy-goal', name: 'Legacy Strength', type: 'Strength', status: 'Active', focus: 'strength' },
+    { id: 'legacy-goal', name: 'Legacy Recovery', type: 'Mobility', status: 'Active', focus: 'recovery' },
     { id: 'paused-goal', name: 'Paused BJJ', type: 'BJJ', status: 'Paused', focus: 'bjj' }
   ])));
   await page.reload();
@@ -27,7 +27,7 @@ test('focus-first Goals groups active records once and preserves legacy focus re
     ['Running goals', '5K Running'],
     ['Cycling goals', 'Century Ride'],
     ['Shared goals', 'Shared Weight'],
-    ['Other goals', 'Legacy Strength']
+    ['Other goals', 'Legacy Recovery']
   ] as const;
   for (const [section, name] of groups) {
     await expect(page.getByRole('region', { name: section }).locator('.goal-card')).toContainText(name);
