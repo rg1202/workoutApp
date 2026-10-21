@@ -735,6 +735,9 @@
 .unified-shell main .arc-progress-focus-context strong{
   color:var(--arc-text);
 }
+.unified-shell main .arc-progress-focus-context small{
+  display:block;margin-top:3px;font-size:.71rem;line-height:1.4;color:var(--arc-muted);
+}
 .unified-shell main .arc-progress-focus-context .arc-ui-button{
   min-height:34px;padding:7px 11px;font-size:.76rem;
 }
