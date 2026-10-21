@@ -627,3 +627,84 @@
   .unified-shell main .arc-calendar-goal-actions{width:100%}
   .unified-shell main .arc-calendar-goal-actions>button{flex:1 1 160px}
 }
+
+
+/* Today: concise action summary and honest weekly goal-support coverage. */
+.unified-shell main .today-execution-brief{
+  display:grid;gap:12px;min-width:0;
+  padding:16px 20px;border:1px solid var(--arc-border);
+  border-radius:var(--arc-radius);background:var(--arc-surface);
+}
+.unified-shell main .today-execution-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+}
+.unified-shell main .today-execution-head h2{
+  margin:4px 0 0;color:var(--arc-text);font-size:1.05rem;letter-spacing:-.02em;
+}
+.unified-shell main .today-execution-counts{
+  display:flex;align-items:center;gap:0;flex-wrap:wrap;
+}
+.unified-shell main .today-execution-counts span{
+  display:inline-flex;align-items:baseline;gap:6px;
+  padding:3px 13px;border-right:1px solid var(--arc-border);
+  color:var(--arc-muted);font-size:.76rem;
+}
+.unified-shell main .today-execution-counts span:last-child{border-right:0;padding-right:0}
+.unified-shell main .today-execution-counts b{
+  font-size:1.2rem;font-variant-numeric:tabular-nums;color:var(--arc-text);
+}
+.unified-shell main .today-execution-gaps{
+  display:grid;gap:9px;padding-top:12px;border-top:1px solid var(--arc-border);
+}
+.unified-shell main .today-execution-gaps>strong{
+  color:var(--arc-text);font-size:.78rem;font-weight:700;
+}
+.unified-shell main .today-execution-gap-list{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:8px;
+}
+.unified-shell main .today-execution-gap{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  min-width:0;padding:10px 12px;background:var(--arc-surface-2);
+  border:1px solid var(--arc-border);border-radius:var(--arc-action-radius);
+}
+.unified-shell main .today-execution-gap>span{display:grid;gap:4px;min-width:0}
+.unified-shell main .today-execution-gap b{
+  font-size:.79rem;line-height:1.3;color:var(--arc-text);overflow-wrap:anywhere;
+}
+.unified-shell main .today-execution-gap small,
+.unified-shell main .today-execution-gaps>small{
+  font-size:.71rem;line-height:1.4;color:var(--arc-muted);
+}
+.unified-shell main .today-execution-gap .arc-ui-button{
+  min-height:34px;flex-shrink:0;padding:6px 10px;font-size:.74rem;
+}
+.unified-shell main .today-execution-covered{
+  margin:0;padding-top:9px;border-top:1px solid var(--arc-border);
+  font-size:.76rem;color:var(--arc-muted);
+}
+.unified-shell main .today-next-goals{
+  display:block;margin-top:9px;font-size:.77rem;color:var(--arc-mint);
+}
+.unified-shell main .today-goal-heading{flex-wrap:wrap}
+.unified-shell main .today-goal-week-status{
+  padding:5px 8px;border:1px solid var(--arc-border);border-radius:999px;
+  font-size:.67rem;font-weight:700;line-height:1.2;
+}
+.unified-shell main .today-goal-week-status.needs{color:#e8c19c;border-color:#72533a;background:#302318}
+.unified-shell main .today-goal-week-status.covered{color:var(--arc-mint);border-color:#315545;background:#172c25}
+.unified-shell main .today-goal-footer-actions{display:flex;gap:8px;flex-wrap:wrap}
+.unified-shell main .today-goal-footer-actions>.arc-ui-button{
+  min-height:36px;padding:8px 11px;font-size:.76rem;
+}
+.unified-shell main .today-timeline-goal-link{
+  display:block;margin-top:5px;color:var(--arc-mint);
+  font-size:.73rem;line-height:1.35;overflow-wrap:anywhere;
+}
+@media(max-width:620px){
+  .unified-shell main .today-execution-brief{padding:14px}
+  .unified-shell main .today-execution-counts{width:100%;justify-content:space-between}
+  .unified-shell main .today-execution-counts span{padding:3px 8px}
+  .unified-shell main .today-execution-counts span:first-child{padding-left:0}
+  .unified-shell main .today-execution-gap{flex-wrap:wrap}
+  .unified-shell main .today-execution-gap .arc-ui-button{margin-left:auto}
+}
