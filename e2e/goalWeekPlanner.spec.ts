@@ -78,7 +78,7 @@ test('recovery cautions require opt-in and mobile layout does not overflow', asy
   const today = new Date().toLocaleDateString('en-CA');
   await page.evaluate(date => {
     localStorage.setItem('workoutapp.goals.v2', JSON.stringify([
-      { id: 'caution-goal', name: 'Running consistency', type: 'Cardio', focus: 'running', status: 'Active',
+      { id: 'caution-goal', name: 'Running consistency', type: 'Cardio', focus: 'running', status: 'Active', deadline: date,
         supportingTargets: [{ id: 'target-run', name: 'Easy run', activityType: 'Cardio', frequencyPerWeek: 1, durationMinutes: 40 }] }
     ]));
     localStorage.setItem('arc.daily-state.v1', JSON.stringify([{ date, energy: 1, soreness: 5, stress: 4, sleepHours: 5 }]));
