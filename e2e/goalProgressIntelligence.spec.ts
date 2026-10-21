@@ -50,7 +50,7 @@ test('only matching activity types count toward weekly coverage, and overdue pla
 });
 
 test('genuine three-window matching-target execution can be described as consistent', () => {
-  const entries = [-25, -22, -19, -15, -11, -8, -4, -2].map((n, i) => plan('session-' + i, n));
+  const entries = [-25, -22, -19, -15, -11, -8, -2, -1].map((n, i) => plan('session-' + i, n));
   const insight = goalProgressInsight(goal(), entries, today);
   expect(insight.windows.map(w => w.targetCompleted)).toEqual([2, 2, 2, 2]);
   expect(insight.windowsMeetingTarget).toBe(4);
