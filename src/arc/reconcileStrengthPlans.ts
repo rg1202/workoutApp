@@ -1,5 +1,5 @@
-import type {PlannedActivity} from './plans';
-import type {SessionRecord} from './storage';
+import type {PlannedActivity} from '../plans';
+import type {SessionRecord} from '../storage';
 
 /** Reconcile completed strength history against persisted manual calendar plans.
  * Generated program plans are derived from program history separately.
