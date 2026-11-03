@@ -1150,3 +1150,11 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .workout-exercise-toggle{flex-shrink:0;white-space:nowrap}
 .workout-execution [hidden]{display:none!important}
 @media(max-width:600px){.workout-execution .workout-exercise-heading{align-items:flex-start;gap:10px}.workout-exercise-toggle{min-height:38px}}
+
+/* ARC-UX-001: active exercise's next action remains visible above set details. */
+.workout-next-set{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;margin:10px 0;border:1px solid rgba(140,160,185,.22);border-radius:12px;background:rgba(140,160,185,.06)}
+.workout-next-set>div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.workout-next-set strong{font-size:1rem;line-height:1.35}
+.workout-next-set small{opacity:.78;line-height:1.4}
+.workout-execution .workout-set-actions button:first-child{min-height:44px}
+@media(max-width:600px){.workout-next-set{padding:11px 12px}.workout-execution .workout-set-actions button:first-child{flex:1}}
