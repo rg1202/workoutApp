@@ -24,4 +24,10 @@ test('Workout coach accepts conversational set logging and rest commands',async(
   await command.fill('stop rest');
   await command.press('Enter');
   await expect(coach.getByRole('status')).toContainText('Rest timer stopped');
+  const beforeReload=await page.evaluate(()=>localStorage.getItem('workoutapp.session.v3'));
+  await page.reload();
+  await page.getByRole('button',{name:'Today',exact:true}).first().click();
+  await page.getByRole('button',{name:/Start workout/i}).click();
+  const afterReload=await page.evaluate(()=>localStorage.getItem('workoutapp.session.v3'));
+  expect(afterReload).toBe(beforeReload);
 });
