@@ -132,6 +132,9 @@ test('workout exercise replacement opens and closes from the expanded exercise c
  await nav(page,'Today').click();
  await page.getByRole('button',{name:/Start workout/i}).click();
  const card=page.locator('#workout-exercise-replace-rx');
+ await expect(page.getByRole('region',{name:'Workout readiness'})).toBeVisible();
+ await page.getByLabel('Readiness energy').selectOption('2');
+ await expect(page.getByRole('region',{name:'Workout readiness'})).toContainText('Readiness is used for contextual guidance');
  await expect(card.getByRole('button',{name:'Replace exercise'})).toBeVisible();
  await card.getByRole('button',{name:'Replace exercise'}).click();
  await expect(card.getByRole('button',{name:'Cancel replacement'})).toHaveAttribute('aria-expanded','true');
