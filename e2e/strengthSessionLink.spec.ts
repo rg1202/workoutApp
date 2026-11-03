@@ -32,3 +32,9 @@ test('linked workout completion is idempotent in history', () => {
   expect(appendStrengthSessionOnce(initial, { ...session, id: 'session-2' })).toBe(initial);
   expect(appendStrengthSessionOnce(initial, { ...session, id: 'session-3', plannedActivityId: 'calendar-2' })).toHaveLength(2);
 });
+
+test('explicit Calendar selection disambiguates two strength sessions on one date', () => {
+  const plans = [planned('morning'), planned('evening')];
+  expect(matchingStrengthPlan(plans, 'program-1', '2026-11-03', 'evening')?.id).toBe('evening');
+  expect(matchingStrengthPlan(plans, 'program-1', '2026-11-03', 'missing')).toBeUndefined();
+});
