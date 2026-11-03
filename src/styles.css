@@ -1203,3 +1203,13 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .arc-session-summary :is(h2,h3){overflow-wrap:anywhere}
 .arc-session-exercise-result strong,.arc-session-exercise-result span{overflow-wrap:anywhere}
 @media(max-width:420px){.arc-session-summary-heading{flex-wrap:wrap}.arc-session-summary-heading>.arc-ui-button{margin-left:auto}.arc-session-summary-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.arc-session-summary-metrics span{font-size:.72rem}.arc-session-summary-actions{flex-direction:column}.arc-session-summary-actions>.arc-ui-button{width:100%}}
+
+/* ARC-UX-002: readable coaching guidance and touch-friendly readiness inputs. */
+.arc-coach-readiness,.arc-session-coach-scorecard{margin:12px 0;padding:14px;border:1px solid rgba(140,160,185,.2);border-radius:12px}
+.arc-coach-readiness>strong,.arc-session-coach-scorecard h3{display:block;margin:0 0 10px;font-size:1rem}
+.arc-coach-readiness select{min-height:40px;min-width:72px;border-radius:8px}
+.arc-coach-readiness small,.workout-intelligence small,.workout-coach-insights small,.workout-volume-comparison small{display:block;line-height:1.5;overflow-wrap:anywhere}
+.workout-intelligence,.workout-coach-insights,.workout-volume-comparison{min-width:0;max-width:100%;overflow-wrap:anywhere}
+.workout-coach-insights{display:grid;gap:5px}
+.arc-session-coach-scorecard p{margin:6px 0;line-height:1.5}
+@media(max-width:600px){.arc-coach-readiness{padding:12px}.arc-coach-readiness label{flex:1 1 130px;justify-content:space-between}.arc-coach-readiness select{min-width:64px}.workout-intelligence strong{overflow-wrap:anywhere}}
