@@ -6,7 +6,8 @@ import type { SessionRecord } from '../storage';
 export function matchingStrengthPlan(
   plans: PlannedActivity[],
   programId: string,
-  sessionDate: string
+  sessionDate: string,
+  preferredPlanId?: string
 ): PlannedActivity | undefined {
   const candidates = plans.filter(plan =>
     plan.type === 'Strength' &&
@@ -14,6 +15,7 @@ export function matchingStrengthPlan(
     plan.programId === programId &&
     plan.date === sessionDate
   );
+  if (preferredPlanId) return candidates.find(plan => plan.id === preferredPlanId);
   return candidates.length === 1 ? candidates[0] : undefined;
 }
 
