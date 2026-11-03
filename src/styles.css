@@ -1213,3 +1213,16 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .workout-coach-insights{display:grid;gap:5px}
 .arc-session-coach-scorecard p{margin:6px 0;line-height:1.5}
 @media(max-width:600px){.arc-coach-readiness{padding:12px}.arc-coach-readiness label{flex:1 1 130px;justify-content:space-between}.arc-coach-readiness select{min-width:64px}.workout-intelligence strong{overflow-wrap:anywhere}}
+
+/* ARC-UX-003: conversational coach confirmation flow. */
+.arc-conversation-coach{margin:12px 0;padding:14px;border:1px solid rgba(140,160,185,.24);border-radius:12px;display:grid;gap:10px}
+.arc-conversation-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.arc-conversation-heading small{opacity:.75}
+.arc-conversation-coach form{display:flex;gap:8px;align-items:stretch}
+.arc-conversation-coach input{flex:1;min-width:0;padding:10px 12px;border-radius:9px}
+.arc-conversation-coach form button{flex-shrink:0}
+.arc-conversation-coach>p{margin:0;line-height:1.5}
+.arc-coach-confirm{padding:12px;border-radius:10px;border:1px solid rgba(140,160,185,.35);display:grid;gap:8px}
+.arc-coach-confirm p{margin:0}
+.arc-coach-confirm>div{display:flex;flex-wrap:wrap;gap:8px}
+@media(max-width:420px){.arc-conversation-coach{padding:11px}.arc-conversation-coach form{flex-wrap:wrap}.arc-conversation-coach form button{width:100%}.arc-coach-confirm>div button{flex:1}}
