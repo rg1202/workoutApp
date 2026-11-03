@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { matchingStrengthPlan, completeLinkedStrengthPlan } from '../src/arc/strengthSessionLink';
+import { matchingStrengthPlan, completeLinkedStrengthPlan, appendStrengthSessionOnce } from '../src/arc/strengthSessionLink';
 import type { PlannedActivity } from '../src/plans';
 
 const planned = (id: string, overrides: Partial<PlannedActivity> = {}): PlannedActivity => ({
@@ -22,4 +22,13 @@ test('completing a linked strength session preserves unrelated plans and IDs', (
     ['calendar-1', 'Completed'], ['calendar-2', 'Planned']
   ]);
   expect(completeLinkedStrengthPlan(plans, {})).toBe(plans);
+});
+
+test('linked workout completion is idempotent in history', () => {
+  const session = { id: 'session-1', name: 'Strength', completedAt: '2026-11-03T12:00:00Z', plannedActivityId: 'calendar-1', sets: [] };
+  const initial = appendStrengthSessionOnce([], session);
+  expect(initial).toHaveLength(1);
+  expect(appendStrengthSessionOnce(initial, session)).toBe(initial);
+  expect(appendStrengthSessionOnce(initial, { ...session, id: 'session-2' })).toBe(initial);
+  expect(appendStrengthSessionOnce(initial, { ...session, id: 'session-3', plannedActivityId: 'calendar-2' })).toHaveLength(2);
 });
