@@ -28,3 +28,15 @@ export function completeLinkedStrengthPlan(
       : plan
   );
 }
+
+/** Completion is idempotent for a linked Calendar activity. */
+export function appendStrengthSessionOnce(
+  history: SessionRecord[],
+  session: SessionRecord
+): SessionRecord[] {
+  if (history.some(item => item.id === session.id)) return history;
+  if (session.plannedActivityId && history.some(item =>
+    item.plannedActivityId === session.plannedActivityId
+  )) return history;
+  return [session, ...history];
+}
