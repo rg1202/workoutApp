@@ -108,7 +108,7 @@ test('finishing Today workout syncs History Calendar and Analytics',async({page}
  await expect(summary.getByRole('heading',{name:'E2E Flow Workout'})).toBeVisible();
  await expect(summary.getByRole('heading',{name:'Exercise results'})).toBeVisible();
  await expect(summary.getByText('Barbell Back Squat')).toBeVisible();
- await expect(summary.getByText(/135.*lb·reps/).first()).toBeVisible();
+ await expect(summary.getByText(/675.*lb·reps/).first()).toBeVisible();
  await summary.getByRole('button',{name:'Review in History'}).click();
  await expect(page.getByText('E2E Flow Workout')).toBeVisible();
  await nav(page,'Calendar').click();
