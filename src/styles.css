@@ -1127,3 +1127,10 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .arc-today-top .arc-weather-hours article>span{font-size:17px;line-height:1.2;font-weight:650;font-variant-numeric:tabular-nums}
 .arc-today-top .arc-weather-hours article small{font-size:10px}
 @media(max-width:600px){.arc-today-top .arc-today-weather{padding:14px}.arc-today-top .arc-weather-heading{align-items:flex-start}.arc-today-top .arc-weather-current>strong{font-size:30px}}
+
+/* ARC-UX-001: daily actions lead; goal and recovery context follows. */
+.arc-today-plan-heading,.arc-today-support-heading{display:flex;flex-direction:column;gap:5px;margin:18px 0 12px}
+.arc-today-plan-heading h2,.arc-today-support-heading h2{margin:0;font-size:clamp(1.1rem,2vw,1.35rem);line-height:1.3}
+.arc-today-plan-heading p,.arc-today-support-heading p{margin:0;color:var(--muted,#9aa5b1);font-size:.875rem;line-height:1.5}
+.arc-today-support-heading{margin-top:26px;padding-top:18px;border-top:1px solid rgba(140,160,185,.18)}
+@media(max-width:600px){.arc-today-plan-heading,.arc-today-support-heading{margin-left:2px;margin-right:2px}}
