@@ -1175,3 +1175,15 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .arc-workout-progress-track span{display:block;height:100%;background:var(--accent,#6eaaad);border-radius:inherit;transition:width .2s ease}
 .arc-workout-progress-done{margin:12px 0 0;font-size:.9rem}
 @media(max-width:600px){.arc-workout-progress{padding:14px 12px}}
+
+/* ARC-UX-001: post-workout review is surfaced in Today without disrupting navigation. */
+.arc-session-summary{max-width:960px;margin:0 auto 20px;padding:20px;border:1px solid rgba(140,160,185,.25);border-radius:16px;background:rgba(140,160,185,.065)}
+.arc-session-summary-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.arc-session-summary-heading h2{margin:5px 0;font-size:1.3rem}
+.arc-session-summary-heading p{margin:0;opacity:.8}
+.arc-session-summary-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}
+.arc-session-summary-metrics>div{padding:12px;border-radius:10px;background:rgba(140,160,185,.08);display:flex;flex-direction:column;gap:5px}
+.arc-session-summary-metrics strong{font-size:1.4rem;font-variant-numeric:tabular-nums}
+.arc-session-summary-metrics span{font-size:.8rem;opacity:.75}
+.arc-session-summary-actions{display:flex;gap:10px;flex-wrap:wrap}
+@media(max-width:600px){.arc-session-summary{padding:14px}.arc-session-summary-metrics{gap:6px}.arc-session-summary-metrics>div{padding:9px}.arc-session-summary-metrics strong{font-size:1.15rem}.arc-session-summary-actions>.arc-ui-button{flex:1}}
