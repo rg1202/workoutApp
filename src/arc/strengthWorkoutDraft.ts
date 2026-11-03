@@ -8,6 +8,7 @@ export type StrengthWorkoutDraft = {
   exerciseNotes: Record<string, string>;
   sessionNotes: string;
   startedAt: number | null;
+  status?: 'InProgress' | 'Paused';
   savedAt: string;
 };
 
@@ -15,7 +16,7 @@ export const STRENGTH_DRAFT_PREFIX = 'arc.strength-draft.v1:';
 export const strengthDraftKey = (planId: string) => STRENGTH_DRAFT_PREFIX + encodeURIComponent(planId);
 export const emptyStrengthDraft = (selection: ActiveStrengthPlan): StrengthWorkoutDraft => ({
   planId: selection.planId, logs: {}, exerciseSelections: {}, exerciseNotes: {},
-  sessionNotes: '', startedAt: null, savedAt: new Date().toISOString(),
+  sessionNotes: '', startedAt: null, status: 'InProgress', savedAt: new Date().toISOString(),
 });
 export function isStrengthDraft(value: unknown, planId: string): value is StrengthWorkoutDraft {
   if (!value || typeof value !== 'object') return false;
