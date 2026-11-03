@@ -167,7 +167,7 @@ test('replacement can be restored and completed session retains chosen exercise 
  await page.getByRole('button',{name:'Finish workout'}).click();
  const summary=page.getByRole('region',{name:'E2E Substitution Workout'});
  await expect(summary.getByText(replacementName,{exact:true})).toBeVisible();
- const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.history.v1')||'[]'));
+ const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.history.v2')||'[]'));
  const session=saved.find((record:any)=>record.name==='E2E Substitution Workout');
  expect(session).toBeTruthy();
  expect(session.sets[0].exerciseName).toBe(replacementName);
