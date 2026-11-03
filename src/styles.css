@@ -1197,3 +1197,9 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .arc-session-exercise-result strong{font-size:.92rem}
 .arc-session-exercise-result span{font-size:.8rem;opacity:.75}
 @media(max-width:600px){.arc-session-exercise-result{flex-direction:column;gap:8px}.arc-session-exercise-result>div:last-child{text-align:left}}
+
+/* ARC-UX-001: accessible keyboard and narrow-screen session review. */
+.arc-session-summary :is(button,a):focus-visible{outline:3px solid var(--accent,#6eaaad);outline-offset:3px}
+.arc-session-summary :is(h2,h3){overflow-wrap:anywhere}
+.arc-session-exercise-result strong,.arc-session-exercise-result span{overflow-wrap:anywhere}
+@media(max-width:420px){.arc-session-summary-heading{flex-wrap:wrap}.arc-session-summary-heading>.arc-ui-button{margin-left:auto}.arc-session-summary-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.arc-session-summary-metrics span{font-size:.72rem}.arc-session-summary-actions{flex-direction:column}.arc-session-summary-actions>.arc-ui-button{width:100%}}
