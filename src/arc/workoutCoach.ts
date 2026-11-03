@@ -23,7 +23,13 @@ export function coachDecision({prescription:p,program,exerciseId,current,history
  const all=sessions.flatMap(s=>working(s.sets.filter(x=>x.exerciseId===exerciseId).map(x=>x.set)));
  const records:string[]=[];
  if(all.length&&last&&last.weight>0&&last.reps>0){if(last.weight>Math.max(0,...all.map(x=>x.weight)))records.push('Weight PR');if(last.reps>Math.max(0,...all.map(x=>x.reps)))records.push('Rep PR');if(last.weight*last.reps>Math.max(0,...all.map(x=>x.weight*x.reps)))records.push('Set volume PR');if(last.weight*(1+last.reps/30)>Math.max(0,...all.map(x=>x.weight*(1+x.reps/30))))records.push('Estimated 1RM PR');if(currentVolume>Math.max(0,...sessions.map(s=>volume(s.sets.filter(x=>x.exerciseId===exerciseId).map(x=>x.set)))))records.push('Session volume PR');}
+ const completed=sets.length>=p.sets;
+ const nextAction=completed
+  ? {type:'NextExercise' as const,description:'Prescribed sets complete; move to the next exercise.'}
+  : fatigue==='Elevated'
+    ? {type:'Adjust' as const,description:'Rest longer and consider reducing resistance before the next set.'}
+    : {type:'Continue' as const,description:'Continue with the next working set.'};
  const intervention=fatigue==='Elevated'?'Reps declined across sets. Consider a longer rest or lighter load.':missed?'Consider more rest or less load.':sets.length>=p.sets?'Prescribed working sets complete.':'Continue toward the rep and RIR targets.';
  const readinessNote=!readiness?'Readiness not recorded':readiness.energy<=2||readiness.sleep<=2||readiness.soreness>=4?'Lower reported readiness; monitor effort and recovery.':'Readiness recorded.';
- return {load,reps:p.minReps,restSeconds,reason,fatigue,phase,intervention,records,currentVolume,previousVolume,volumeDelta:previousVolume?Math.round((currentVolume-previousVolume)/previousVolume*100):null,readinessNote};
+ return {load,reps:p.minReps,restSeconds,reason,fatigue,phase,intervention,nextAction,records,currentVolume,previousVolume,volumeDelta:previousVolume?Math.round((currentVolume-previousVolume)/previousVolume*100):null,readinessNote};
 }
