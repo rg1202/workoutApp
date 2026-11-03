@@ -1158,3 +1158,8 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .workout-next-set small{opacity:.78;line-height:1.4}
 .workout-execution .workout-set-actions button:first-child{min-height:44px}
 @media(max-width:600px){.workout-next-set{padding:11px 12px}.workout-execution .workout-set-actions button:first-child{flex:1}}
+
+/* ARC-UX-001: exercise progression stays in context without automatic navigation. */
+.workout-execution{scroll-margin-top:24px}
+.workout-next-set>.arc-ui-button{align-self:center;flex-shrink:0}
+@media(max-width:600px){.workout-next-set{flex-wrap:wrap}.workout-next-set>.arc-ui-button{width:100%;justify-content:center}}
