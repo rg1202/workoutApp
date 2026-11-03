@@ -1143,3 +1143,10 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .arc-workout-immersive .arc-workout-mode-heading .eyebrow{letter-spacing:.11em}
 .arc-workout-immersive .workout-session-actions{border-top:1px solid rgba(140,160,185,.2);padding-top:18px}
 @media(max-width:600px){.arc-workout-immersive>main#arc-main{padding-inline:12px}.arc-workout-immersive .arc-workout-mode-heading{margin-bottom:10px}}
+
+/* ARC-UX-001: compact exercise navigation in immersive workout mode. */
+.workout-execution.exercise-collapsed{padding-bottom:12px}
+.workout-execution.exercise-collapsed .exercise-main{padding-bottom:0}
+.workout-exercise-toggle{flex-shrink:0;white-space:nowrap}
+.workout-execution [hidden]{display:none!important}
+@media(max-width:600px){.workout-execution .workout-exercise-heading{align-items:flex-start;gap:10px}.workout-exercise-toggle{min-height:38px}}
