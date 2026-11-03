@@ -1187,3 +1187,13 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .arc-session-summary-metrics span{font-size:.8rem;opacity:.75}
 .arc-session-summary-actions{display:flex;gap:10px;flex-wrap:wrap}
 @media(max-width:600px){.arc-session-summary{padding:14px}.arc-session-summary-metrics{gap:6px}.arc-session-summary-metrics>div{padding:9px}.arc-session-summary-metrics strong{font-size:1.15rem}.arc-session-summary-actions>.arc-ui-button{flex:1}}
+
+/* ARC-UX-001: exercise-by-exercise post-session review. */
+.arc-session-exercise-results{margin:18px 0}
+.arc-session-exercise-results h3{font-size:1rem;margin:0 0 10px}
+.arc-session-exercise-result{display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-top:1px solid rgba(140,160,185,.18)}
+.arc-session-exercise-result>div{display:flex;flex-direction:column;gap:5px;min-width:0}
+.arc-session-exercise-result>div:last-child{text-align:right}
+.arc-session-exercise-result strong{font-size:.92rem}
+.arc-session-exercise-result span{font-size:.8rem;opacity:.75}
+@media(max-width:600px){.arc-session-exercise-result{flex-direction:column;gap:8px}.arc-session-exercise-result>div:last-child{text-align:left}}
