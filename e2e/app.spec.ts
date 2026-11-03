@@ -142,6 +142,38 @@ test('workout exercise replacement opens and closes from the expanded exercise c
  await expect(card.getByRole('button',{name:'Replace exercise'})).toBeDisabled();
 });
 
+test('replacement can be restored and completed session retains chosen exercise identity',async({page})=>{
+ const today=new Date(),date=today.toLocaleDateString('en-CA'),weekday=today.getDay();
+ await page.evaluate(({date,weekday})=>{
+  const p={id:'e2e-substitution',name:'E2E Substitution Program',goal:'Strength',weeks:2,activeWeek:1,activeDayId:'substitution-day',status:'Active',createdAt:new Date().toISOString(),startDate:date,progression:{type:'None',loadStep:5,startRir:3,endRir:1,deloadEvery:4,deloadPercent:15},days:[{id:'substitution-day',name:'E2E Substitution Workout',type:'Lower Body',weekday,prescriptions:[{id:'substitution-rx',exerciseId:'back-squat',sets:1,minReps:5,maxReps:5,rir:2,weight:135}]}]};
+  localStorage.setItem('workoutapp.programs.v3',JSON.stringify({activeProgramId:p.id,programs:[p]}));
+ },{date,weekday});
+ await page.reload();
+ await nav(page,'Today').click();
+ await page.getByRole('button',{name:/Start workout/i}).click();
+ const card=page.locator('#workout-exercise-substitution-rx');
+ await card.getByRole('button',{name:'Replace exercise'}).click();
+ const option=card.locator('.substitution-options button').first();
+ await expect(option).toBeVisible();
+ const replacementName=(await option.locator('b').innerText()).trim();
+ await option.click();
+ await expect(card.getByRole('heading',{name:replacementName})).toBeVisible();
+ await card.getByRole('button',{name:'Restore original exercise'}).click();
+ await expect(card.getByRole('heading',{name:'Barbell Back Squat'})).toBeVisible();
+ await card.getByRole('button',{name:'Replace exercise'}).click();
+ await card.locator('.substitution-options button').first().click();
+ await card.getByRole('button',{name:/Working set/i}).first().click();
+ page.once('dialog',dialog=>dialog.accept());
+ await page.getByRole('button',{name:'Finish workout'}).click();
+ const summary=page.getByRole('region',{name:'E2E Substitution Workout'});
+ await expect(summary.getByText(replacementName,{exact:true})).toBeVisible();
+ const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.history.v1')||'[]'));
+ const session=saved.find((record:any)=>record.name==='E2E Substitution Workout');
+ expect(session).toBeTruthy();
+ expect(session.sets[0].exerciseName).toBe(replacementName);
+ expect(session.sets[0].exerciseId).not.toBe('back-squat');
+});
+
 test('partial workout summary can be dismissed without losing recorded history',async({page})=>{
  const today=new Date(),date=today.toLocaleDateString('en-CA'),weekday=today.getDay();
  await page.evaluate(({date,weekday})=>{
