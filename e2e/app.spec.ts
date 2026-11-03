@@ -122,6 +122,24 @@ test('finishing Today workout syncs History Calendar and Analytics',async({page}
 });
 
 
+test('workout exercise replacement opens and closes from the expanded exercise card',async({page})=>{
+ const today=new Date(),date=today.toLocaleDateString('en-CA'),weekday=today.getDay();
+ await page.evaluate(({date,weekday})=>{
+  const p={id:'e2e-replace',name:'E2E Replacement Program',goal:'Strength',weeks:2,activeWeek:1,activeDayId:'replace-day',status:'Active',createdAt:new Date().toISOString(),startDate:date,progression:{type:'None',loadStep:5,startRir:3,endRir:1,deloadEvery:4,deloadPercent:15},days:[{id:'replace-day',name:'E2E Replacement Workout',type:'Lower Body',weekday,prescriptions:[{id:'replace-rx',exerciseId:'back-squat',sets:2,minReps:5,maxReps:5,rir:2,weight:135}]}]};
+  localStorage.setItem('workoutapp.programs.v3',JSON.stringify({activeProgramId:p.id,programs:[p]}));
+ },{date,weekday});
+ await page.reload();
+ await nav(page,'Today').click();
+ await page.getByRole('button',{name:/Start workout/i}).click();
+ const card=page.locator('#workout-exercise-replace-rx');
+ await expect(card.getByRole('button',{name:'Replace exercise'})).toBeVisible();
+ await card.getByRole('button',{name:'Replace exercise'}).click();
+ await expect(card.getByRole('button',{name:'Cancel replacement'})).toHaveAttribute('aria-expanded','true');
+ await expect(card.getByLabel('Substitution reason')).toBeVisible();
+ await card.getByRole('button',{name:'Cancel replacement'}).click();
+ await expect(card.getByLabel('Substitution reason')).toHaveCount(0);
+});
+
 test('partial workout summary can be dismissed without losing recorded history',async({page})=>{
  const today=new Date(),date=today.toLocaleDateString('en-CA'),weekday=today.getDay();
  await page.evaluate(({date,weekday})=>{
