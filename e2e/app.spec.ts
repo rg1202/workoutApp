@@ -142,6 +142,11 @@ test('workout exercise replacement opens and closes from the expanded exercise c
  await expect(card.getByLabel('Substitution reason')).toBeVisible();
  await card.getByRole('button',{name:'Cancel replacement'}).click();
  await expect(card.getByLabel('Substitution reason')).toHaveCount(0);
+ await page.getByLabel('Coach command').fill('135 x 8, 2 RIR');
+ await page.getByRole('region',{name:'Conversational workout coach'}).getByRole('button',{name:'Send'}).click();
+ await expect(page.getByRole('group',{name:'Confirm working set'})).toContainText('135 lb');
+ await page.getByRole('group',{name:'Confirm working set'}).getByRole('button',{name:'Discard'}).click();
+ await expect(card.locator('.set-log-row')).toHaveCount(0);
  await card.getByRole('button',{name:/Working set/i}).first().click();
  await expect(card.getByRole('button',{name:'Replace exercise'})).toBeDisabled();
  await expect(card.getByLabel('Set coaching')).toContainText('Last set');
