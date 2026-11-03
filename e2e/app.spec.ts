@@ -140,6 +140,12 @@ test('workout exercise replacement opens and closes from the expanded exercise c
  await expect(card.getByLabel('Substitution reason')).toHaveCount(0);
  await card.getByRole('button',{name:/Working set/i}).first().click();
  await expect(card.getByRole('button',{name:'Replace exercise'})).toBeDisabled();
+ await expect(card.getByLabel('Set coaching')).toContainText('Last set');
+ await card.getByLabel('Set 1 reps').fill('2');
+ await expect(card.getByLabel('Set coaching')).toContainText('below the 5-rep floor');
+ await card.getByLabel('Set 1 reps').fill('5');
+ await card.getByLabel('Set 1 RIR').fill('0');
+ await expect(card.getByLabel('Set coaching')).toContainText('below the target effort range');
 });
 
 test('replacement can be restored and completed session retains chosen exercise identity',async({page})=>{
