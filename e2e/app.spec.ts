@@ -105,6 +105,7 @@ test('finishing Today workout syncs History Calendar and Analytics',async({page}
  await page.getByRole('button',{name:/Finish workout/i}).click();
  const summary=page.getByRole('region',{name:'E2E Flow Workout'});
  await expect(summary).toBeVisible();
+ await expect(summary.getByLabel('Workout coach scorecard')).toContainText('total working volume');
  await expect(summary.getByRole('heading',{name:'E2E Flow Workout'})).toBeVisible();
  await expect(summary.getByRole('heading',{name:'Exercise results'})).toBeVisible();
  await expect(summary.getByText('Barbell Back Squat')).toBeVisible();
