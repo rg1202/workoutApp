@@ -103,7 +103,14 @@ test('finishing Today workout syncs History Calendar and Analytics',async({page}
  await page.getByRole('button',{name:/Working set/i}).first().click();
  page.once('dialog',dialog=>dialog.accept());
  await page.getByRole('button',{name:/Finish workout/i}).click();
- await nav(page,'History').click();
+ const summary=page.getByRole('region',{name:'E2E Flow Workout'});
+ await expect(summary).toBeVisible();
+ await expect(summary.getByLabel('Workout coach scorecard')).toContainText('total working volume');
+ await expect(summary.getByRole('heading',{name:'E2E Flow Workout'})).toBeVisible();
+ await expect(summary.getByRole('heading',{name:'Exercise results'})).toBeVisible();
+ await expect(summary.getByText('Barbell Back Squat')).toBeVisible();
+ await expect(summary.getByText(/675.*lb·reps/).first()).toBeVisible();
+ await summary.getByRole('button',{name:'Review in History'}).click();
  await expect(page.getByText('E2E Flow Workout')).toBeVisible();
  await nav(page,'Calendar').click();
  await calendarDay(page);
@@ -115,6 +122,100 @@ test('finishing Today workout syncs History Calendar and Analytics',async({page}
  await expect(page.locator('.analytics-summary article').first().locator('b')).toHaveText('1');
 });
 
+
+test('workout exercise replacement opens and closes from the expanded exercise card',async({page})=>{
+ const today=new Date(),date=today.toLocaleDateString('en-CA'),weekday=today.getDay();
+ await page.evaluate(({date,weekday})=>{
+  const p={id:'e2e-replace',name:'E2E Replacement Program',goal:'Strength',weeks:2,activeWeek:1,activeDayId:'replace-day',status:'Active',createdAt:new Date().toISOString(),startDate:date,progression:{type:'None',loadStep:5,startRir:3,endRir:1,deloadEvery:4,deloadPercent:15},days:[{id:'replace-day',name:'E2E Replacement Workout',type:'Lower Body',weekday,prescriptions:[{id:'replace-rx',exerciseId:'back-squat',sets:2,minReps:5,maxReps:5,rir:2,weight:135}]}]};
+  localStorage.setItem('workoutapp.programs.v3',JSON.stringify({activeProgramId:p.id,programs:[p]}));
+ },{date,weekday});
+ await page.reload();
+ await nav(page,'Today').click();
+ await page.getByRole('button',{name:/Start workout/i}).click();
+ const card=page.locator('#workout-exercise-replace-rx');
+ await expect(page.getByRole('region',{name:'Workout readiness'})).toBeVisible();
+ await page.getByLabel('Readiness energy').selectOption('2');
+ await expect(page.getByRole('region',{name:'Workout readiness'})).toContainText('Readiness is used for contextual guidance');
+ await expect(card.getByRole('button',{name:'Replace exercise'})).toBeVisible();
+ await card.getByRole('button',{name:'Replace exercise'}).click();
+ await expect(card.getByRole('button',{name:'Cancel replacement'})).toHaveAttribute('aria-expanded','true');
+ await expect(card.getByLabel('Substitution reason')).toBeVisible();
+ await card.getByRole('button',{name:'Cancel replacement'}).click();
+ await expect(card.getByLabel('Substitution reason')).toHaveCount(0);
+ await page.getByLabel('Coach command').fill('135 x 8, 2 RIR');
+ await page.getByRole('region',{name:'Conversational workout coach'}).getByRole('button',{name:'Send'}).click();
+ await expect(page.getByRole('group',{name:'Confirm working set'})).toContainText('135 lb');
+ await page.getByRole('group',{name:'Confirm working set'}).getByRole('button',{name:'Discard'}).click();
+ await expect(card.locator('.set-log-row')).toHaveCount(0);
+ await card.getByRole('button',{name:/Working set/i}).first().click();
+ await expect(card.getByRole('button',{name:'Replace exercise'})).toBeDisabled();
+ await expect(card.getByLabel('Set coaching')).toContainText('Last set');
+ await card.getByLabel('Set 1 reps').fill('2');
+ await expect(card.getByLabel('Set coaching')).toContainText('below the 5-rep floor');
+ await expect(card.getByLabel('Next set recommendation')).toContainText('Suggested rest: 120 seconds');
+ await expect(card.getByLabel('Workout coach insights')).toContainText('Fatigue signal: Possible');
+ await expect(card.getByLabel('Next set recommendation')).toContainText('Last set missed the rep or effort floor');
+ await expect(card.getByLabel('Exercise volume comparison')).toContainText('Working volume:');
+ await card.getByLabel('Set 1 reps').fill('5');
+ await card.getByLabel('Set 1 RIR').fill('0');
+ await expect(card.getByLabel('Set coaching')).toContainText('below the target effort range');
+});
+
+test('replacement can be restored and completed session retains chosen exercise identity',async({page})=>{
+ const today=new Date(),date=today.toLocaleDateString('en-CA'),weekday=today.getDay();
+ await page.evaluate(({date,weekday})=>{
+  const p={id:'e2e-substitution',name:'E2E Substitution Program',goal:'Strength',weeks:2,activeWeek:1,activeDayId:'substitution-day',status:'Active',createdAt:new Date().toISOString(),startDate:date,progression:{type:'None',loadStep:5,startRir:3,endRir:1,deloadEvery:4,deloadPercent:15},days:[{id:'substitution-day',name:'E2E Substitution Workout',type:'Lower Body',weekday,prescriptions:[{id:'substitution-rx',exerciseId:'back-squat',sets:1,minReps:5,maxReps:5,rir:2,weight:135}]}]};
+  localStorage.setItem('workoutapp.programs.v3',JSON.stringify({activeProgramId:p.id,programs:[p]}));
+ },{date,weekday});
+ await page.reload();
+ await nav(page,'Today').click();
+ await page.getByRole('button',{name:/Start workout/i}).click();
+ const card=page.locator('#workout-exercise-substitution-rx');
+ await card.getByRole('button',{name:'Replace exercise'}).click();
+ const option=card.locator('.substitution-options button').first();
+ await expect(option).toBeVisible();
+ const replacementName=(await option.locator('b').innerText()).trim();
+ await option.click();
+ await expect(card.getByRole('heading',{name:replacementName})).toBeVisible();
+ await card.getByRole('button',{name:'Restore original exercise'}).click();
+ await expect(card.getByRole('heading',{name:'Barbell Back Squat'})).toBeVisible();
+ await card.getByRole('button',{name:'Replace exercise'}).click();
+ await card.locator('.substitution-options button').first().click();
+ await card.getByRole('button',{name:/Working set/i}).first().click();
+ page.once('dialog',dialog=>dialog.accept());
+ await page.getByRole('button',{name:'Finish workout'}).click();
+ const summary=page.getByRole('region',{name:'E2E Substitution Workout'});
+ await expect(summary.getByText(replacementName,{exact:true})).toBeVisible();
+ const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('workoutapp.history.v2')||'[]'));
+ const session=saved.find((record:any)=>record.name==='E2E Substitution Workout');
+ expect(session).toBeTruthy();
+ expect(session.sets[0].exerciseName).toBe(replacementName);
+ expect(session.sets[0].exerciseId).not.toBe('back-squat');
+});
+
+test('partial workout summary can be dismissed without losing recorded history',async({page})=>{
+ const today=new Date(),date=today.toLocaleDateString('en-CA'),weekday=today.getDay();
+ await page.evaluate(({date,weekday})=>{
+  const p={id:'e2e-partial',name:'E2E Partial Program',goal:'Strength',weeks:2,activeWeek:1,activeDayId:'partial-day',status:'Active',createdAt:new Date().toISOString(),startDate:date,progression:{type:'None',loadStep:5,startRir:3,endRir:1,deloadEvery:4,deloadPercent:15},days:[{id:'partial-day',name:'E2E Partial Workout',type:'Lower Body',weekday,prescriptions:[{id:'partial-rx',exerciseId:'back-squat',sets:2,minReps:5,maxReps:5,rir:2,weight:135}]}]};
+  localStorage.setItem('workoutapp.programs.v3',JSON.stringify({activeProgramId:p.id,programs:[p]}));
+ },{date,weekday});
+ await page.reload();
+ await nav(page,'Today').click();
+ await page.getByRole('button',{name:/Start workout/i}).click();
+ await page.getByRole('button',{name:/Working set/i}).first().click();
+ page.once('dialog',dialog=>dialog.accept());
+ await page.getByRole('button',{name:'End workout early'}).click();
+ const summary=page.getByRole('region',{name:'E2E Partial Workout'});
+ await expect(summary).toBeVisible();
+ await expect(summary.getByText('Partial workout recorded')).toBeVisible();
+ await expect(summary.getByText('1 working set')).toBeVisible();
+ await expect(summary.getByText(/675.*lb·reps/).first()).toBeVisible();
+ await summary.getByRole('button',{name:'Dismiss'}).click();
+ await expect(summary).toHaveCount(0);
+ await expect(page.getByRole('heading',{name:'Today',exact:true})).toBeVisible();
+ await nav(page,'History').click();
+ await expect(page.getByText('E2E Partial Workout')).toBeVisible();
+});
 
 test('latest body weight drives weight-loss goal progress',async({page})=>{
  await page.evaluate(()=>{
@@ -1545,4 +1646,25 @@ test('pilot notice requires renewed acknowledgment after version mismatch or sto
  await page.evaluate(()=>localStorage.clear());
  await page.reload();
  await expect(page.getByRole('heading',{name:'Welcome to Arc'})).toBeVisible();
+});
+
+test('coach engine: prior performance, fatigue, rest and PR boundaries',async()=>{
+ const {coachDecision}=await import('../src/arc/workoutCoach');
+ const set=(weight:number,reps:number,rir=2)=>({weight,reps,rir,kind:'Working' as const,completedAt:'2026-10-01T12:00:00Z'});
+ const prescription={id:'rx',exerciseId:'squat',sets:3,minReps:5,maxReps:8,rir:2,weight:100};
+ const program={id:'p',name:'Test',goal:'Strength' as const,activeWeek:1,progression:{type:'None' as const,loadStep:5,deloadEvery:4,deloadPercent:20,startRir:3,endRir:1}};
+ const history=[{id:'prior',name:'Prior',completedAt:'2026-10-01T12:00:00Z',sets:[{exerciseId:'squat',exerciseName:'Squat',set:set(100,8)}]}];
+ const input={prescription,program:program as any,exerciseId:'squat',current:[] as ReturnType<typeof set>[],history,restPreset:90,isStrength:true};
+ const prior=coachDecision(input);
+ expect(prior.load).toBe(100);
+ expect(prior.previousVolume).toBe(800);
+ const fatigue=coachDecision({...input,current:[set(100,8),set(100,4,0)]});
+ expect(fatigue.fatigue).toBe('Elevated');
+ expect(fatigue.load).toBe(95);
+ expect(fatigue.restSeconds).toBe(180);
+ expect(coachDecision({...input,current:[set(110,9)]}).records).toContain('Weight PR');
+ expect(coachDecision({...input,history:[],current:[set(100,8)]}).records).toEqual([]);
+ expect(coachDecision({...input,exerciseId:'unknown'}).load).toBe(0);
+ expect(coachDecision({...input,program:{...program,activeWeek:4} as any}).phase).not.toBe('Scheduled deload');
+ expect(coachDecision({...input,readiness:{energy:1,sleep:1,soreness:5}}).readinessNote).toContain('Lower reported readiness');
 });
