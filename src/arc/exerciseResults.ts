@@ -9,6 +9,7 @@ export type ExerciseResult = {
   bestWeight: number | null;
   previousVolume: number | null;
   previousWorkingSets: number | null;
+  volumeChange: number | null;
 };
 
 export function exerciseResults(session: SessionRecord, history: SessionRecord[]): ExerciseResult[] {
@@ -26,6 +27,7 @@ export function exerciseResults(session: SessionRecord, history: SessionRecord[]
       bestWeight: null,
       previousVolume: null,
       previousWorkingSets: null,
+      volumeChange: null,
     };
     if ((entry.set.kind ?? 'Working') === 'Working') {
       result.workingSets++;
@@ -44,6 +46,7 @@ export function exerciseResults(session: SessionRecord, history: SessionRecord[]
       ...result,
       previousVolume: sets.reduce((total, entry) => total + Math.max(0, entry.set.weight) * Math.max(0, entry.set.reps), 0),
       previousWorkingSets: sets.length,
+      volumeChange: result.volume - sets.reduce((total, entry) => total + Math.max(0, entry.set.weight) * Math.max(0, entry.set.reps), 0),
     };
   });
 }
