@@ -17,3 +17,10 @@ test('invalid or cleared drafts cannot be resumed',()=>{
  expect(isStrengthDraft(null,selection.planId)).toBe(false);
  expect(isStrengthDraft({planId:selection.planId,logs:{}},selection.planId)).toBe(false);
 });
+
+test('paused workout draft remains valid and retains its sets for resumption',()=>{
+ const draft={...emptyStrengthDraft(selection),status:'Paused' as const,logs:{squat:[{weight:135,reps:5,rir:2,completedAt:'2026-11-02T18:00:00Z'}]}};
+ expect(isStrengthDraft(draft,selection.planId)).toBe(true);
+ expect(draft.logs.squat).toHaveLength(1);
+ expect(draft.status).toBe('Paused');
+});
