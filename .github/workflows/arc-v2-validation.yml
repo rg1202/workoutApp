@@ -1,0 +1,46 @@
+name: Arc V2 validation
+
+on:
+  pull_request:
+    branches: [product/v2]
+  push:
+    branches: [integration/arc-v2-session-linkage]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Check lockfile
+        run: npm run check:lockfile
+      - name: Build TypeScript and Vite
+        run: npm run build
+      - name: Validate production artifact
+        run: npm run check:artifact
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run Playwright Chromium tests
+        run: npx playwright test --project=chromium --workers=4 --reporter=line
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: arc-v2-playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7
