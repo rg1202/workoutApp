@@ -1134,3 +1134,12 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .arc-today-plan-heading p,.arc-today-support-heading p{margin:0;color:var(--muted,#9aa5b1);font-size:.875rem;line-height:1.5}
 .arc-today-support-heading{margin-top:26px;padding-top:18px;border-top:1px solid rgba(140,160,185,.18)}
 @media(max-width:600px){.arc-today-plan-heading,.arc-today-support-heading{margin-left:2px;margin-right:2px}}
+
+/* ARC-UX-001: Workout Mode is contextual and immersive, not a second sidebar destination. */
+.unified-shell.arc-workout-immersive{display:block;min-height:100vh}
+.arc-workout-immersive>aside{display:none!important}
+.arc-workout-immersive>main#arc-main{margin-left:0!important;width:100%!important;max-width:none;min-height:100vh;padding-inline:clamp(14px,4vw,44px)}
+.arc-workout-immersive .arc-workout-mode-heading{max-width:960px;margin:0 auto 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.arc-workout-immersive .arc-workout-mode-heading .eyebrow{letter-spacing:.11em}
+.arc-workout-immersive .workout-session-actions{border-top:1px solid rgba(140,160,185,.2);padding-top:18px}
+@media(max-width:600px){.arc-workout-immersive>main#arc-main{padding-inline:12px}.arc-workout-immersive .arc-workout-mode-heading{margin-bottom:10px}}
