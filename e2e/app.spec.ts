@@ -1642,3 +1642,24 @@ test('pilot notice requires renewed acknowledgment after version mismatch or sto
  await page.reload();
  await expect(page.getByRole('heading',{name:'Welcome to Arc'})).toBeVisible();
 });
+
+test('coach engine: prior performance, fatigue, rest and PR boundaries',async()=>{
+ const {coachDecision}=await import('../src/arc/workoutCoach');
+ const set=(weight:number,reps:number,rir=2)=>({weight,reps,rir,kind:'Working' as const,completedAt:'2026-10-01T12:00:00Z'});
+ const prescription={id:'rx',exerciseId:'squat',sets:3,minReps:5,maxReps:8,rir:2,weight:100};
+ const program={id:'p',name:'Test',goal:'Strength' as const,activeWeek:1,progression:{type:'None' as const,loadStep:5,deloadEvery:4,deloadPercent:20,startRir:3,endRir:1}};
+ const history=[{id:'prior',name:'Prior',completedAt:'2026-10-01T12:00:00Z',sets:[{exerciseId:'squat',exerciseName:'Squat',set:set(100,8)}]}];
+ const input={prescription,program:program as any,exerciseId:'squat',current:[] as ReturnType<typeof set>[],history,restPreset:90,isStrength:true};
+ const prior=coachDecision(input);
+ expect(prior.load).toBe(100);
+ expect(prior.previousVolume).toBe(800);
+ const fatigue=coachDecision({...input,current:[set(100,8),set(100,4,0)]});
+ expect(fatigue.fatigue).toBe('Elevated');
+ expect(fatigue.load).toBe(95);
+ expect(fatigue.restSeconds).toBe(180);
+ expect(coachDecision({...input,current:[set(110,9)]}).records).toContain('Weight PR');
+ expect(coachDecision({...input,history:[],current:[set(100,8)]}).records).toEqual([]);
+ expect(coachDecision({...input,exerciseId:'unknown'}).load).toBe(0);
+ expect(coachDecision({...input,program:{...program,activeWeek:4} as any}).phase).not.toBe('Scheduled deload');
+ expect(coachDecision({...input,readiness:{energy:1,sleep:1,soreness:5}}).readinessNote).toContain('Lower reported readiness');
+});
