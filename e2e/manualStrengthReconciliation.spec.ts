@@ -22,3 +22,8 @@ test('reconciliation is idempotent and leaves skipped plans untouched',()=>{
  expect(first[0].status).toBe('Skipped');
  expect(reconcileStrengthPlans(first,[record('session-1','manual-1'),record('session-2','manual-2')])).toEqual(first);
 });
+
+test('partial strength history does not falsely complete a planned session',()=>{
+ const partial={...record('partial','manual-1'),outcome:'Partial' as const};
+ expect(reconcileStrengthPlans([plan('manual-1')],[partial])[0].status).toBe('Planned');
+});
