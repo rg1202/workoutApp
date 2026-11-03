@@ -143,6 +143,9 @@ test('workout exercise replacement opens and closes from the expanded exercise c
  await expect(card.getByLabel('Set coaching')).toContainText('Last set');
  await card.getByLabel('Set 1 reps').fill('2');
  await expect(card.getByLabel('Set coaching')).toContainText('below the 5-rep floor');
+ await expect(card.getByLabel('Next set recommendation')).toContainText('Suggested rest: 120 seconds');
+ await expect(card.getByLabel('Next set recommendation')).toContainText('Reduce suggested load');
+ await expect(card.getByLabel('Exercise volume comparison')).toContainText('Working volume:');
  await card.getByLabel('Set 1 reps').fill('5');
  await card.getByLabel('Set 1 RIR').fill('0');
  await expect(card.getByLabel('Set coaching')).toContainText('below the target effort range');
