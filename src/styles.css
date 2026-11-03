@@ -1163,3 +1163,15 @@ p,label,.goal-type-v2 button small{color:#a5b3c2}
 .workout-execution{scroll-margin-top:24px}
 .workout-next-set>.arc-ui-button{align-self:center;flex-shrink:0}
 @media(max-width:600px){.workout-next-set{flex-wrap:wrap}.workout-next-set>.arc-ui-button{width:100%;justify-content:center}}
+
+/* ARC-UX-001: workout-wide progress, distinct from individual exercise progress. */
+.arc-workout-progress{max-width:960px;margin:0 auto 16px;padding:16px 18px;border:1px solid rgba(140,160,185,.22);border-radius:14px;background:rgba(140,160,185,.055)}
+.arc-workout-progress-top{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.arc-workout-progress-top>div{display:flex;flex-direction:column;gap:5px}
+.arc-workout-progress-top strong{font-size:1.05rem}
+.arc-workout-progress-top small{opacity:.75}
+.arc-workout-progress-percent{font-size:1.35rem;font-weight:750;font-variant-numeric:tabular-nums}
+.arc-workout-progress-track{height:7px;overflow:hidden;border-radius:999px;background:rgba(140,160,185,.18);margin-top:14px}
+.arc-workout-progress-track span{display:block;height:100%;background:var(--accent,#6eaaad);border-radius:inherit;transition:width .2s ease}
+.arc-workout-progress-done{margin:12px 0 0;font-size:.9rem}
+@media(max-width:600px){.arc-workout-progress{padding:14px 12px}}
