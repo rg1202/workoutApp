@@ -122,6 +122,30 @@ test('finishing Today workout syncs History Calendar and Analytics',async({page}
 });
 
 
+test('partial workout summary can be dismissed without losing recorded history',async({page})=>{
+ const today=new Date(),date=today.toLocaleDateString('en-CA'),weekday=today.getDay();
+ await page.evaluate(({date,weekday})=>{
+  const p={id:'e2e-partial',name:'E2E Partial Program',goal:'Strength',weeks:2,activeWeek:1,activeDayId:'partial-day',status:'Active',createdAt:new Date().toISOString(),startDate:date,progression:{type:'None',loadStep:5,startRir:3,endRir:1,deloadEvery:4,deloadPercent:15},days:[{id:'partial-day',name:'E2E Partial Workout',type:'Lower Body',weekday,prescriptions:[{id:'partial-rx',exerciseId:'back-squat',sets:2,minReps:5,maxReps:5,rir:2,weight:135}]}]};
+  localStorage.setItem('workoutapp.programs.v3',JSON.stringify({activeProgramId:p.id,programs:[p]}));
+ },{date,weekday});
+ await page.reload();
+ await nav(page,'Today').click();
+ await page.getByRole('button',{name:/Start workout/i}).click();
+ await page.getByRole('button',{name:/Working set/i}).first().click();
+ page.once('dialog',dialog=>dialog.accept());
+ await page.getByRole('button',{name:'End workout early'}).click();
+ const summary=page.getByRole('region',{name:'E2E Partial Workout'});
+ await expect(summary).toBeVisible();
+ await expect(summary.getByText('Partial workout recorded')).toBeVisible();
+ await expect(summary.getByText('1 working set')).toBeVisible();
+ await expect(summary.getByText(/675.*lb·reps/).first()).toBeVisible();
+ await summary.getByRole('button',{name:'Dismiss'}).click();
+ await expect(summary).toHaveCount(0);
+ await expect(page.getByRole('heading',{name:'Today',exact:true})).toBeVisible();
+ await nav(page,'History').click();
+ await expect(page.getByText('E2E Partial Workout')).toBeVisible();
+});
+
 test('latest body weight drives weight-loss goal progress',async({page})=>{
  await page.evaluate(()=>{
   localStorage.setItem('workoutapp.goals.v2',JSON.stringify([{id:'weight-goal',name:'Weight Cut',type:'Body',status:'Active',metric:'Bodyweight',start:200,current:200,target:190,unit:'lb'}]));
