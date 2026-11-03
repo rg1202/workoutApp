@@ -8,7 +8,7 @@ import type {SessionRecord} from '../storage';
 export function reconcileStrengthPlans(plans:PlannedActivity[],history:SessionRecord[]):PlannedActivity[]{
  const byPlan=new Map<string,SessionRecord>();
  for(const session of history){
-  if(!session.plannedActivityId)continue;
+  if(!session.plannedActivityId||session.outcome==='Partial')continue;
   const previous=byPlan.get(session.plannedActivityId);
   if(!previous||session.completedAt>previous.completedAt)byPlan.set(session.plannedActivityId,session);
  }
